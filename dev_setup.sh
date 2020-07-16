@@ -5,6 +5,6 @@
 
 
 composer i
-mv .env.example .env
+cp .env.example .env
 ./artisan key:generate
 vim .env
