@@ -20,3 +20,11 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::middleware('auth')->group(function () {
+    Route::get('/settings', 'SettingsController@edit')->name('settings.edit');
+
+    Route::patch('/settings', 'SettingsController@update')
+        ->name('settings.update');
+});
