@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container">
-        <form action="/profile" enctype="multipart/form-data" method="post">
+        <form action="/settings" enctype="multipart/form-data" method="post">
             @csrf
             @method('PATCH')
 
@@ -64,7 +64,7 @@
                             profile picture
                         </label>
                         <input name="picture"
-                        type="file" class="form-control-file" id="picture"
+                            type="file" class="form-control-file" id="picture"
                         >
 
                         @error('picture')
