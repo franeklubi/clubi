@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Intervention\Image\Facades\Image;
+
 class SettingsController extends Controller
 {
     public function __construct() {
@@ -77,9 +79,13 @@ class SettingsController extends Controller
                 .'max_width=5000,max_height=5000',
         ]);
 
-        if ( $request->has('picture') ) {
-            $image_path = $request->image->store(
-                "profile_pictures/{$this->user->id}", 'public'
+        if ( $request->has('profile_picture') ) {
+            $request_file = $request->file('profile_picture');
+
+            $image_path = $request_file->storeAs(
+                'profile_pictures',
+                "{$this->user->id}.{$request_file->extension()}",
+                'public',
             );
 
             $image = Image::make(public_path("storage/{$image_path}"))
