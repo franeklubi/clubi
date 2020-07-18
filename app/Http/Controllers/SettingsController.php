@@ -75,8 +75,11 @@ class SettingsController extends Controller
                 'alpha_dash',
             ],
             'description' => '',
-            'profile_picture' => 'dimensions:min_width=250,min_height=250,'
-                .'max_width=5000,max_height=5000',
+            'profile_picture' => [
+                'image',
+                'dimensions:min_width=250,min_height=250,'.
+                    'max_width=5000,max_height=5000',
+            ],
         ]);
 
         if ( $request->has('profile_picture') ) {

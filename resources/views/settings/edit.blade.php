@@ -12,6 +12,13 @@
                         <h1>Edit Profile</h1>
                     </div>
 
+                    <div class="p-5">
+                        <img
+                            src="/storage/{{ $user->profile->profile_picture }}"
+                            class="rouded-circle w-50"
+                        >
+                    </div>
+
                     {{-- change username --}}
                     <div class="form-group row">
                         <label for="username" class="col-md-4 col-form-label">
