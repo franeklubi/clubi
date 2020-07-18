@@ -14,7 +14,7 @@
 
                     <div class="p-5">
                         <img
-                            src="/storage/{{ $user->profile->profile_picture }}"
+                            src="{{ $user->profile->profile_picture }}"
                             class="rouded-circle w-50"
                         >
                     </div>

@@ -85,13 +85,13 @@ class SettingsController extends Controller
         if ( $request->has('profile_picture') ) {
             $request_file = $request->file('profile_picture');
 
-            $image_path = $request_file->storeAs(
+            $image_path = '/storage/'.$request_file->storeAs(
                 'profile_pictures',
                 "{$this->user->id}.{$request_file->extension()}",
                 'public',
             );
 
-            $image = Image::make(public_path("storage/{$image_path}"))
+            $image = Image::make(public_path($image_path))
                 ->fit(1000, 1000);
             $image->save();
 
