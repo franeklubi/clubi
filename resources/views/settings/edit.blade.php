@@ -12,6 +12,12 @@
                         <h1>Edit Profile</h1>
                     </div>
 
+                    @if ( Session::has('status') )
+                        <div class="alert alert-success">
+                            {{ Session::get('status') }}
+                        </div>
+                    @endif
+
                     <div class="p-5">
                         <img
                             src="{{ $user->profile->profile_picture }}"
