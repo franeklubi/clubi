@@ -19,6 +19,34 @@
                         >
                     </div>
 
+                    {{-- checkbox to indicate if to remove the profile_picture
+                    --}}
+                    <div class="row">
+                        <label for="remove_profile_picture">
+                            delete profile picture
+                        </label>
+                        <input type="checkbox" name="remove_profile_picture">
+                    </div>
+
+                    {{-- change profile_picture --}}
+                    <div class="row pb-3">
+                        <label for="profile_picture"
+                            class="col-md-4 col-form-label"
+                        >
+                            profile picture
+                        </label>
+                        <input name="profile_picture"
+                            type="file" class="form-control-file"
+                            id="profile_picture"
+                        >
+
+                        @error('profile_picture')
+                            <strong>
+                                {{ $errors->first('profile_picture') }}
+                            </strong>
+                        @enderror
+                    </div>
+
                     {{-- change username --}}
                     <div class="form-group row">
                         <label for="username" class="col-md-4 col-form-label">
@@ -60,25 +88,6 @@
                         @error('description')
                             <strong>
                                 {{ $errors->first('description') }}
-                            </strong>
-                        @enderror
-                    </div>
-
-                    {{-- change profile_picture --}}
-                    <div class="row pt-3">
-                        <label for="profile_picture"
-                            class="col-md-4 col-form-label"
-                        >
-                            profile picture
-                        </label>
-                        <input name="profile_picture"
-                            type="file" class="form-control-file"
-                            id="profile_picture"
-                        >
-
-                        @error('profile_picture')
-                            <strong>
-                                {{ $errors->first('profile_picture') }}
                             </strong>
                         @enderror
                     </div>
