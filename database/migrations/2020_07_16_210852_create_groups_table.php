@@ -18,8 +18,9 @@ class CreateGroupsTable extends Migration
             $table->timestamps();
 
             $table->foreignId('owner_id')->references('id')->on('users');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('banner_picture')->nullable();
+            $table->boolean('private')->default('false');
         });
     }
 
