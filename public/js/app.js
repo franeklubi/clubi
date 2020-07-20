@@ -1936,6 +1936,25 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: {
     create: Boolean,
@@ -1945,20 +1964,65 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       preview_image: this.group.banner_picture,
-      "private": false
+      group_private: this.group["private"],
+      group_name: this.group.name,
+      group_banner_remove: false,
+      files: [],
+      feedback: ''
     };
   },
   methods: {
     updatePreview: function updatePreview(event) {
-      var files = event.target.files;
-      this.preview_image = window.URL.createObjectURL(files[0]);
+      this.files = event.target.files;
+      this.preview_image = window.URL.createObjectURL(this.files[0]);
     },
     applyChanges: function applyChanges() {
-      console.log('post to /groups');
+      var _this = this;
+
+      var headers = {
+        headers: {
+          'content-type': 'multipart/form-data'
+        }
+      };
+      var post_path = '/groups';
+
+      if (!this.create) {
+        post_path += '/' + this.group.name;
+      }
+
+      var post_data = new FormData(); // check if a different image has been selected
+
+      if (this.group.banner_picture != this.preview_image) {
+        post_data.append('banner_picture', this.files[0]);
+      }
+
+      post_data.append('name', this.group_name);
+      post_data.append('private', this.group_private ? '1' : '0');
+      post_data.append('remove_banner_picture', this.group_banner_remove ? '1' : '0');
+      axios.post(post_path, post_data, headers).then(function (res) {
+        if (_this.create) {
+          window.location.href = '/groups/' + _this.group_name;
+        }
+      })["catch"](function (err) {
+        var errors_object = err.response.data.errors;
+        _this.feedback = '';
+
+        for (var key in errors_object) {
+          _this.feedback += errors_object[key];
+        }
+      });
     }
   },
   mounted: function mounted() {
-    console.log(this.group, this.editable, this.action);
+    if (typeof this.group_name == 'undefined') {
+      this.group_name = '';
+    }
+
+    if (typeof this.group_private == 'undefined') {
+      this.group_private = false;
+    }
+
+    console.log(this.group_private, this.group_name, this.editable, this.create);
   }
 });
 
@@ -37565,21 +37629,27 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.group.name,
-                  expression: "group.name"
+                  value: _vm.group_name,
+                  expression: "group_name"
                 }
               ],
               attrs: { type: "text", placeholder: "name" },
-              domProps: { value: _vm.group.name },
+              domProps: { value: _vm.group_name },
               on: {
                 input: function($event) {
                   if ($event.target.composing) {
                     return
                   }
-                  _vm.$set(_vm.group, "name", $event.target.value)
+                  _vm.group_name = $event.target.value
                 }
               }
             }),
+            _vm._v(" "),
+            !_vm.group_name
+              ? _c("p", [
+                  _vm._v("\n                Name is required!\n            ")
+                ])
+              : _vm._e(),
             _vm._v(" "),
             _c("img", {
               staticClass: "w-100",
@@ -37591,6 +37661,8 @@ var render = function() {
               on: { change: _vm.updatePreview }
             }),
             _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
             _c("label", { attrs: { for: "private_ch" } }, [
               _vm._v("private group")
             ]),
@@ -37600,34 +37672,76 @@ var render = function() {
                 {
                   name: "model",
                   rawName: "v-model",
-                  value: _vm.private,
-                  expression: "private"
+                  value: _vm.group_private,
+                  expression: "group_private"
                 }
               ],
               attrs: { id: "private_ch", type: "checkbox" },
               domProps: {
-                checked: Array.isArray(_vm.private)
-                  ? _vm._i(_vm.private, null) > -1
-                  : _vm.private
+                checked: Array.isArray(_vm.group_private)
+                  ? _vm._i(_vm.group_private, null) > -1
+                  : _vm.group_private
               },
               on: {
                 change: function($event) {
-                  var $$a = _vm.private,
+                  var $$a = _vm.group_private,
                     $$el = $event.target,
                     $$c = $$el.checked ? true : false
                   if (Array.isArray($$a)) {
                     var $$v = null,
                       $$i = _vm._i($$a, $$v)
                     if ($$el.checked) {
-                      $$i < 0 && (_vm.private = $$a.concat([$$v]))
+                      $$i < 0 && (_vm.group_private = $$a.concat([$$v]))
                     } else {
                       $$i > -1 &&
-                        (_vm.private = $$a
+                        (_vm.group_private = $$a
                           .slice(0, $$i)
                           .concat($$a.slice($$i + 1)))
                     }
                   } else {
-                    _vm.private = $$c
+                    _vm.group_private = $$c
+                  }
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "remove_banner" } }, [
+              _vm._v("remove banner")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.group_banner_remove,
+                  expression: "group_banner_remove"
+                }
+              ],
+              attrs: { type: "checkbox", id: "remove_banner" },
+              domProps: {
+                checked: Array.isArray(_vm.group_banner_remove)
+                  ? _vm._i(_vm.group_banner_remove, null) > -1
+                  : _vm.group_banner_remove
+              },
+              on: {
+                change: function($event) {
+                  var $$a = _vm.group_banner_remove,
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = null,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 && (_vm.group_banner_remove = $$a.concat([$$v]))
+                    } else {
+                      $$i > -1 &&
+                        (_vm.group_banner_remove = $$a
+                          .slice(0, $$i)
+                          .concat($$a.slice($$i + 1)))
+                    }
+                  } else {
+                    _vm.group_banner_remove = $$c
                   }
                 }
               }
@@ -37635,10 +37749,19 @@ var render = function() {
             _vm._v(" "),
             _c("br"),
             _vm._v(" "),
+            _vm.feedback
+              ? _c("p", { staticStyle: { color: "red" } }, [
+                  _vm._v(_vm._s(_vm.feedback))
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("br"),
+            _vm._v(" "),
             _c(
               "button",
               {
                 staticClass: "btn btn-primary",
+                attrs: { disabled: !_vm.group_name },
                 on: { click: _vm.applyChanges }
               },
               [
@@ -37657,7 +37780,9 @@ var render = function() {
             }),
             _vm._v(" "),
             _c("p", [
-              _vm._v(_vm._s(_vm.private ? "private group" : "public group"))
+              _vm._v(
+                _vm._s(_vm.group_private ? "private group" : "public group")
+              )
             ])
           ])
     ])
@@ -50002,8 +50127,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! /home/franek/Atom/work_dir/club/resources/js/app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! /home/franek/Atom/work_dir/club/resources/sass/app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! /home/franek/work_dir/club/resources/js/app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! /home/franek/work_dir/club/resources/sass/app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
