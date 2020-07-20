@@ -14,4 +14,16 @@ class Group extends Model
     public function getBannerPictureAttribute($value) {
         return $value ? $value : '/const_assets/default_banner_picture.png';
     }
+
+    public function getRouteKeyName() {
+        return 'id_string';
+    }
+
+    public function owner() {
+        return $this->belongsTo('App\User', 'owner_id');
+    }
+
+    public function members() {
+        return $this->belongsToMany('App\User');
+    }
 }

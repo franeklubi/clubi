@@ -2001,7 +2001,7 @@ __webpack_require__.r(__webpack_exports__);
       post_data.append('remove_banner_picture', this.group_banner_remove ? '1' : '0');
       axios.post(post_path, post_data, headers).then(function (res) {
         if (_this.create) {
-          window.location.href = '/groups/' + _this.group_name;
+          window.location.href = '/groups/' + res.data.string_id;
         }
       })["catch"](function (err) {
         var errors_object = err.response.data.errors;

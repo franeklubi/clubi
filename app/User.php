@@ -49,4 +49,14 @@ class User extends Authenticatable
     public function profile() {
         return $this->hasOne('App\Profile');
     }
+
+
+    public function ownsGroups() {
+        return $this->hasMany('App\Group', 'owner_id');
+    }
+
+
+    public function memberOfGroups() {
+        return $this->belongsToMany('App\Group');
+    }
 }

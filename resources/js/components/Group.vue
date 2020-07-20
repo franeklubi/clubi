@@ -93,7 +93,7 @@
 
                 axios.post(post_path, post_data, headers).then((res) => {
                     if ( this.create ) {
-                        window.location.href = '/groups/'+this.group_name;
+                        window.location.href = '/groups/'+res.data.string_id;
                     }
                 }).catch((err) => {
                     let errors_object = err.response.data.errors;
