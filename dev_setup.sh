@@ -5,6 +5,8 @@
 
 
 composer i
+npm i
+npm run dev
 cp .env.example .env
 ./artisan key:generate
 vim .env
