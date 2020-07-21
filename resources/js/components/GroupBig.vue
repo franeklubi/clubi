@@ -81,7 +81,10 @@
                 let post_data = new FormData();
 
                 // check if a different image has been selected
-                if ( this.group.banner_picture != this.preview_image ) {
+                if (
+                    this.group.banner_picture != this.preview_image
+                    && !this.group_banner_remove
+                ) {
                     post_data.append('banner_picture', this.files[0])
                 }
 
@@ -96,11 +99,7 @@
                         window.location.href = '/groups/'+res.data.string_id;
                     }
                 }).catch((err) => {
-                    let errors_object = err.response.data.errors;
-                    this.feedback = '';
-                    for ( const key in errors_object ) {
-                        this.feedback += errors_object[key];
-                    }
+                    this.feedback = this.handleAxiosError(err);
                 });
             },
         },

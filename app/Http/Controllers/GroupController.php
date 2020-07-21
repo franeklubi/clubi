@@ -44,6 +44,8 @@ class GroupController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Group::class);
+
         $auth_user = auth()->user();
 
         $validated_data = $request->validate([
@@ -107,8 +109,9 @@ class GroupController extends Controller
      */
     public function show(Group $group)
     {
-        dd($group->name, $group->id_string, $group->members);
-        return view('groups.show');
+        $this->authorize('view', $group);
+
+        return view('groups.show', ['group' => $group]);
     }
 
     /**

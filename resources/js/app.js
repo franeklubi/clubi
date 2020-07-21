@@ -8,6 +8,29 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
+Vue.mixin({
+    methods: {
+        handleAxiosError: function(err) {
+            let validation_errors = err.response.data.errors;
+            let feedback = '';
+            if ( typeof validation_errors != 'undefined' ) {
+                for ( const key in validation_errors ) {
+                    let add = '';
+                    if ( typeof validation_errors[key] != 'string' ) {
+                        add = validation_errors[key][0];
+                    } else {
+                        add = validation_errors[key];
+                    }
+                    feedback += add;
+                }
+            } else {
+                feedback += err.response.data.message;
+            }
+            return feedback;
+        }
+    }
+})
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -20,8 +43,8 @@ window.Vue = require('vue');
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component(
-    'group',
-    require('./components/Group.vue').default
+    'group-big',
+    require('./components/GroupBig.vue').default
 );
 
 /**
