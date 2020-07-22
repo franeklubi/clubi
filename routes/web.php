@@ -36,3 +36,7 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/groups/{group}', 'GroupController@show')
     ->name('groups.show');
+
+Route::get('/groups/{group}/posts/{post}', 'PostController@show')
+    ->middleware('can:view,group')
+    ->name('posts.show');

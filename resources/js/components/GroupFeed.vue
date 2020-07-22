@@ -5,8 +5,7 @@
         />
         <div v-for="post in posts" :key="post.id">
             <group-post
-                :user="post.user"
-                :content="post.content"
+                :post="post"
             />
         </div>
     </div>
@@ -27,6 +26,7 @@
         methods: {
             addPost(new_post) {
                 const { text } = new_post;
+                console.log(text);
             }
         },
 

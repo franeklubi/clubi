@@ -28,6 +28,6 @@ class Group extends Model
     }
 
     public function posts() {
-        return $this->hasMany('App\Post')->with('user.profile');
+        return $this->hasMany('App\Post')->with(['user.profile', 'group']);
     }
 }
