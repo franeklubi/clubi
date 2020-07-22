@@ -8,10 +8,10 @@
                 <div class="card-header">{{ __('Create group') }}</div>
 
                 <div class="card-body">
-                    <group-big
+                    <group-header
                         :create="true"
                         :group="{{ $group }}"
-                    ></group-big>
+                    ></group-header>
                 </div>
             </div>
         </div>

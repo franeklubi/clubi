@@ -43,10 +43,24 @@ Vue.mixin({
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 Vue.component(
-    'group-big',
-    require('./components/GroupBig.vue').default
+    'group-add-post',
+    require('./components/GroupAddPost.vue').default
 );
 
+Vue.component(
+    'group-feed',
+    require('./components/GroupFeed.vue').default
+);
+
+Vue.component(
+    'group-header',
+    require('./components/GroupHeader.vue').default
+);
+
+Vue.component(
+    'group-post',
+    require('./components/GroupPost.vue').default
+);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
