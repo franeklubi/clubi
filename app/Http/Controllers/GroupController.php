@@ -111,7 +111,17 @@ class GroupController extends Controller
     {
         $this->authorize('view', $group);
 
-        return view('groups.show', ['group' => $group]);
+        // check if owner or admin
+        $editable = false;
+        if ( auth()->check() ) {
+            $user = auth()->user();
+            $editable = $user->can('update', $group);
+        }
+
+        return view('groups.show', [
+            'group' => $group,
+            'editable' => $editable,
+        ]);
     }
 
     /**

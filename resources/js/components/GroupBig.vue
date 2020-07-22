@@ -111,7 +111,6 @@
             if ( typeof this.group_private == 'undefined' ) {
                 this.group_private = false;
             }
-            console.log(this.group_private, this.group_name, this.editable, this.create);
         },
     }
 </script>

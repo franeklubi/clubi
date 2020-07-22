@@ -37,20 +37,27 @@ class GroupPolicy
      * @param  \App\Group  $group
      * @return boolean
      */
-    public function view(User $user, Group $group)
+    public function view(?User $user, Group $group)
     {
         // if group is not private
         if ( !$group->private ) {
             return true;
         }
 
+        // all cases below are checked only if the group is private
+
+        // if guest
+        if ( $user == null ) {
+            return false;
+        }
+
         // if user's the group owner
-        if ( $group->owner->id == $user->id ) {
+        if ( $group->owner_id == $user->id ) {
             return true;
         }
 
         // if user belongs to the group
-        if ( $group->members->has($user->id) ) {
+        if ( $group->members->contains($user) ) {
             return true;
         }
 
@@ -75,11 +82,11 @@ class GroupPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Group  $group
-     * @return mixed
+     * @return boolean
      */
     public function update(User $user, Group $group)
     {
-        //
+        return ($group->owner_id == $user->id);
     }
 
     /**
