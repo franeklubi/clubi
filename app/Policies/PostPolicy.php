@@ -10,6 +10,13 @@ class PostPolicy
 {
     use HandlesAuthorization;
 
+    // check if admin
+    public function before(User $user, $ability) {
+        if ( $user->is_admin ) {
+            return true;
+        }
+    }
+
     /**
      * Determine whether the user can view any models.
      *
@@ -37,11 +44,12 @@ class PostPolicy
      * Determine whether the user can create models.
      *
      * @param  \App\User  $user
+     * @param  \App\Group $group
      * @return mixed
      */
-    public function create(User $user)
+    public function create(User $user, \App\Group $group)
     {
-        //
+        return $group->members->contains($user);
     }
 
     /**

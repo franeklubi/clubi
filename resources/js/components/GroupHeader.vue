@@ -75,7 +75,7 @@
 
                 let post_path = '/groups';
                 if ( !this.create ) {
-                    post_path += '/'+this.group.name;
+                    post_path += '/'+this.group.id_string;
                 }
 
                 let post_data = new FormData();

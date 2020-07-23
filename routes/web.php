@@ -31,6 +31,10 @@ Route::middleware('auth')->group(function () {
         ->name('groups.create');
 
     Route::post('/groups', 'GroupController@store')->name('groups.store');
+
+    Route::post('/groups/{group}/posts', 'PostController@store')
+        ->middleware('can:view,group')
+        ->name('posts.store');
 });
 
 

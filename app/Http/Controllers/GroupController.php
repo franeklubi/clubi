@@ -46,7 +46,7 @@ class GroupController extends Controller
     {
         $this->authorize('create', Group::class);
 
-        $auth_user = auth()->user();
+        $auth_user = $request->user();
 
         $validated_data = $request->validate([
             'name' => [

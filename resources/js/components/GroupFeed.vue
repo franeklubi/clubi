@@ -3,8 +3,10 @@
         <group-add-post
             @add-post="addPost"
         />
-        <div v-for="post in posts" :key="post.id">
+        {{ feedback }}
+        <div v-for="post in posts_render" :key="post.id">
             <group-post
+                class="pb-3"
                 :post="post"
             />
         </div>
@@ -20,13 +22,26 @@
 
         data: function () {
             return {
+                feedback: '',
+                posts_render: this.posts,
             }
         },
 
         methods: {
             addPost(new_post) {
                 const { text } = new_post;
-                console.log(text);
+
+                let post_data = new FormData();
+
+                post_data.append('content', text);
+
+                // assuming you're in /groups/*/
+                axios.post('posts', post_data).then((res) => {
+                    this.posts_render.unshift(res.data);
+                }).catch((err) => {
+                    console.log('errorr kurwaawa', err);
+                    this.feedback = this.handleAxiosError(err);
+                });
             }
         },
 

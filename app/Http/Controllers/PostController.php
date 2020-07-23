@@ -33,9 +33,27 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, \App\Group $group)
     {
-        //
+        $this->authorize('create', [Post::class, $group]);
+
+        $auth_user = $request->user();
+
+        $validated_data = $request->validate([
+            'content' => [
+                'required',
+                'min:4',
+                'max:5000',
+            ],
+            'image' => '',
+        ]);
+
+        $post = $group->posts()->create([
+            'user_id' => $auth_user->id,
+            'content' => $validated_data['content'],
+        ]);
+
+        return response($post->load(['user.profile', 'group']));
     }
 
     /**

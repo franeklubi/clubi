@@ -28,6 +28,8 @@ class Group extends Model
     }
 
     public function posts() {
-        return $this->hasMany('App\Post')->with(['user.profile', 'group']);
+        return $this->hasMany('App\Post')
+            ->with(['user.profile', 'group'])
+            ->orderBy('created_at', 'DESC');
     }
 }
