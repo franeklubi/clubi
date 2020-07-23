@@ -111,6 +111,9 @@
             if ( typeof this.group_private == 'undefined' ) {
                 this.group_private = false;
             }
+
+            // cast laravel's bool to js bool
+            this.group_private = Boolean(Number(this.group_private));
         },
     }
 </script>

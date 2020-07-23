@@ -18,6 +18,7 @@
         props: {
             posts: Array,
             is_group_admin: Boolean,
+            group_id_string: String,
         },
 
         data: function () {
@@ -31,15 +32,15 @@
             addPost(new_post) {
                 const { text } = new_post;
 
+                let post_path = '/groups/'+this.group_id_string+'/posts';
+
                 let post_data = new FormData();
 
                 post_data.append('content', text);
 
-                // assuming you're in /groups/*/
-                axios.post('posts', post_data).then((res) => {
+                axios.post(post_path, post_data).then((res) => {
                     this.posts_render.unshift(res.data);
                 }).catch((err) => {
-                    console.log('errorr kurwaawa', err);
                     this.feedback = this.handleAxiosError(err);
                 });
             }

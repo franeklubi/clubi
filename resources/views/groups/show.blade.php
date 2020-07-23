@@ -11,6 +11,7 @@
         <group-feed
             :posts="{{ $group->posts }}"
             :is_group_admin="{{ $editable?'true':'false' }}"
+            group_id_string="{{ $group->id_string }}"
         ></group-feed>
     </div>
 </div>
