@@ -1,6 +1,7 @@
 <template>
     <div class="container">
         <group-add-post
+            v-if="is_member"
             @add-post="addPost"
         />
         {{ feedback }}
@@ -17,6 +18,7 @@
     export default {
         props: {
             posts: Array,
+            is_member: Boolean,
             is_group_admin: Boolean,
             group_id_string: String,
         },

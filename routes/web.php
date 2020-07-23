@@ -35,6 +35,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/groups/{group}/posts', 'PostController@store')
         ->middleware('can:view,group')
         ->name('posts.store');
+
+    Route::post('/groups/{group}/join', 'GroupMembershipController@store')
+        ->middleware('can:view,group')
+        ->name('groups.membership');
 });
 
 

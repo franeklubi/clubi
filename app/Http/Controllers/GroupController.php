@@ -113,14 +113,17 @@ class GroupController extends Controller
 
         // check if owner or admin
         $editable = false;
+        $is_member = false;
         if ( auth()->check() ) {
             $user = auth()->user();
             $editable = $user->can('update', $group);
+            $is_member = $user->memberOfGroups->contains($group);
         }
 
         return view('groups.show', [
             'group' => $group,
             'editable' => $editable,
+            'is_member' => $is_member,
         ]);
     }
 

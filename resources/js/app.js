@@ -48,6 +48,11 @@ Vue.component(
 );
 
 Vue.component(
+    'group-container',
+    require('./components/GroupContainer.vue').default
+);
+
+Vue.component(
     'group-feed',
     require('./components/GroupFeed.vue').default
 );
@@ -61,6 +66,12 @@ Vue.component(
     'group-post',
     require('./components/GroupPost.vue').default
 );
+
+Vue.component(
+    'group-toggle-join',
+    require('./components/GroupToggleJoin.vue').default
+);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
