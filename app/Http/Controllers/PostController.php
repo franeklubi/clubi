@@ -46,8 +46,11 @@ class PostController extends Controller
             'content' => 'max:5000',
             'picture' => [
                 'image',
-                'dimensions:min_width=250,min_height=250,'.
-                    'max_width=5000,max_height=5000',
+                'dimensions:'
+                    .'min_width='.config('consts.post_picture.min_width')
+                    .',min_height='.config('consts.post_picture.min_height')
+                    .',max_width='.config('consts.post_picture.max_width')
+                    .',max_height='.config('consts.post_picture.max_height')
             ],
         ]);
 
@@ -68,10 +71,14 @@ class PostController extends Controller
             );
 
             $picture = Image::make(public_path($picture_path));
-            $picture->resize(1920, 1080, function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
+            $picture->resize(
+                config('consts.post_picture.fit_width'),
+                config('consts.post_picture.fit_height'),
+                function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                }
+            );
             $picture->save();
 
             $validated_data = array_merge(

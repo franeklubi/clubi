@@ -77,8 +77,11 @@ class SettingsController extends Controller
             'description' => '',
             'profile_picture' => [
                 'image',
-                'dimensions:min_width=250,min_height=250,'.
-                    'max_width=5000,max_height=5000',
+                'dimensions:'
+                    .'min_width='.config('consts.profile_picture.min_width')
+                    .',min_height='.config('consts.profile_picture.min_height')
+                    .',max_width='.config('consts.profile_picture.max_width')
+                    .',max_height='.config('consts.profile_picture.max_height')
             ],
             'remove_profile_picture' => '',
         ]);
@@ -92,8 +95,10 @@ class SettingsController extends Controller
                 'public',
             );
 
-            $image = Image::make(public_path($image_path))
-                ->fit(1000, 1000);
+            $image = Image::make(public_path($image_path))->fit(
+                config('consts.profile_picture.fit_width'),
+                config('consts.profile_picture.fit_height')
+            );
             $image->save();
 
             $validated_data = array_merge(

@@ -55,8 +55,11 @@ class GroupController extends Controller
             ],
             'banner_picture' => [
                 'image',
-                'dimensions:min_width=250,min_height=250,'.
-                    'max_width=5000,max_height=5000',
+                'dimensions:'
+                    .'min_width='.config('consts.banner_picture.min_width')
+                    .',min_height='.config('consts.banner_picture.min_height')
+                    .',max_width='.config('consts.banner_picture.max_width')
+                    .',max_height='.config('consts.banner_picture.max_height')
             ],
             'private' => 'boolean',
             'remove_banner_picture' => 'boolean',
@@ -70,8 +73,15 @@ class GroupController extends Controller
                 'public',
             );
 
-            $image = Image::make(public_path($image_path))
-                ->fit(1500);
+            $image = Image::make(public_path($image_path));
+            $image->resize(
+                config('consts.banner_picture.fit_width'),
+                config('consts.banner_picture.fit_height'),
+                function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                }
+            );
             $image->save();
 
             $validated_data = array_merge(
