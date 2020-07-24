@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Post;
 use Illuminate\Http\Request;
 
+use Validator;
+use Intervention\Image\Facades\Image;
+
 class PostController extends Controller
 {
     /**
@@ -39,19 +42,48 @@ class PostController extends Controller
 
         $auth_user = $request->user();
 
-        $validated_data = $request->validate([
-            'content' => [
-                'required',
-                'min:4',
-                'max:5000',
+        $validator = Validator::make($request->all(), [
+            'content' => 'max:5000',
+            'picture' => [
+                'image',
+                'dimensions:min_width=250,min_height=250,'.
+                    'max_width=5000,max_height=5000',
             ],
-            'image' => '',
         ]);
 
-        $post = $group->posts()->create([
-            'user_id' => $auth_user->id,
-            'content' => $validated_data['content'],
-        ]);
+        $validator->sometimes('content', 'required',
+            function ($input) {
+                return $input->picture == null;
+            }
+        );
+
+        $validated_data = $validator->validate();
+
+        if ( $request->has('picture') ) {
+            $request_file = $request->file('picture');
+
+            $picture_path = '/storage/'.$request_file->store(
+                'post_pictures/'.$auth_user->id,
+                'public',
+            );
+
+            $picture = Image::make(public_path($picture_path));
+            $picture->resize(1920, 1080, function ($constraint) {
+                $constraint->aspectRatio();
+                $constraint->upsize();
+            });
+            $picture->save();
+
+            $validated_data = array_merge(
+                $validated_data, ['picture' => $picture_path]
+            );
+        }
+
+        $validated_data = array_merge(
+            $validated_data, ['user_id' => $auth_user->id]
+        );
+
+        $post = $group->posts()->create($validated_data);
 
         return response($post->load(['user.profile', 'group']));
     }

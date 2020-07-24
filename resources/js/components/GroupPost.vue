@@ -30,6 +30,7 @@
                     {{ post.content }}
                 </p>
             </div>
+            <img class="w-100" :src="post.picture" alt="">
         </div>
     </div>
 </template>
