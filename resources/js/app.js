@@ -42,6 +42,7 @@ Vue.mixin({
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
+// group components
 Vue.component(
     'group-add-post',
     require('./components/group/GroupAddPost.vue').default
@@ -63,13 +64,14 @@ Vue.component(
 );
 
 Vue.component(
-    'group-post',
-    require('./components/group/GroupPost.vue').default
-);
-
-Vue.component(
     'group-toggle-join',
     require('./components/group/GroupToggleJoin.vue').default
+);
+
+// post components
+Vue.component(
+    'post-item',
+    require('./components/post/PostItem.vue').default
 );
 
 /**

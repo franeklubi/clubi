@@ -6,7 +6,7 @@
         />
         {{ feedback }}
         <div v-for="post in posts_to_render" :key="post.id">
-            <group-post
+            <post-item
                 class="pb-3"
                 :post="post"
             />
