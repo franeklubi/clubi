@@ -44,32 +44,32 @@ Vue.mixin({
 
 Vue.component(
     'group-add-post',
-    require('./components/GroupAddPost.vue').default
+    require('./components/group/GroupAddPost.vue').default
 );
 
 Vue.component(
     'group-container',
-    require('./components/GroupContainer.vue').default
+    require('./components/group/GroupContainer.vue').default
 );
 
 Vue.component(
     'group-feed',
-    require('./components/GroupFeed.vue').default
+    require('./components/group/GroupFeed.vue').default
 );
 
 Vue.component(
     'group-header',
-    require('./components/GroupHeader.vue').default
+    require('./components/group/GroupHeader.vue').default
 );
 
 Vue.component(
     'group-post',
-    require('./components/GroupPost.vue').default
+    require('./components/group/GroupPost.vue').default
 );
 
 Vue.component(
     'group-toggle-join',
-    require('./components/GroupToggleJoin.vue').default
+    require('./components/group/GroupToggleJoin.vue').default
 );
 
 /**
