@@ -70,6 +70,16 @@ Vue.component(
 
 // post components
 Vue.component(
+    'post-add-comment',
+    require('./components/post/PostAddComment.vue').default
+);
+
+Vue.component(
+    'post-comment-feed',
+    require('./components/post/PostCommentFeed.vue').default
+);
+
+Vue.component(
     'post-item',
     require('./components/post/PostItem.vue').default
 );
