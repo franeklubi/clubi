@@ -28,12 +28,7 @@ class GroupController extends Controller
      */
     public function create()
     {
-        $group = new \App\Group;
-        // setting banner to default accessor value so that vue doesn't have
-        // to resolve it by itself
-        $group->banner_picture = $group->banner_picture;
-
-        return view('groups.create', ['group' => $group]);
+        return view('groups.create');
     }
 
     /**

@@ -33,7 +33,9 @@
                 </div>
                 <img class="w-100" :src="post.picture" alt="">
                 <div class="card-footer">
-                    <post-comment-feed />
+                    <post-comment-feed
+                        :comments="post.comments"
+                    />
                 </div>
             </div>
         </div>

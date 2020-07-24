@@ -8,15 +8,6 @@ use Intervention\Image\Facades\Image;
 
 class SettingsController extends Controller
 {
-    public function __construct() {
-        // bind $this->user to the authenticated user
-        $this->middleware(function ($request, $next) {
-            $this->user = auth()->user();
-
-            return $next($request);
-        });
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -56,7 +47,7 @@ class SettingsController extends Controller
      */
     public function edit()
     {
-        return view('settings.edit', ['user' => $this->user]);
+        return view('settings.edit', ['user' => auth()->user()]);
     }
 
     /**
@@ -71,7 +62,7 @@ class SettingsController extends Controller
         $validated_data = $request->validate([
             'username' => [
                 'required',
-                'unique:users,username,'.$this->user->id,
+                'unique:users,username,'.$request->user()->id,
                 'alpha_dash',
             ],
             'description' => '',
@@ -91,7 +82,7 @@ class SettingsController extends Controller
 
             $image_path = '/storage/'.$request_file->storeAs(
                 'profile_pictures',
-                "{$this->user->id}.{$request_file->extension()}",
+                "{$request->user()->id}.{$request_file->extension()}",
                 'public',
             );
 
@@ -115,8 +106,8 @@ class SettingsController extends Controller
 
         unset($validated_data['username']);
 
-        $this->user->profile->update($validated_data);
-        $this->user->update($user_data);
+        $request->user()->profile->update($validated_data);
+        $request->user()->update($user_data);
 
         return redirect('settings')->with('status', 'Update successful!');
     }

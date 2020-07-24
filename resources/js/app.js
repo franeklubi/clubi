@@ -80,6 +80,11 @@ Vue.component(
 );
 
 Vue.component(
+    'post-comment-item',
+    require('./components/post/PostCommentItem.vue').default
+);
+
+Vue.component(
     'post-item',
     require('./components/post/PostItem.vue').default
 );

@@ -14,6 +14,6 @@ class Profile extends Model
 
     // accessor for the profile picture
     public function getProfilePictureAttribute($value) {
-        return $value ? $value : '/const_assets/default_profile_picture.png';
+        return $value ? $value : config('consts.default_profile_picture_path');
     }
 }

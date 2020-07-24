@@ -15,4 +15,8 @@ class Post extends Model
     public function group() {
         return $this->belongsTo('App\Group');
     }
+
+    public function comments() {
+        return $this->hasMany('App\Comment')->latest();
+    }
 }

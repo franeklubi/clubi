@@ -10,7 +10,7 @@
                 <div class="card-body">
                     <group-header
                         :create="true"
-                        :group="{{ $group }}"
+                        :group="{}"
                     ></group-header>
                 </div>
             </div>

@@ -12,7 +12,7 @@ class Group extends Model
 
     // accessor for the banner picture
     public function getBannerPictureAttribute($value) {
-        return $value ? $value : '/const_assets/default_banner_picture.png';
+        return $value ? $value : config('consts.default_banner_picture_path');
     }
 
     public function getRouteKeyName() {
@@ -29,7 +29,13 @@ class Group extends Model
 
     public function posts() {
         return $this->hasMany('App\Post')
-            ->with(['user.profile', 'group'])
-            ->orderBy('created_at', 'DESC');
+            ->with([
+                'user.profile',
+                'group',
+                'comments' => function ($query) {
+                    $query->with('user.profile')
+                        ->take(config('consts.comments_per_page'));
+                },
+            ])->orderBy('created_at', 'DESC');
     }
 }

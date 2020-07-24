@@ -38,7 +38,7 @@
             <!-- view just to display data. it's all temporary anyway -->
             <div v-else>
                 <p>{{ group.name }}</p>
-                <img :src="group.banner_picture" class="w-100">
+                <img :src="group_banner_picture" class="w-100">
                 <p>{{ group_private? "private group" : "public group" }}</p>
             </div>
         </div>
@@ -55,9 +55,10 @@
 
         data: function () {
             return {
-                preview_image: this.group.banner_picture,
                 group_private: this.group.private,
                 group_name: this.group.name,
+                group_banner_picture: this.group.banner_picture,
+                preview_image: this.group.banner_picture,
                 group_banner_remove: false,
                 files: [],
                 feedback: '',
@@ -82,7 +83,7 @@
 
                 // check if a different image has been selected
                 if (
-                    this.group.banner_picture != this.preview_image
+                    this.group_banner_picture != this.preview_image
                     && !this.group_banner_remove
                 ) {
                     post_data.append('banner_picture', this.files[0])
@@ -110,6 +111,11 @@
             }
             if ( typeof this.group_private == 'undefined' ) {
                 this.group_private = false;
+            }
+            if ( typeof this.group_banner_picture == 'undefined' ) {
+                this.group_banner_picture =
+                    process.env.MIX_DEFAULT_BANNER_PICTURE_PATH;
+                this.preview_image = this.group_banner_picture;
             }
 
             // cast laravel's bool to js bool

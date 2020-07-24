@@ -1,6 +1,10 @@
 <template>
     <div class="container">
         <div class="">
+            <post-comment-item
+                v-for="comment in reversedComments" :key="comment.id"
+                :comment="comment"
+            />
             <post-add-comment @add-comment="addComment"/>
         </div>
     </div>
@@ -9,37 +13,33 @@
 <script>
     export default {
         props: {
-
+            comments: Array,
         },
 
         data: function () {
             return {
-                comment_text: '',
-                picture_file: null,
-                preview_image: '',
+                comments_per_page: process.env.MIX_COMMENTS_PER_PAGE,
+                comments_to_render: this.comments,
+                current_page: 1,
             }
         },
 
         methods: {
-            updatePreview(event) {
-                this.picture_file = event.target.files[0];
-                this.preview_image = window.URL.createObjectURL(
-                    this.picture_file
-                );
-            },
-
             addComment(new_comment) {
                 const { text, picture_file } = new_comment;
 
-                console.log(text, picture_file, 'chuj');
+                console.log(text, picture_file);
             },
         },
 
         computed: {
-            commentReady() {
-                return this.comment_text.length > 4
-                    || this.picture_file != null;
+            reversedComments() {
+                return this.comments_to_render.slice().reverse();
             }
         },
+
+        mounted() {
+            console.log(this.comments);
+        }
     }
 </script>
