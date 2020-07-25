@@ -34,7 +34,7 @@
                 <img class="w-100" :src="post.picture" alt="">
                 <div class="card-footer">
                     <post-comment-feed
-                        :comments="post.comments"
+                        :post="post"
                     />
                 </div>
             </div>
@@ -54,6 +54,10 @@
             relativeTime: function () {
                 return moment(this.post.created_at).fromNow();
             }
+        },
+
+        mounted() {
+            console.log('pizda', this.post);
         }
     }
 </script>

@@ -3,7 +3,7 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-	    <group-post
+	    <post-item
 	        :post="{{ $post }}"
 	    />
     </div>

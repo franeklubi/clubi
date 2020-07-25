@@ -39,12 +39,25 @@ Route::middleware('auth')->group(function () {
     Route::post('/groups/{group}/join', 'GroupMembershipController@store')
         ->middleware('can:view,group')
         ->name('groups.membership');
+
+    Route::post(
+        '/groups/{group}/posts/{post}/comments',
+        'CommentController@store'
+    )->middleware(['can:view,group'])
+        ->name('comments.store');
 });
 
 
 Route::get('/groups/{group}', 'GroupController@show')
     ->name('groups.show');
 
+
 Route::get('/groups/{group}/posts/{post}', 'PostController@show')
     ->middleware('can:view,group')
     ->name('posts.show');
+
+
+Route::get(
+    '/groups/{group}/posts/{post}/comments',
+    'CommentController@index'
+)->middleware('can:view,group')->name('comments.index');

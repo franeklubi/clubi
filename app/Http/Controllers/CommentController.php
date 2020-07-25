@@ -2,30 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Comment;
 use App\Post;
 use Illuminate\Http\Request;
 
 use Validator;
 use Intervention\Image\Facades\Image;
 
-class PostController extends Controller
+class CommentController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
+     * @param  \App\Group $group
+     * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(\App\Group $group, Post $post)
     {
-        //
+        $this->authorize('viewAny', [Comment::class, $group, $post]);
+
+        return $post->comments()->with('user.profile')
+            ->simplePaginate(config('consts.comments_per_page'));
     }
 
     /**
      * Show the form for creating a new resource.
      *
+     * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Post $post)
     {
         //
     }
@@ -34,23 +41,23 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Group $group
+     * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, \App\Group $group)
+    public function store(Request $request, \App\Group $group, Post $post)
     {
-        $this->authorize('create', [Post::class, $group]);
-
-        $auth_user = $request->user();
+        $this->authorize('create', [Comment::class, $group, $post]);
 
         $validator = Validator::make($request->all(), [
-            'content' => 'max:'.config('consts.max_post_length'),
+            'content' => 'max:'.config('consts.max_comment_length'),
             'picture' => [
                 'image',
                 'dimensions:'
-                    .'min_width='.config('consts.post_picture.min_width')
-                    .',min_height='.config('consts.post_picture.min_height')
-                    .',max_width='.config('consts.post_picture.max_width')
-                    .',max_height='.config('consts.post_picture.max_height')
+                    .'min_width='.config('consts.comment_picture.min_width')
+                    .',min_height='.config('consts.comment_picture.min_height')
+                    .',max_width='.config('consts.comment_picture.max_width')
+                    .',max_height='.config('consts.comment_picture.max_height')
             ],
         ]);
 
@@ -66,14 +73,14 @@ class PostController extends Controller
             $request_file = $request->file('picture');
 
             $picture_path = '/storage/'.$request_file->store(
-                'post_pictures/'.$auth_user->id,
+                'comment_pictures/'.$post->id,
                 'public',
             );
 
             $picture = Image::make(public_path($picture_path));
             $picture->resize(
-                config('consts.post_picture.fit_width'),
-                config('consts.post_picture.fit_height'),
+                config('consts.comment_picture.fit_width'),
+                config('consts.comment_picture.fit_height'),
                 function ($constraint) {
                     $constraint->aspectRatio();
                     $constraint->upsize();
@@ -87,36 +94,34 @@ class PostController extends Controller
         }
 
         $validated_data = array_merge(
-            $validated_data, ['user_id' => $auth_user->id]
+            $validated_data, ['user_id' => $request->user()->id]
         );
 
-        $post = $group->posts()->create($validated_data);
+        $comment = $post->comments()->create($validated_data);
 
-        return response($post->load(['user.profile', 'group']));
+        return response($comment->load(['user.profile']));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Group $group
      * @param  \App\Post  $post
+     * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function show(\App\Group $group, Post $post)
+    public function show(Post $post, Comment $comment)
     {
-        $this->authorize('view', [$post, $group]);
-        return view('posts.show', [
-            'post' => $post->load(['user.profile', 'group']),
-        ]);
+        //
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param  \App\Post  $post
+     * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function edit(Post $post)
+    public function edit(Post $post, Comment $comment)
     {
         //
     }
@@ -126,9 +131,10 @@ class PostController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Post  $post
+     * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post, Comment $comment)
     {
         //
     }
@@ -137,9 +143,10 @@ class PostController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Post  $post
+     * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post, Comment $comment)
     {
         //
     }

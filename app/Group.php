@@ -29,13 +29,7 @@ class Group extends Model
 
     public function posts() {
         return $this->hasMany('App\Post')
-            ->with([
-                'user.profile',
-                'group',
-                'comments' => function ($query) {
-                    $query->with('user.profile')
-                        ->take(config('consts.comments_per_page'));
-                },
-            ])->orderBy('created_at', 'DESC');
+            ->with(['user.profile','group'])
+            ->latest();
     }
 }

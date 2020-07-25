@@ -14,9 +14,14 @@
                     </span>
                     {{ relativeTime }}
                 </p>
-                <p class="card-body">
-                    {{ comment.content }}
-                </p>
+                <div v-if="comment.content" class="card-body">
+                    <p class="card-text">
+                        {{ comment.content }}
+                    </p>
+                </div>
+                <img v-if="comment.picture"
+                    class="w-100 p-1" :src="comment.picture" alt=""
+                >
             </div>
         </div>
     </div>
