@@ -47,9 +47,7 @@
                 axios.post(this.comments_url, post_data).then((res) => {
                     this.comments_to_render.unshift(res.data);
                     this.feedback = '';
-                    console.log('resss kurwaa', res);
                 }).catch((err) => {
-                    console.log('errr kurwaa', err);
                     this.feedback = this.handleAxiosError(err);
                 });
             },

@@ -9,6 +9,8 @@ use Intervention\Image\Facades\Image;
 
 use Illuminate\Support\Str;
 
+use App\Http\Controllers\PostController;
+
 class GroupController extends Controller
 {
     /**
@@ -125,8 +127,24 @@ class GroupController extends Controller
             $is_member = $user->memberOfGroups->contains($group);
         }
 
+        // call post controller for the paginated posts
+        $paginated_posts = app(PostController::class)->index($group);
+
+        // creating a collection of the first page of posts
+        $posts = collect($paginated_posts->items());
+
+        $next_page_url = null;
+        if ( $paginated_posts->hasMorePages() ) {
+            $next_page_url = route('posts.index', [
+                'group' => $group->id_string,
+                'page' => 2,
+            ]);
+        }
+
         return view('groups.show', [
             'group' => $group,
+            'posts' => $posts,
+            'next_page' => $next_page_url,
             'editable' => $editable,
             'is_member' => $is_member,
         ]);

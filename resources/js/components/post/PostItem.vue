@@ -55,9 +55,5 @@
                 return moment(this.post.created_at).fromNow();
             }
         },
-
-        mounted() {
-            console.log('pizda', this.post);
-        }
     }
 </script>

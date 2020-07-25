@@ -13,11 +13,15 @@ class PostController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param  \App\Group $group
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(\App\Group $group)
     {
-        //
+        return $group->posts()
+            ->with(['user.profile','group'])
+            ->latest()
+            ->simplePaginate(config('consts.posts_per_page'));
     }
 
     /**

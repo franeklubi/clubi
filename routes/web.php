@@ -52,6 +52,12 @@ Route::get('/groups/{group}', 'GroupController@show')
     ->name('groups.show');
 
 
+Route::get(
+    '/groups/{group}/posts',
+    'PostController@index'
+)->middleware('can:view,group')->name('posts.index');
+
+
 Route::get('/groups/{group}/posts/{post}', 'PostController@show')
     ->middleware('can:view,group')
     ->name('posts.show');

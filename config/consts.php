@@ -41,6 +41,7 @@ return [
     ],
 
     'comments_per_page' => env('MIX_COMMENTS_PER_PAGE'),
+    'posts_per_page' => env('MIX_POSTS_PER_PAGE'),
     'default_profile_picture_path' => env('MIX_DEFAULT_PROFILE_PICTURE_PATH'),
     'default_banner_picture_path' => env('MIX_DEFAULT_BANNER_PICTURE_PATH'),
 

@@ -17,6 +17,7 @@
                 :is_member="is_member_temp"
                 :is_group_admin="is_group_admin"
                 :group_id_string="group.id_string"
+                :passed_next_page_url="next_page_url"
             ></group-feed>
         </div>
     </div>
@@ -27,6 +28,7 @@
         props: {
             group: Object,
             posts: Array,
+            next_page_url: String,
             is_member: Boolean,
             is_group_admin: Boolean,
         },
@@ -49,9 +51,6 @@
                 is_member_temp: this.is_member,
                 feedback: '',
             }
-        },
-
-        mounted() {
         },
     }
 </script>

@@ -11,6 +11,9 @@
                 :post="post"
             />
         </div>
+        <button @click="loadPosts" v-if="next_page_url" class="btn">
+            Load more posts
+        </button>
     </div>
 </template>
 
@@ -21,12 +24,14 @@
             is_member: Boolean,
             is_group_admin: Boolean,
             group_id_string: String,
+            passed_next_page_url: String,
         },
 
         data: function () {
             return {
                 feedback: '',
                 posts_to_render: this.posts,
+                next_page_url: this.passed_next_page_url,
             }
         },
 
@@ -49,11 +54,20 @@
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });
-            }
-        },
+            },
 
-        mounted() {
-            console.log(this.posts_to_render);
+            loadPosts() {
+                if ( this.next_page_url == null ) {
+                    return;
+                }
+                axios.get(this.next_page_url).then((res) => {
+                    this.next_page_url = res.data.next_page_url;
+                    this.posts_to_render.push(...res.data.data);
+                    this.feedback = '';
+                }).catch((err) => {
+                    this.feedback = this.handleAxiosError(err);
+                });
+            },
         },
     }
 </script>

@@ -28,8 +28,6 @@ class Group extends Model
     }
 
     public function posts() {
-        return $this->hasMany('App\Post')
-            ->with(['user.profile','group'])
-            ->latest();
+        return $this->hasMany('App\Post');
     }
 }
