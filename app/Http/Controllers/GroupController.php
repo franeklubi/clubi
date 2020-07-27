@@ -183,13 +183,18 @@ class GroupController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \Illuminate\Http\Request  $request
      * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Group $group)
+    public function destroy(Request $request, Group $group)
     {
         $this->authorize('delete', $group);
         $group->delete();
+
+        $message = "Group $group->name has been deleted.";
+        $request->session()->flash('status', $message);
+
         return response()->json(['group' => $group]);
     }
 }
