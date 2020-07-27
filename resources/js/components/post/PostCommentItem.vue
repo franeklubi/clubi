@@ -1,26 +1,33 @@
 <template>
     <div class="container">
         <div class="d-flex pb-2">
-            <div class="pr-2">
+            <!-- profile picture outside card -->
+            <div class="pr-2 pt-1">
                 <img :src="comment.user.profile.profile_picture"
                     class="rounded-circle w-100"
-                    style="max-width: 40px"
+                    style="max-width: 30px"
                 >
             </div>
+
+            <!-- card -->
             <div class="card w-100">
-                <p class="card-header hover d-flex">
-                    <span class="font-weight-bold text-dark pr-2">
-                        {{ comment.user.username }}
-                    </span>
-                    {{ relativeTime }}
-                    <span v-if="comment.user_id == user_id || is_group_admin"
-                        class="ml-auto show"
+                <span class="card-header">
+                    <user-header
+                        :user="comment.user"
+                        :date="comment.created_at"
+                        :is_group_admin="is_group_admin"
+                        :disable_profile_picture="true"
+                        class="hover"
                     >
-                        <span @click="deleteCommentEvent" role="button"
-                            class="point fa fa-times"
-                        />
-                    </span>
-                </p>
+                        <span v-if="comment.user_id == user_id || is_group_admin"
+                            class="ml-auto show"
+                        >
+                            <span @click="deleteCommentEvent" role="button"
+                                class="point fa fa-times"
+                            />
+                        </span>
+                    </user-header>
+                </span>
                 <div v-if="comment.content" class="card-body">
                     <p class="card-text">
                         {{ comment.content }}

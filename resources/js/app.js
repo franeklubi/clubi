@@ -68,6 +68,14 @@ Vue.component(
     require('./components/group/GroupToggleJoin.vue').default
 );
 
+
+// helper components
+Vue.component(
+    'user-header',
+    require('./components/helper_components/UserHeader.vue').default
+);
+
+
 // post components
 Vue.component(
     'post-add-comment',

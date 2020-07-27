@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <group-add-post
-            v-if="is_member"
+            v-if="is_member || is_group_admin"
             @add-post="addPost"
         />
         {{ feedback }}
