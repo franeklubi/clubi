@@ -54,7 +54,8 @@ class CommentPolicy
      */
     public function create(User $user, Group $group, Post $post)
     {
-        return $group->members->contains($user);
+        return $group->members->contains($user)
+            && $group->posts->contains($post);
     }
 
     /**

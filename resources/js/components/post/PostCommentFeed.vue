@@ -76,9 +76,11 @@
                     +'/posts/'+this.post.id
                     +'/comments/'+comment.id
                 ).then((res) => {
-                    this.comments_to_render.splice(
-                        this.comments_to_render.indexOf(res.data.comment), 1
-                    );
+                    let index = this.comments_to_render.findIndex((comment) => {
+                        return comment.id == res.data.comment.id
+                    });
+
+                    this.comments_to_render.splice(index, 1);
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });
