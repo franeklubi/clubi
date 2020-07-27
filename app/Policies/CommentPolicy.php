@@ -74,11 +74,21 @@ class CommentPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Comment  $comment
+     * @param  \App\Group  $group
      * @return mixed
      */
-    public function delete(User $user, Comment $comment)
+    public function delete(User $user, Comment $comment, Group $group)
     {
-        //
+        // checking if the comment's in the group
+        if ( !$group->comments->contains($comment) ) {
+            return false;
+        }
+
+        if ($comment->user_id == $user->id || $group->owner_id == $user->id) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

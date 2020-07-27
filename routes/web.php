@@ -49,6 +49,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/groups/{group}/posts/{post}', 'PostController@destroy')
         ->middleware('can:view,group')
         ->name('posts.destroy');
+
+    Route::delete(
+        '/groups/{group}/posts/{post}/comments/{comment}',
+        'CommentController@destroy'
+    )->middleware('can:view,group')->name('comments.destroy');
 });
 
 

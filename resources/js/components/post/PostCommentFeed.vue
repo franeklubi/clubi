@@ -7,6 +7,9 @@
             <post-comment-item
                 v-for="comment in reversedComments" :key="comment.id"
                 :comment="comment"
+                :user_id="user_id"
+                :is_group_admin="is_group_admin"
+                @delete-comment="deleteComment"
             />
             <div v-if="feedback" class="alert alert-danger">{{ feedback }}</div>
             <post-add-comment @add-comment="addComment"/>
@@ -18,6 +21,8 @@
     export default {
         props: {
             post: Object,
+            user_id: Number,
+            is_group_admin: Boolean,
         },
 
         data: function () {
@@ -64,6 +69,20 @@
                     this.feedback = this.handleAxiosError(err);
                 });
             },
+
+            deleteComment(comment) {
+                axios.delete(
+                    '/groups/'+this.post.group.id_string
+                    +'/posts/'+this.post.id
+                    +'/comments/'+comment.id
+                ).then((res) => {
+                    this.comments_to_render.splice(
+                        this.comments_to_render.indexOf(res.data.comment), 1
+                    );
+                }).catch((err) => {
+                    this.feedback = this.handleAxiosError(err);
+                });
+            }
         },
 
         computed: {

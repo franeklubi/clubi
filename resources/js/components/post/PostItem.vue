@@ -12,7 +12,7 @@
                         </div>
                         <div class="pl-3">
                             <p>
-                                <span class="font-weight-bold text-dark">
+                                <span class="font-weight-bold text-dark pr-1">
                                     {{ post.user.username }}
                                 </span>
                                 <a :href="
@@ -42,6 +42,8 @@
                 <div class="card-footer">
                     <post-comment-feed
                         :post="post"
+                        :user_id="user_id"
+                        :is_group_admin="is_group_admin"
                     />
                 </div>
             </div>

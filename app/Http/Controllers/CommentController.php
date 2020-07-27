@@ -146,8 +146,10 @@ class CommentController extends Controller
      * @param  \App\Comment  $comment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post, Comment $comment)
+    public function destroy(\App\Group $group, Post $post, Comment $comment)
     {
-        //
+        $this->authorize('delete', [$comment, $group]);
+        $comment->delete();
+        return response()->json(['comment' => $comment]);
     }
 }

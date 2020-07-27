@@ -74,9 +74,15 @@ class PostPolicy
      */
     public function delete(User $user, Post $post, \App\Group $group)
     {
-        if ( $user == $post->user || $user->id == $group->owner ) {
+        // checking if the group contains the post
+        if ( !$group->posts->contains($post) ) {
+            return false;
+        }
+
+        if ( $user == $post->user || $user == $group->owner ) {
             return true;
         }
+
         return false;
     }
 
