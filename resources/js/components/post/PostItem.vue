@@ -3,7 +3,7 @@
         <div class="col-8">
             <div class="card">
                 <div class="card-body pt-4">
-                    <div class="d-flex align-items-baseline">
+                    <div class="d-flex align-items-baseline hover">
                         <div class="">
                             <img :src="post.user.profile.profile_picture"
                                 class="rounded-circle w-100"
@@ -23,6 +23,13 @@
                                 </a>
                             </p>
                         </div>
+                        <span v-if="post.user_id == user_id || is_group_admin"
+                            class="align-self-start ml-auto show"
+                        >
+                            <span @click="deletePostEvent" role="button"
+                                class="point fa fa-times"
+                            />
+                        </span>
                     </div>
 
                     <hr>
@@ -48,6 +55,16 @@
     export default {
         props: {
             post: Object,
+            user_id: Number,
+            is_group_admin: Boolean,
+        },
+
+        methods: {
+            deletePostEvent() {
+                if ( confirm('Are you sure?') ) {
+                    this.$emit('delete-post', this.post);
+                }
+            },
         },
 
         computed: {
@@ -57,3 +74,13 @@
         },
     }
 </script>
+
+<style scoped>
+    .show {
+        display: none;
+    }
+
+    .hover:hover > .show {
+        display: block;
+    }
+</style>

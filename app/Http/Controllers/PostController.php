@@ -140,11 +140,14 @@ class PostController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param  \App\Group $group
      * @param  \App\Post  $post
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Post $post)
+    public function destroy(\App\Group $group, Post $post)
     {
-        //
+        $this->authorize('delete', [$post, $group]);
+        $post->delete();
+        return response()->json(['post' => $post]);
     }
 }

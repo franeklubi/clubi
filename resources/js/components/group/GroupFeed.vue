@@ -9,6 +9,9 @@
             <post-item
                 class="pb-3"
                 :post="post"
+                :user_id="user_id"
+                :is_group_admin="is_group_admin"
+                @delete-post="deletePost"
             />
         </div>
         <button @click="loadPosts" v-if="next_page_url" class="btn">
@@ -21,6 +24,7 @@
     export default {
         props: {
             posts: Array,
+            user_id: Number,
             is_member: Boolean,
             is_group_admin: Boolean,
             group_id_string: String,
@@ -67,6 +71,17 @@
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });
+            },
+
+            deletePost(post) {
+                axios.delete('/groups/'+post.group.id_string+'/posts/'+post.id)
+                    .then((res) => {
+                        this.posts_to_render.splice(
+                            this.posts_to_render.indexOf(res.data.post), 1
+                        );
+                    }).catch((err) => {
+                        this.feedback = this.handleAxiosError(err);
+                    });
             },
         },
     }

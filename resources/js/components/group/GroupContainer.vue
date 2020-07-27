@@ -14,6 +14,7 @@
 
             <group-feed
                 :posts="posts"
+                :user_id="user_id"
                 :is_member="is_member_temp"
                 :is_group_admin="is_group_admin"
                 :group_id_string="group.id_string"
@@ -28,6 +29,7 @@
         props: {
             group: Object,
             posts: Array,
+            user_id: Number,
             next_page_url: String,
             is_member: Boolean,
             is_group_admin: Boolean,

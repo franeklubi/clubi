@@ -68,12 +68,16 @@ class PostPolicy
      * Determine whether the user can delete the model.
      *
      * @param  \App\User  $user
+     * @param  \App\Group $group
      * @param  \App\Post  $post
      * @return mixed
      */
-    public function delete(User $user, Post $post)
+    public function delete(User $user, Post $post, \App\Group $group)
     {
-        //
+        if ( $user == $post->user || $user->id == $group->owner ) {
+            return true;
+        }
+        return false;
     }
 
     /**
