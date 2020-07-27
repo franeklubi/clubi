@@ -1,6 +1,6 @@
 <template>
     <div class="card-footer"
-        v-if="this.is_member || this.reversedComments.length > 0"
+        v-if="canComment || reversedComments.length > 0"
     >
         <button @click="loadComments" v-if="next_page_url" class="btn">
             Load more replies
@@ -13,7 +13,7 @@
             @delete-comment="deleteComment"
         />
         <div v-if="feedback" class="alert alert-danger">{{ feedback }}</div>
-        <post-add-comment v-if="is_member" @add-comment="addComment"/>
+        <post-add-comment v-if="canComment" @add-comment="addComment"/>
     </div>
 </template>
 
@@ -93,7 +93,11 @@
                 return this.comments_to_render?
                     this.comments_to_render.slice().reverse()
                     : [];
-            }
+            },
+
+            canComment() {
+                return this.is_member || this.is_group_admin;
+            },
         },
 
         created() {

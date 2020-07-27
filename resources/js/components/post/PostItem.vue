@@ -34,11 +34,11 @@
 
                     <hr>
 
-                    <p>
+                    <p class="card-text">
                         {{ post.content }}
                     </p>
                 </div>
-                <img class="w-100" :src="post.picture" alt="">
+                <img class="w-100" :src="post.picture">
                 <post-comment-feed
                     :post="post"
                     :is_member="is_member"
