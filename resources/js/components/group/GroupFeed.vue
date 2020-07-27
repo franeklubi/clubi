@@ -76,9 +76,11 @@
             deletePost(post) {
                 axios.delete('/groups/'+post.group.id_string+'/posts/'+post.id)
                     .then((res) => {
-                        this.posts_to_render.splice(
-                            this.posts_to_render.indexOf(res.data.post), 1
-                        );
+                        let index = this.posts_to_render.findIndex((post) => {
+                            return post.id == res.data.post.id
+                        });
+
+                        this.posts_to_render.splice(index, 1);
                     }).catch((err) => {
                         this.feedback = this.handleAxiosError(err);
                     });

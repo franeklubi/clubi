@@ -3,6 +3,12 @@
         <div class="col-md-8">
             <!-- view if to update or create -->
             <div v-if="create || editable">
+                <button v-if="!create" class="btn btn-danger"
+                    @click="deleteGroup"
+                >
+                    Delete group
+                </button>
+
                 <input type="text" v-model="group_name" placeholder="name">
                 <p v-if="!group_name">
                     Name is required!
@@ -99,6 +105,20 @@
                     if ( this.create ) {
                         window.location.href = '/groups/'+res.data.string_id;
                     }
+                }).catch((err) => {
+                    this.feedback = this.handleAxiosError(err);
+                });
+            },
+
+            deleteGroup() {
+                if ( !confirm('Are you sure?') ) {
+                    return;
+                }
+
+                axios.delete(
+                    '/groups/'+this.group.id_string
+                ).then((res) => {
+                    window.location.href = '/';
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });

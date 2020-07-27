@@ -40,6 +40,11 @@ Route::middleware('auth')->group(function () {
         ->middleware('can:view,group')
         ->name('groups.membership');
 
+    Route::delete('/groups/{group}', 'GroupController@destroy')
+        ->middleware('can:view,group')
+        ->name('groups.destroy');
+
+
     Route::post(
         '/groups/{group}/posts/{post}/comments',
         'CommentController@store'

@@ -17,7 +17,7 @@ class CreateGroupUserPivotTable extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('group_id')->constrained();
+            $table->foreignId('group_id')->constrained()->onDelete('cascade');
             $table->foreignId('user_id')->constrained();
         });
     }

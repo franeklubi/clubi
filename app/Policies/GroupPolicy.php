@@ -98,7 +98,7 @@ class GroupPolicy
      */
     public function delete(User $user, Group $group)
     {
-        //
+        return ($user->id == $group->owner_id);
     }
 
     /**
