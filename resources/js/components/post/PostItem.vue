@@ -39,13 +39,12 @@
                     </p>
                 </div>
                 <img class="w-100" :src="post.picture" alt="">
-                <div class="card-footer">
-                    <post-comment-feed
-                        :post="post"
-                        :user_id="user_id"
-                        :is_group_admin="is_group_admin"
-                    />
-                </div>
+                <post-comment-feed
+                    :post="post"
+                    :is_member="is_member"
+                    :user_id="user_id"
+                    :is_group_admin="is_group_admin"
+                />
             </div>
         </div>
     </div>
@@ -58,6 +57,7 @@
         props: {
             post: Object,
             user_id: Number,
+            is_member: Boolean,
             is_group_admin: Boolean,
         },
 

@@ -150,7 +150,7 @@ class GroupController extends Controller
         return view('groups.show', [
             'group' => $group,
             'posts' => $posts,
-            'user_id' => $user->id,
+            'user_id' => $user?$user->id:-1,
             'next_page' => $next_page_url,
             'editable' => $editable,
             'is_member' => $is_member,

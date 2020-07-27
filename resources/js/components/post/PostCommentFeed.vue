@@ -1,19 +1,19 @@
 <template>
-    <div class="container">
-        <div class="">
-            <button @click="loadComments" v-if="next_page_url" class="btn">
-                Load more replies
-            </button>
-            <post-comment-item
-                v-for="comment in reversedComments" :key="comment.id"
-                :comment="comment"
-                :user_id="user_id"
-                :is_group_admin="is_group_admin"
-                @delete-comment="deleteComment"
-            />
-            <div v-if="feedback" class="alert alert-danger">{{ feedback }}</div>
-            <post-add-comment @add-comment="addComment"/>
-        </div>
+    <div class="card-footer"
+        v-if="this.is_member || this.reversedComments.length > 0"
+    >
+        <button @click="loadComments" v-if="next_page_url" class="btn">
+            Load more replies
+        </button>
+        <post-comment-item
+            v-for="comment in reversedComments" :key="comment.id"
+            :comment="comment"
+            :user_id="user_id"
+            :is_group_admin="is_group_admin"
+            @delete-comment="deleteComment"
+        />
+        <div v-if="feedback" class="alert alert-danger">{{ feedback }}</div>
+        <post-add-comment v-if="is_member" @add-comment="addComment"/>
     </div>
 </template>
 
@@ -22,6 +22,7 @@
         props: {
             post: Object,
             user_id: Number,
+            is_member: Boolean,
             is_group_admin: Boolean,
         },
 

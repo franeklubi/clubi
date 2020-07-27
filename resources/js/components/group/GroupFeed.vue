@@ -10,6 +10,7 @@
                 class="pb-3"
                 :post="post"
                 :user_id="user_id"
+                :is_member="is_member"
                 :is_group_admin="is_group_admin"
                 @delete-post="deletePost"
             />
