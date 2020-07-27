@@ -59,6 +59,10 @@ Route::middleware('auth')->group(function () {
         '/groups/{group}/posts/{post}/comments/{comment}',
         'CommentController@destroy'
     )->middleware('can:view,group')->name('comments.destroy');
+
+    Route::get('/users/search/{search?}', function ($search = "") {
+        return response()->json(['results' => \App\User::search($search)]);
+    })->name('users.search');
 });
 
 

@@ -45,6 +45,18 @@ class User extends Authenticatable
         });
     }
 
+    public static function search(string $search) {
+        if (empty(trim($search))) {
+            return null;
+        }
+
+        $term = '%'.implode("%", str_split(str_replace(" ", "", $search))).'%';
+
+        return static::select('username')
+            ->where('username', 'like', $term)
+            ->get();
+    }
+
     public function profile() {
         return $this->hasOne('App\Profile');
     }
