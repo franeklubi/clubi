@@ -62,6 +62,10 @@ Route::middleware('auth')->group(function () {
 });
 
 
+Route::get('/groups/search/{search?}', 'GroupController@search')
+    ->name('groups.search');
+
+
 Route::get('/groups/{group}', 'GroupController@show')
     ->name('groups.show');
 

@@ -23,6 +23,11 @@ class GroupController extends Controller
         //
     }
 
+    // return search results
+    public function search(Request $request, $search = "") {
+        return response()->json(['results' => Group::search($search)]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *

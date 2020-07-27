@@ -10,6 +10,21 @@ class Group extends Model
         'name', 'banner_picture', 'private'
     ];
 
+    public static function search(string $search) {
+        $columns = ['name', 'id_string'];
+
+        if (empty(trim($search))) {
+            return null;
+        }
+
+        $term = '%'.implode("%", str_split(str_replace(" ", "", $search))).'%';
+
+        return static::select($columns)
+            ->where($columns[0], 'like', $term)
+            ->orWhere($columns[1], 'like', $term)
+            ->get();
+    }
+
     // accessor for the banner picture
     public function getBannerPictureAttribute($value) {
         return $value ? $value : config('consts.default_banner_picture_path');
