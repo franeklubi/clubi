@@ -63,6 +63,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/users/search/{search?}', function ($search = "") {
         return response()->json(['results' => \App\User::search($search)]);
     })->name('users.search');
+
+
+    Route::get('/groups/{group}/invitations', 'InvitationController@index')
+        ->middleware('can:view,group')
+        ->name('invitations.index');
 });
 
 

@@ -16,7 +16,9 @@ class InvitationController extends Controller
      */
     public function index(Group $group)
     {
-        //
+        return response()->json([
+            'invitations' => $group->invitations()->with('user.profile')->get()
+        ]);
     }
 
     /**

@@ -49,4 +49,8 @@ class Group extends Model
     public function comments() {
         return $this->hasManyThrough('App\Comment', 'App\Post');
     }
+
+    public function invitations() {
+        return $this->hasMany('App\Invitation');
+    }
 }

@@ -25,7 +25,9 @@ class Invitation extends Model
 {
     protected $fillable = ['group_id', 'user_id'];
 
-    public function namedState() {
+    protected $appends = ['named_state'];
+
+    public function getNamedStateAttribute() {
         if ( !$this->admin_accepted && !$this->user_accepted ) {
             return 'Pending for admin approval.';
         }

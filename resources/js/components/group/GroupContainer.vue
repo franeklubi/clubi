@@ -12,6 +12,10 @@
                 :group="group"
             ></group-header>
 
+            <group-invitation-window
+                :group="group"
+            />
+
             <group-feed
                 :posts="posts"
                 :owner="group.owner"

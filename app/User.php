@@ -82,4 +82,8 @@ class User extends Authenticatable
     public function comments() {
         return $this->hasMany('App\Comment');
     }
+
+    public function invitations() {
+        return $this->hasMany('App\Invitation')->where('admin_accepted', true);
+    }
 }

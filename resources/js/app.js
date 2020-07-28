@@ -64,6 +64,11 @@ Vue.component(
 );
 
 Vue.component(
+    'group-invitation-window',
+    require('./components/group/GroupInvitationWindow.vue').default
+);
+
+Vue.component(
     'group-toggle-join',
     require('./components/group/GroupToggleJoin.vue').default
 );
