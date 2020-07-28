@@ -110,7 +110,7 @@ class PostController extends Controller
     {
         $this->authorize('view', [$post, $group]);
         return view('posts.show', [
-            'post' => $post->load(['user.profile', 'group']),
+            'post' => $post->load(['user.profile', 'group.owner']),
         ]);
     }
 
