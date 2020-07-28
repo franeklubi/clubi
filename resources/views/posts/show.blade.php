@@ -6,6 +6,9 @@
         <post-item
             :post="{{ $post }}"
             :owner="{{ $post->group->owner }}"
+            :user_id="{{ $user_id }}"
+            :is_group_admin="{{ $editable?'true':'false' }}"
+            :is_member="{{ $is_member?'true':'false' }}"
         />
     </div>
 </div>

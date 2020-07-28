@@ -109,8 +109,22 @@ class PostController extends Controller
     public function show(\App\Group $group, Post $post)
     {
         $this->authorize('view', [$post, $group]);
+
+        // check if owner or admin
+        $editable = false;
+        $is_member = false;
+        $user = null;
+        if ( auth()->check() ) {
+            $user = auth()->user();
+            $editable = $user->can('update', $group);
+            $is_member = $user->memberOfGroups->contains($group);
+        }
+
         return view('posts.show', [
             'post' => $post->load(['user.profile', 'group.owner']),
+            'user_id' => $user?$user->id:-1,
+            'editable' => $editable,
+            'is_member' => $is_member,
         ]);
     }
 
