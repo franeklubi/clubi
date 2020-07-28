@@ -7,8 +7,10 @@
         </button>
         <post-comment-item
             v-for="comment in reversedComments" :key="comment.id"
+            :owner="owner"
             :comment="comment"
             :user_id="user_id"
+            :post_author_id="parseInt(post.user_id)"
             :is_group_admin="is_group_admin"
             @delete-comment="deleteComment"
         />
@@ -21,6 +23,7 @@
     export default {
         props: {
             post: Object,
+            owner: Object,
             user_id: Number,
             is_member: Boolean,
             is_group_admin: Boolean,

@@ -7,7 +7,7 @@
                         :user="post.user"
                         :date="post.created_at"
                         :link="post_link"
-                        :is_group_admin="is_group_admin"
+                        :is_owner="owner.id == post.user.id"
                         class="hover"
                     >
                         <span v-if="post.user_id == user_id || is_group_admin"
@@ -28,8 +28,9 @@
                 <img class="w-100" :src="post.picture">
                 <post-comment-feed
                     :post="post"
-                    :is_member="is_member"
+                    :owner="owner"
                     :user_id="user_id"
+                    :is_member="is_member"
                     :is_group_admin="is_group_admin"
                 />
             </div>
@@ -43,6 +44,7 @@
     export default {
         props: {
             post: Object,
+            owner: Object,
             user_id: Number,
             is_member: Boolean,
             is_group_admin: Boolean,

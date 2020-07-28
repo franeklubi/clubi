@@ -15,7 +15,8 @@
                     <user-header
                         :user="comment.user"
                         :date="comment.created_at"
-                        :is_group_admin="is_group_admin"
+                        :is_owner="owner.id == comment.user.id"
+                        :is_author="comment.user_id == post_author_id"
                         :disable_profile_picture="true"
                         class="hover"
                     >
@@ -46,8 +47,10 @@
 
     export default {
         props: {
+            owner: Object,
             comment: Object,
             user_id: Number,
+            post_author_id: Number,
             is_group_admin: Boolean,
         },
 

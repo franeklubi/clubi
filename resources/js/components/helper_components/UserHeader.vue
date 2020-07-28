@@ -12,7 +12,9 @@
                     {{ user.username }}
                 </span>
 
-                <span v-if="is_group_admin" class="fa fa-shield-alt" />
+                <span v-if="is_author" class="fa fa-pen-nib" />
+                <span v-if="is_owner" class="fa fa-shield-alt" />
+                <span v-else-if="user.is_admin == '1'" class="fa fa-tools" />
 
                 <span class="pl-1" />
 
@@ -36,7 +38,8 @@
             user: Object,
             date: String,
             link: String,
-            is_group_admin: Boolean,
+            is_owner: Boolean,
+            is_author: Boolean,
             profile_picture_size: {default: 40, type: Number},
             disable_profile_picture: Boolean,
         },

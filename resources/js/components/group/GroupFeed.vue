@@ -9,6 +9,7 @@
             <post-item
                 class="pb-3"
                 :post="post"
+                :owner="owner"
                 :user_id="user_id"
                 :is_member="is_member"
                 :is_group_admin="is_group_admin"
@@ -25,6 +26,7 @@
     export default {
         props: {
             posts: Array,
+            owner: Object,
             user_id: Number,
             is_member: Boolean,
             is_group_admin: Boolean,
