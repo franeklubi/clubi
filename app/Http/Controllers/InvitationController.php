@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use App\Group;
 use App\Invitation;
 use Illuminate\Http\Request;
@@ -16,20 +17,11 @@ class InvitationController extends Controller
      */
     public function index(Group $group)
     {
+        $this->authorize('viewAny', [Invitation::class, $group]);
+
         return response()->json([
             'invitations' => $group->invitations()->with('user.profile')->get()
         ]);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
-     */
-    public function create(Group $group)
-    {
-        //
     }
 
     /**
@@ -41,44 +33,53 @@ class InvitationController extends Controller
      */
     public function store(Request $request, Group $group)
     {
-        //
-    }
+        $this->authorize('create', [Invitation::class, $group]);
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Group  $group
-     * @param  \App\Invitation  $invitation
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Group $group, Invitation $invitation)
-    {
-        //
-    }
+        $validated_data = $request->validate([
+            'username' => [
+                'required',
+                'string',
+                'min:4',
+                'max:20',
+            ],
+        ]);
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Group  $group
-     * @param  \App\Invitation  $invitation
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Group $group, Invitation $invitation)
-    {
-        //
-    }
+        $user = User::where('username', $validated_data['username'])->first();
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Group  $group
-     * @param  \App\Invitation  $invitation
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Group $group, Invitation $invitation)
-    {
-        //
+        if ( $user == null ) {
+            return abort(404, $validated_data['username'].' not found.');
+        }
+
+        // checking if user's already in the group
+        if ( $group->members->contains($user) ) {
+            return abort(403, $user->username.' is already in the group.');
+        }
+
+        // checking if an invitation exists
+        $invitation = $group->invitations->where('user_id', $user->id)->first();
+        if ( $invitation != null ) {
+            return abort(403, $user->username.' has already been invited.');
+        }
+
+        $invitation = Invitation::create([
+            'from_id' => $request->user()->id,
+            'user_id' => $user->id,
+            'group_id' => $group->id,
+        ]);
+
+        // cases where admin_accepted is set to true at creation time
+        if (
+            !$group->private
+            || $group->owner_id == $request->user()->id
+            || $request->user()->is_admin
+        ) {
+            $invitation->admin_accepted = true;
+            $invitation->save();
+        }
+
+        return response()->json([
+            'invitation' => $invitation->load('user.profile')
+        ]);
     }
 
     /**
@@ -90,6 +91,10 @@ class InvitationController extends Controller
      */
     public function destroy(Group $group, Invitation $invitation)
     {
-        //
+        $this->authorize('delete', [$invitation, $group]);
+
+        $invitation->delete();
+
+        return response()->json(['invitation' => $invitation]);
     }
 }

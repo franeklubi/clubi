@@ -13,7 +13,10 @@
             ></group-header>
 
             <group-invitation-window
+                v-if="is_member_temp"
                 :group="group"
+                :user_id="user_id"
+                :is_group_admin="is_group_admin"
             />
 
             <group-feed

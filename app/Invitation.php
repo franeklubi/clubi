@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
 //             * invitation is destroyed
 class Invitation extends Model
 {
-    protected $fillable = ['group_id', 'user_id'];
+    protected $fillable = ['from_id', 'group_id', 'user_id'];
 
     protected $appends = ['named_state'];
 

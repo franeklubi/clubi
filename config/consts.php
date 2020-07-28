@@ -47,4 +47,8 @@ return [
 
     'max_post_length' => 5000,
     'max_comment_length' => 1000,
+
+    'max_invitations_per_group' => env('MIX_MAX_INVITATIONS_PER_GROUP'),
+
+    'min_username_length' => env('MIX_MIN_USERNAME_LENGTH'),
 ];

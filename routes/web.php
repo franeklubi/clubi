@@ -68,6 +68,15 @@ Route::middleware('auth')->group(function () {
     Route::get('/groups/{group}/invitations', 'InvitationController@index')
         ->middleware('can:view,group')
         ->name('invitations.index');
+
+    Route::post('/groups/{group}/invitations', 'InvitationController@store')
+        ->middleware('can:view,group')
+        ->name('invitations.store');
+
+    Route::delete(
+        '/groups/{group}/invitations/{invitation}',
+        'InvitationController@destroy'
+    )->middleware('can:view,group')->name('invitations.destroy');
 });
 
 

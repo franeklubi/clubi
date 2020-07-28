@@ -17,6 +17,7 @@ class CreateInvitationsTable extends Migration
             $table->id();
             $table->timestamps();
 
+            $table->foreignId('from_id')->references('id')->on('users');
             $table->foreignId('group_id')->constrained();
             $table->foreignId('user_id')->constrained();
             $table->boolean('admin_accepted')->default(false);
