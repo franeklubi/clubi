@@ -53,4 +53,23 @@ class Group extends Model
     public function invitations() {
         return $this->hasMany('App\Invitation');
     }
+
+    public static function rules() {
+        return [
+            'name' => [
+                'required',
+                'max:30',
+            ],
+            'banner_picture' => [
+                'image',
+                'dimensions:'
+                    .'min_width='.config('consts.banner_picture.min_width')
+                    .',min_height='.config('consts.banner_picture.min_height')
+                    .',max_width='.config('consts.banner_picture.max_width')
+                    .',max_height='.config('consts.banner_picture.max_height')
+            ],
+            'private' => 'boolean',
+            'remove_banner_picture' => 'boolean',
+        ];
+    }
 }

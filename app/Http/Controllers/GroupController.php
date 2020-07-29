@@ -50,33 +50,18 @@ class GroupController extends Controller
 
         $auth_user = $request->user();
 
-        $validated_data = $request->validate([
-            'name' => [
-                'required',
-                'max:30',
-            ],
-            'banner_picture' => [
-                'image',
-                'dimensions:'
-                    .'min_width='.config('consts.banner_picture.min_width')
-                    .',min_height='.config('consts.banner_picture.min_height')
-                    .',max_width='.config('consts.banner_picture.max_width')
-                    .',max_height='.config('consts.banner_picture.max_height')
-            ],
-            'private' => 'boolean',
-            'remove_banner_picture' => 'boolean',
-        ]);
+        $validated_data = $request->validate(Group::rules());
 
         if ( $request->has('banner_picture') ) {
             $request_file = $request->file('banner_picture');
 
-            $image_path = '/storage/'.$request_file->store(
+            $picture_path = '/storage/'.$request_file->store(
                 'banner_pictures/'.$auth_user->id,
                 'public',
             );
 
-            $image = Image::make(public_path($image_path));
-            $image->resize(
+            $picture = Image::make(public_path($picture_path));
+            $picture->resize(
                 config('consts.banner_picture.fit_width'),
                 config('consts.banner_picture.fit_height'),
                 function ($constraint) {
@@ -84,10 +69,10 @@ class GroupController extends Controller
                     $constraint->upsize();
                 }
             );
-            $image->save();
+            $picture->save();
 
             $validated_data = array_merge(
-                $validated_data, ['banner_picture' => $image_path]
+                $validated_data, ['banner_picture' => $picture_path]
             );
         } else if ( $request->has('remove_banner_picture') ) {
             unset($validated_data['remove_banner_picture']);
@@ -158,17 +143,6 @@ class GroupController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Group  $group
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Group $group)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -177,7 +151,45 @@ class GroupController extends Controller
      */
     public function update(Request $request, Group $group)
     {
-        //
+        $this->authorize('update', $group);
+
+        $auth_user = $request->user();
+
+        $validated_data = $request->validate(Group::rules());
+
+        if ( $request->has('banner_picture') ) {
+            $request_file = $request->file('banner_picture');
+
+            $picture_path = '/storage/'.$request_file->store(
+                'banner_pictures/'.$auth_user->id,
+                'public',
+            );
+
+            $picture = Image::make(public_path($picture_path));
+            $picture->resize(
+                config('consts.banner_picture.fit_width'),
+                config('consts.banner_picture.fit_height'),
+                function ($constraint) {
+                    $constraint->aspectRatio();
+                    $constraint->upsize();
+                }
+            );
+            $picture->save();
+
+            $validated_data = array_merge(
+                $validated_data, ['banner_picture' => $picture_path]
+            );
+        } else if ( $request->has('remove_banner_picture') ) {
+            unset($validated_data['remove_banner_picture']);
+            $validated_data = array_merge(
+                $validated_data, ['banner_picture' => null]
+            );
+        }
+
+        // update group
+        $group->update($validated_data);
+
+        return response()->json(['group' => $group]);
     }
 
     /**

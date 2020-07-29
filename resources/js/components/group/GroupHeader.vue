@@ -80,12 +80,13 @@
             applyChanges() {
                 let headers = {headers:{'content-type':'multipart/form-data'}};
 
-                let post_path = '/groups';
-                if ( !this.create ) {
-                    post_path += '/'+this.group.id_string;
-                }
-
+                let url = '/groups';
                 let post_data = new FormData();
+
+                if ( !this.create ) {
+                    url += '/'+this.group.id_string;
+                    post_data.append('_method', 'PATCH');
+                }
 
                 // check if a different image has been selected
                 if (
@@ -101,7 +102,7 @@
                     'remove_banner_picture', this.group_banner_remove?'1':'0'
                 );
 
-                axios.post(post_path, post_data, headers).then((res) => {
+                axios.post(url, post_data, headers).then((res) => {
                     if ( this.create ) {
                         window.location.href = '/groups/'+res.data.string_id;
                     }

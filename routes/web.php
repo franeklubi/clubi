@@ -32,17 +32,27 @@ Route::middleware('auth')->group(function () {
 
     Route::post('/groups', 'GroupController@store')->name('groups.store');
 
-    Route::post('/groups/{group}/posts', 'PostController@store')
+    Route::delete('/groups/{group}', 'GroupController@destroy')
         ->middleware('can:view,group')
-        ->name('posts.store');
+        ->name('groups.destroy');
+
+    Route::patch('/groups/{group}', 'GroupController@update')
+        ->middleware('can:view,group')
+        ->name('groups.destroy');
+
 
     Route::post('/groups/{group}/join', 'GroupMembershipController@store')
         ->middleware('can:view,group')
         ->name('groups.membership');
 
-    Route::delete('/groups/{group}', 'GroupController@destroy')
+
+    Route::post('/groups/{group}/posts', 'PostController@store')
         ->middleware('can:view,group')
-        ->name('groups.destroy');
+        ->name('posts.store');
+
+    Route::delete('/groups/{group}/posts/{post}', 'PostController@destroy')
+        ->middleware('can:view,group')
+        ->name('posts.destroy');
 
 
     Route::post(
@@ -51,14 +61,11 @@ Route::middleware('auth')->group(function () {
     )->middleware(['can:view,group'])
         ->name('comments.store');
 
-    Route::delete('/groups/{group}/posts/{post}', 'PostController@destroy')
-        ->middleware('can:view,group')
-        ->name('posts.destroy');
-
     Route::delete(
         '/groups/{group}/posts/{post}/comments/{comment}',
         'CommentController@destroy'
     )->middleware('can:view,group')->name('comments.destroy');
+
 
     Route::get('/users/search/{search?}', function ($search = "") {
         return response()->json(['results' => \App\User::search($search)]);

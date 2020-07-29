@@ -96,7 +96,9 @@ class GroupPolicy
      */
     public function update(User $user, Group $group)
     {
-        return ($group->owner_id == $user->id);
+        return ($group->owner_id != $user->id)?
+            Response::deny("You can't update this group.")
+            : Response::allow();
     }
 
     /**
