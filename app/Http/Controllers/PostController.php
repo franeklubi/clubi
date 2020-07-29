@@ -19,7 +19,7 @@ class PostController extends Controller
     public function index(\App\Group $group)
     {
         return $group->posts()
-            ->with(['user.profile','group'])
+            ->with(['user.profile', 'group.owner'])
             ->latest()
             ->simplePaginate(config('consts.posts_per_page'));
     }
@@ -96,7 +96,7 @@ class PostController extends Controller
 
         $post = $group->posts()->create($validated_data);
 
-        return response($post->load(['user.profile', 'group']));
+        return response($post->load(['user.profile', 'group.owner']));
     }
 
     /**

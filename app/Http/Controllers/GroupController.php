@@ -133,7 +133,7 @@ class GroupController extends Controller
         }
 
         return view('groups.show', [
-            'group' => $group->load('owner'),
+            'group' => $group,
             'posts' => $posts,
             'user_id' => $user?$user->id:-1,
             'next_page' => $next_page_url,

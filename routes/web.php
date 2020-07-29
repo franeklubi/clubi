@@ -16,10 +16,18 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 
-Route::get('/', 'HomeController@index')->name('home');
+Route::get('/', 'DashboardController@feed')->name('dashboard.feed');
+
+Route::get('/popular', 'DashboardController@popular')
+    ->name('dashboard.popular');
 
 
 Route::middleware('auth')->group(function () {
+    // dashboard routes
+    Route::get('/dashboard/posts', 'DashboardController@posts')
+        ->name('dashboard.posts');
+
+
     // settings routes
     Route::get('/settings', 'SettingsController@edit')->name('settings.edit');
 

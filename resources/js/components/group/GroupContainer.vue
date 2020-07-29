@@ -21,7 +21,6 @@
 
             <group-feed
                 :posts="posts"
-                :owner="group.owner"
                 :user_id="user_id"
                 :is_member="is_member_temp"
                 :is_group_admin="is_group_admin"

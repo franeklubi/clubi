@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="col-8">
+        <div class="">
             <div class="card">
                 <div class="card-body pt-3">
                     <user-header
@@ -10,6 +10,16 @@
                         :is_owner="owner.id == post.user.id"
                         class="hover"
                     >
+                        <span v-if="display_group">
+                            <span class="ml-2 fas fa-arrow-right"
+                                :href="group_link"
+                            >
+                            </span>
+                            <a :href="group_link"
+                                class="ml-2 font-weight-bold"
+                            >{{ post.group.name }}</a>
+                        </span>
+
                         <span v-if="post.user_id == user_id || is_group_admin"
                             class="align-self-start ml-auto show"
                         >
@@ -44,16 +54,18 @@
     export default {
         props: {
             post: Object,
-            owner: Object,
             user_id: Number,
             is_member: Boolean,
+            display_group: Boolean,
             is_group_admin: Boolean,
         },
 
         data: function () {
             return {
+                group_link: '/groups/'+this.post.group.id_string,
                 post_link: '/groups/'+this.post.group.id_string
                     +'/posts/'+this.post.id,
+                owner: this.post.group.owner,
             }
         },
 

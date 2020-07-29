@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <group-add-post
-            v-if="is_member || is_group_admin"
+            v-if="(is_member || is_group_admin) && group_id_string"
             @add-post="addPost"
         />
         {{ feedback }}
@@ -9,14 +9,16 @@
             <post-item
                 class="pb-3"
                 :post="post"
-                :owner="owner"
                 :user_id="user_id"
                 :is_member="is_member"
+                :display_group="display_group"
                 :is_group_admin="is_group_admin"
                 @delete-post="deletePost"
             />
         </div>
-        <button @click="loadPosts" v-if="next_page_url" class="btn">
+        <button @click="loadPosts" v-if="next_page_url"
+            class="btn btn-secondary"
+        >
             Load more posts
         </button>
     </div>
@@ -26,9 +28,9 @@
     export default {
         props: {
             posts: Array,
-            owner: Object,
             user_id: Number,
             is_member: Boolean,
+            display_group: Boolean,
             is_group_admin: Boolean,
             group_id_string: String,
             passed_next_page_url: String,
