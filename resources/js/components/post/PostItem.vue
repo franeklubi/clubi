@@ -3,20 +3,20 @@
         <div class="">
             <div class="card">
                 <div class="card-body pt-3">
-                    <user-header
+                    <user-list-item
                         :user="post.user"
                         :date="post.created_at"
                         :link="post_link"
                         :is_owner="owner.id == post.user.id"
                         class="hover"
                     >
-                        <span v-if="display_group">
+                        <span v-if="display_group" style="white-space: nowrap;">
                             <span class="ml-2 fas fa-arrow-right"
                                 :href="group_link"
                             >
                             </span>
                             <a :href="group_link"
-                                class="ml-2 font-weight-bold"
+                                class="ml-1 font-weight-bold"
                             >{{ post.group.name }}</a>
                         </span>
 
@@ -27,7 +27,7 @@
                                 class="point fa fa-times"
                             />
                         </span>
-                    </user-header>
+                    </user-list-item>
 
                     <hr>
 

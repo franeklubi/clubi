@@ -27,7 +27,7 @@
             </div>
 
             <div class="card-body" v-if="invitations.length != 0">
-                <user-header
+                <user-list-item
                     v-for="(invitation, index) in invitations"
                     :key="invitation.id"
                     :user="invitation.user"
@@ -58,7 +58,7 @@
                     >
                         <span class="fas fa-times" />
                     </button>
-                </user-header>
+                </user-list-item>
             </div>
         </div>
     </div>

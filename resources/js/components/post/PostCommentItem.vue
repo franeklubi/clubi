@@ -12,7 +12,7 @@
             <!-- card -->
             <div class="card w-100">
                 <span class="card-header">
-                    <user-header
+                    <user-list-item
                         :user="comment.user"
                         :date="comment.created_at"
                         :is_owner="owner.id == comment.user.id"
@@ -27,7 +27,7 @@
                                 class="point fa fa-times"
                             />
                         </span>
-                    </user-header>
+                    </user-list-item>
                 </span>
                 <div v-if="comment.content" class="card-body">
                     <p class="card-text">

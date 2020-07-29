@@ -76,8 +76,8 @@ Vue.component(
 
 // helper components
 Vue.component(
-    'user-header',
-    require('./components/helper_components/UserHeader.vue').default
+    'user-list-item',
+    require('./components/helper_components/UserListItem.vue').default
 );
 
 
