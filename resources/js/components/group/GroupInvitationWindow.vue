@@ -37,8 +37,11 @@
                 >
                     <p class="pl-2">{{ invitation.named_state }}</p>
 
+                    <!-- just so that buttons are on the right -->
+                    <span class="ml-auto"></span>
+
                     <!-- accept button -->
-                    <button class="btn btn-success ml-auto"
+                    <button class="btn btn-success"
                         v-if="
                             is_group_admin
                             && invitation.admin_accepted == '0'
@@ -49,11 +52,7 @@
                     </button>
 
                     <!-- cancel button -->
-                    <button class="btn btn-light justify-content-center"
-                        :class="{
-                            'ml-1': is_group_admin,
-                            'ml-auto': !is_group_admin
-                        }"
+                    <button class="btn btn-light justify-content-center ml-1"
                         v-if="user_id == invitation.from_id || is_group_admin"
                         @click="cancelInvitation(invitation)"
                     >
