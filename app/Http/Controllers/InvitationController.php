@@ -15,9 +15,9 @@ class InvitationController extends Controller
      * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function index(Group $group)
+    public function groupIndex(Group $group)
     {
-        $this->authorize('viewAny', [Invitation::class, $group]);
+        $this->authorize('viewAnyGroup', [Invitation::class, $group]);
 
         return response()->json([
             'invitations' => $group->invitations()->with('user.profile')->get()
@@ -82,12 +82,12 @@ class InvitationController extends Controller
         ]);
     }
 
-    public function confirm(
+    public function adminConfirm(
         Request $request,
         Group $group,
         Invitation $invitation
     ) {
-        $this->authorize('confirm', [$invitation, $group]);
+        $this->authorize('adminConfirm', [$invitation, $group]);
 
         $invitation->admin_accepted = true;
         $invitation->save();

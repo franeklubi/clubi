@@ -41,9 +41,16 @@ class DashboardController extends Controller
         }
 
         return view('dashboard.feed', [
+            'user' => $user,
             'posts' => $posts,
-            'user_id' => $user?$user->id:-1,
             'next_page_url' => $next_page_url,
+        ]);
+    }
+
+
+    public function invitations() {
+        return response()->json([
+            'invitations' => auth()->user()->invitations->load('group')
         ]);
     }
 

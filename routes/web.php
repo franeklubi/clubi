@@ -27,6 +27,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/posts', 'DashboardController@posts')
         ->name('dashboard.posts');
 
+    Route::get('/dashboard/invitations', 'DashboardController@invitations')
+        ->name('dashboard.invitations');
+
 
     // settings routes
     Route::get('/settings', 'SettingsController@edit')->name('settings.edit');
@@ -80,9 +83,10 @@ Route::middleware('auth')->group(function () {
     })->name('users.search');
 
 
-    Route::get('/groups/{group}/invitations', 'InvitationController@index')
-        ->middleware('can:view,group')
-        ->name('invitations.index');
+    Route::get(
+        '/groups/{group}/invitations',
+        'InvitationController@groupIndex'
+    )->middleware('can:view,group')->name('invitations.groupIndex');
 
     Route::post('/groups/{group}/invitations', 'InvitationController@store')
         ->middleware('can:view,group')
@@ -95,8 +99,8 @@ Route::middleware('auth')->group(function () {
 
     Route::patch(
         '/groups/{group}/invitations/{invitation}',
-        'InvitationController@confirm'
-    )->middleware('can:view,group')->name('invitations.confirm');
+        'InvitationController@adminConfirm'
+    )->middleware('can:view,group')->name('invitations.adminConfirm');
 });
 
 

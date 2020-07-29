@@ -76,6 +76,16 @@ Vue.component(
 
 // helper components
 Vue.component(
+    'group-list-item',
+    require('./components/helper_components/GroupListItem.vue').default
+);
+
+Vue.component(
+    'user-invitation-window',
+    require('./components/helper_components/UserInvitationWindow.vue').default
+);
+
+Vue.component(
     'user-list-item',
     require('./components/helper_components/UserListItem.vue').default
 );

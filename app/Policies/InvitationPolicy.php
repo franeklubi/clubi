@@ -27,7 +27,7 @@ class InvitationPolicy
      * @param  \App\Group  $group
      * @return \Illuminate\Auth\Access\Response
      */
-    public function viewAny(User $user, Group $group)
+    public function viewAnyGroup(User $user, Group $group)
     {
         return $group->members->contains($user)?
             Response::allow()
@@ -57,13 +57,17 @@ class InvitationPolicy
         return Response::allow();
     }
 
-    // determine whether the user can confirm the invitation
-    public function confirm(User $user, Invitation $invitation, Group $group) {
-        if ( $group->owner_id != $user->id ) {
-            return Response::deny("You can't confirm this invitation");
+    // determine whether the user can confirm the invitation as an admin
+    public function adminConfirm(
+        User $user,
+        Invitation $invitation,
+        Group $group
+    ) {
+        if ( $group->owner_id == $user->id ) {
+            return Response::allow();
         }
 
-        return Response::allow();
+        return Response::deny("You can't confirm this invitation");
     }
 
     /**
@@ -76,18 +80,14 @@ class InvitationPolicy
      */
     public function delete(User $user, Invitation $invitation, Group $group)
     {
-        if ( $group->owner_id == $user->id ) {
+        if (
+            $group->owner_id == $user->id
+            || $invitation->user_id == $user->id
+            || $invitation->from_id == $user->id
+        ) {
             return Response::allow();
         }
 
-        if ( !$group->members->contains($user) ) {
-            return Response::deny('Authenticated user not in group');
-        }
-
-        if ( $invitation->from_id != $user->id ) {
-            return Response::deny("That's not your invitation.");
-        }
-
-        return Response::allow();
+        return Response::deny("That's not your invitation.");
     }
 }
