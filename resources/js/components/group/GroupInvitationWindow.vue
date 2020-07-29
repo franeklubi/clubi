@@ -26,7 +26,7 @@
                 </div>
             </div>
 
-            <div class="card-body">
+            <div class="card-body" v-if="invitations.length != 0">
                 <user-header
                     v-for="(invitation, index) in invitations"
                     :key="invitation.id"
@@ -36,11 +36,28 @@
                     :class="{'mb-3': index != invitations.length-1}"
                 >
                     <p class="pl-2">{{ invitation.named_state }}</p>
-                    <button class="btn btn-light ml-auto"
+
+                    <!-- accept button -->
+                    <button class="btn btn-success ml-auto"
+                        v-if="
+                            is_group_admin
+                            && invitation.admin_accepted == '0'
+                        "
+                        @click="acceptInvitation(invitation)"
+                    >
+                        <span class="fas fa-check" />
+                    </button>
+
+                    <!-- cancel button -->
+                    <button class="btn btn-light justify-content-center"
+                        :class="{
+                            'ml-1': is_group_admin,
+                            'ml-auto': !is_group_admin
+                        }"
                         v-if="user_id == invitation.from_id || is_group_admin"
                         @click="cancelInvitation(invitation)"
                     >
-                        <span>cancel</span>
+                        <span class="fas fa-times" />
                     </button>
                 </user-header>
             </div>
@@ -89,6 +106,28 @@
                     });
 
                     this.invitations.splice(index, 1);
+
+                    this.feedback = '';
+                }).catch((err) => {
+                    this.feedback = this.handleAxiosError(err);
+                });
+            },
+
+            acceptInvitation(invitation) {
+                if ( !confirm('Are you sure?') ) {
+                    return;
+                }
+
+                let patch_url = '/groups/'+this.group.id_string+'/invitations/'
+                    +invitation.id;
+
+                axios.patch(patch_url).then((res) => {
+                    let index = this.invitations.findIndex((invitation) => {
+                        return invitation.id == res.data.invitation.id;
+                    });
+
+                    // replace the invitation
+                    Vue.set(this.invitations, index, res.data.invitation);
 
                     this.feedback = '';
                 }).catch((err) => {

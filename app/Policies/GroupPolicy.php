@@ -61,6 +61,16 @@ class GroupPolicy
             return true;
         }
 
+        // if there's an admin accepted invitation for the user
+        $invitation = $group->invitations
+            ->where('user_id', $user->id)
+            ->where('admin_accepted', true)
+            ->first();
+
+        if ( $invitation != null ) {
+            return true;
+        }
+
         return false;
     }
 

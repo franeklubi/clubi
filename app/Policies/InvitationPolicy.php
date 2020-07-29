@@ -57,6 +57,15 @@ class InvitationPolicy
         return Response::allow();
     }
 
+    // determine whether the user can confirm the invitation
+    public function confirm(User $user, Invitation $invitation, Group $group) {
+        if ( $group->owner_id != $user->id ) {
+            return Response::deny("You can't confirm this invitation");
+        }
+
+        return Response::allow();
+    }
+
     /**
      * Determine whether the user can delete the model.
      *

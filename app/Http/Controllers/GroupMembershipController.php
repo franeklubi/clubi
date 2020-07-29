@@ -8,7 +8,15 @@ use Illuminate\Http\Request;
 class GroupMembershipController extends Controller
 {
     public function store(Request $request, Group $group) {
-        $res = $group->members()->toggle($request->user());
+        $user = $request->user();
+
+        $res = $group->members()->toggle($user);
+
+        // if there's an invitation for the user
+        $invitation = $group->invitations->where('user_id', $user->id)->first();
+        if ( $invitation != null ) {
+            $invitation->delete();
+        }
 
         return response()->json([
             'status' => count($res['attached'])==0?'left':'joined',

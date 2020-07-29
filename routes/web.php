@@ -77,6 +77,11 @@ Route::middleware('auth')->group(function () {
         '/groups/{group}/invitations/{invitation}',
         'InvitationController@destroy'
     )->middleware('can:view,group')->name('invitations.destroy');
+
+    Route::patch(
+        '/groups/{group}/invitations/{invitation}',
+        'InvitationController@confirm'
+    )->middleware('can:view,group')->name('invitations.confirm');
 });
 
 

@@ -82,6 +82,21 @@ class InvitationController extends Controller
         ]);
     }
 
+    public function confirm(
+        Request $request,
+        Group $group,
+        Invitation $invitation
+    ) {
+        $this->authorize('confirm', [$invitation, $group]);
+
+        $invitation->admin_accepted = true;
+        $invitation->save();
+
+        return response()->json([
+            'invitation' => $invitation->load('user.profile'),
+        ]);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
