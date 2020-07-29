@@ -17,7 +17,8 @@ class CreateGroupsTable extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('owner_id')->references('id')->on('users');
+            $table->foreignId('owner_id')->references('id')->on('users')
+                ->onDelete('cascade');
             $table->string('name');
             $table->string('id_string')->unique();
             $table->string('banner_picture')->nullable();

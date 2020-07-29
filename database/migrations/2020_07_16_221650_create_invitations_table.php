@@ -17,9 +17,10 @@ class CreateInvitationsTable extends Migration
             $table->id();
             $table->timestamps();
 
-            $table->foreignId('from_id')->references('id')->on('users');
-            $table->foreignId('group_id')->constrained();
-            $table->foreignId('user_id')->constrained();
+            $table->foreignId('from_id')->references('id')->on('users')
+                ->onDelete('cascade');
+            $table->foreignId('group_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->boolean('admin_accepted')->default(false);
             $table->boolean('user_accepted')->default(false);
         });
