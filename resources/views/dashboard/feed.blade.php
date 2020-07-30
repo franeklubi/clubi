@@ -3,13 +3,13 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-4">
-            @auth
-                <user-invitation-window
-                    :user="{{ $user }}"
-                />
-            @endauth
-        </div>
+        @auth
+            <div class="col-md-4">
+                    <user-invitation-window
+                        :user="{{ $user }}"
+                    />
+            </div>
+        @endauth
         <div class="col-md-8">
             @guest
                 <div class="alert alert-info">
@@ -22,11 +22,11 @@
                             {{ session('status') }}
                         </div>
                     @endif
-                    <div class="alert alert-warning"
-                        v-if="{{ $posts->count() == 0 }}"
-                    >
-                        Join groups to see recent posts!
-                    </div>
+                    @if ( $posts->count() == 0 )
+                        <div class="alert alert-warning">
+                            Join groups to see recent posts!
+                        </div>
+                    @endif
 
                     <group-feed
                         :posts="{{ $posts }}"

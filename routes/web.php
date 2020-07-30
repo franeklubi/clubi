@@ -30,6 +30,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/invitations', 'DashboardController@invitations')
         ->name('dashboard.invitations');
 
+    Route::get('/yourGroups', 'DashboardController@yourGroups')
+        ->name('dashboard.yourGroups');
+
+    Route::get('/joinedGroups', 'DashboardController@joinedGroups')
+        ->name('dashboard.joinedGroups');
+
 
     // settings routes
     Route::get('/settings', 'SettingsController@edit')->name('settings.edit');

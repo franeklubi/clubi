@@ -55,6 +55,32 @@ class DashboardController extends Controller
     }
 
 
+    public function yourGroups(Request $request) {
+        $groups = $request->user()->ownsGroups()->get();
+
+        $zero_warning = "You haven't created any groups yet! Create one and it'll show up here.";
+
+        return view('groups.index', [
+            'user' => $request->user(),
+            'groups' => $groups,
+            'zero_warning' => $zero_warning,
+        ]);
+    }
+
+
+    public function joinedGroups(Request $request) {
+        $groups = $request->user()->memberOfGroups()->get();
+
+        $zero_warning = "You haven't joined any groups yet! Join one and it'll show up here.";
+
+        return view('groups.index', [
+            'user' => $request->user(),
+            'groups' => $groups,
+            'zero_warning' => $zero_warning,
+        ]);
+    }
+
+
     public function popular() {
         return view('dashboard.popular');
     }
