@@ -2,7 +2,9 @@
     <div class="card-footer"
         v-if="canComment || reversedComments.length > 0"
     >
-        <button @click="loadComments" v-if="next_page_url" class="btn">
+        <button @click="loadComments" v-if="next_page_url"
+            class="btn btn-link mb-3 mx-auto d-block"
+        >
             Load more replies
         </button>
         <post-comment-item
