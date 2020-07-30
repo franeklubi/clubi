@@ -7,7 +7,7 @@
             >
         </div>
         <div>
-            <span>
+            <span style="white-space: nowrap;">
                 <span class="font-weight-bold text-dark">
                     {{ user.username }}
                 </span>

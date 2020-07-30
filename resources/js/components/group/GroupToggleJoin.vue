@@ -1,7 +1,9 @@
 <template>
     <div class="container">
         <div class="form-group">
-            <button id="join_leave" type="button" :class="['btn', buttonColor]"
+            <button id="join_leave" type="button"
+                :class="['btn', buttonColor]"
+                class="w-100"
                 @click="emitToggle"
             >
                 {{ buttonText }}

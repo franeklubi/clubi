@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="">
         <group-add-post
             v-if="(is_member || is_group_admin) && group_id_string"
             @add-post="addPost"
