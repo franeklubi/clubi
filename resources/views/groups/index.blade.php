@@ -14,6 +14,7 @@
                 @foreach ($groups as $group)
                     <group-header
                         :editable="{{
+                            $user &&
                             ($group->owner_id == $user->id || $user->is_admin)
                                 ?'true':'false'
                         }}"

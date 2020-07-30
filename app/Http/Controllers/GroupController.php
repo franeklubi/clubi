@@ -179,7 +179,10 @@ class GroupController extends Controller
             $validated_data = array_merge(
                 $validated_data, ['banner_picture' => $picture_path]
             );
-        } else if ( $request->has('remove_banner_picture') ) {
+        } else if (
+            $request->has('remove_banner_picture')
+            && $request->input('remove_banner_picture')
+        ) {
             unset($validated_data['remove_banner_picture']);
             $validated_data = array_merge(
                 $validated_data, ['banner_picture' => null]

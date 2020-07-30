@@ -2,20 +2,22 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-start">
-        @auth
+    @guest
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="alert alert-info">
+                    You're not logged in! Please log in to see Your feed!
+                </div>
+            </div>
+        </div>
+    @else
+        <div class="row justify-content-start">
             <div class="col-lg-4 mb-3">
                 <user-invitation-window
                     :user="{{ $user }}"
                 />
             </div>
-        @endauth
-        <div class="col-lg-8">
-            @guest
-                <div class="alert alert-info">
-                    You're not logged in! Please log in to see Your feed!
-                </div>
-            @else
+            <div class="col-lg-8">
                 @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
@@ -35,8 +37,8 @@
                     :is_member="true"
                     passed_next_page_url="{{ $next_page_url }}"
                 />
-            @endguest
+            </div>
         </div>
-    </div>
+    @endguest
 </div>
 @endsection

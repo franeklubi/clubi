@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\User;
+use App\Group;
 
 class DashboardController extends Controller
 {
@@ -81,7 +82,18 @@ class DashboardController extends Controller
     }
 
 
-    public function popular() {
-        return view('dashboard.popular');
+    public function popular(Request $request) {
+        $most_popular = Group::all()
+            ->where('private', false)
+            ->sortByDesc(function ($group, $key) {
+                return $group->posts()->count()
+                    +$group->comments()->count();
+            });
+
+        return view('groups.index', [
+            'user' => $request->user(),
+            'groups' => $most_popular,
+            'zero_warning' => 'Nothing there yet...',
+        ]);
     }
 }
