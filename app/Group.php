@@ -19,9 +19,10 @@ class Group extends Model
 
         $term = '%'.implode("%", str_split(str_replace(" ", "", $search))).'%';
 
-        return static::select($columns)
+        return Group::where('private', false)
             ->where($columns[0], 'like', $term)
-            ->orWhere($columns[1], 'like', $term)
+            ->orWhere('private', false)
+            ->where($columns[1], 'like', $term)
             ->get();
     }
 

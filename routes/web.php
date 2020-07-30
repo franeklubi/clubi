@@ -104,10 +104,8 @@ Route::middleware('auth')->group(function () {
         'LikeController@toggleComment'
     )->middleware('can:view,group')->name('comments.likes.toggle');
 
-
-    Route::get('/users/search/{search?}', function ($search = "") {
-        return response()->json(['results' => \App\User::search($search)]);
-    })->name('users.search');
+    Route::post('/groups/search/', 'GroupController@search')
+        ->name('groups.search');
 
 
     Route::get(

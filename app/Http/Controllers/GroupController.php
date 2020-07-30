@@ -24,8 +24,18 @@ class GroupController extends Controller
     }
 
     // return search results
-    public function search(Request $request, $search = "") {
-        return response()->json(['results' => Group::search($search)]);
+    public function search(Request $request) {
+        $validated_data = $request->validate([
+            'query' => ['string', 'max:30'],
+        ]);
+
+        $groups = Group::search($validated_data['query']);
+
+        return view('groups.index', [
+            'user' => $request->user(),
+            'groups' => $groups,
+            'zero_warning' => 'No groups found :(',
+        ]);
     }
 
     /**

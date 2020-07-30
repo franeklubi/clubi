@@ -88,7 +88,7 @@ class DashboardController extends Controller
             ->sortByDesc(function ($group, $key) {
                 return $group->posts()->count()
                     +$group->comments()->count();
-            });
+            })->splice(0,10);
 
         return view('groups.index', [
             'user' => $request->user(),

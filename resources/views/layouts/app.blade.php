@@ -36,19 +36,15 @@
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
                             <a class="nav-link"
-                                href="{{ route('dashboard.feed') }}"
-                            >
-                                Feed
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
                                 href="{{ route('dashboard.popular') }}"
                             >
                                 Popular groups
                             </a>
                         </li>
+                    </ul>
+
+                    <ul class="navbar-nav mx-auto w-50">
+                        <x-group-search />
                     </ul>
 
                     <!-- Right Side Of Navbar -->
