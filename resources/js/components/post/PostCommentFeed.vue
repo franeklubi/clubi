@@ -7,9 +7,11 @@
         </button>
         <post-comment-item
             v-for="comment in reversedComments" :key="comment.id"
+            :post="post"
             :owner="owner"
             :comment="comment"
             :user_id="user_id"
+            :is_member="is_member"
             :post_author_id="parseInt(post.user_id)"
             :is_group_admin="is_group_admin"
             @delete-comment="deleteComment"

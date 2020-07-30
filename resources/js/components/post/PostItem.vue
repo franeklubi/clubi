@@ -38,9 +38,12 @@
                         {{ post.content }}
                     </p>
 
-                    <img class="w-100 mb-2" :src="post.picture">
+                    <img style="max-height: 50vh;"
+                        class="mb-2 rounded" :src="post.picture"
+                        v-if="post.picture"
+                    >
 
-                    <button class="btn mr-auto"
+                    <button class="btn w-100"
                         :class="likeButtonClass"
                         @click="toggleLike"
                         :disabled="!is_member"

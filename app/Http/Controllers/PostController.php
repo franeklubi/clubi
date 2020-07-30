@@ -121,7 +121,7 @@ class PostController extends Controller
         }
 
         return view('posts.show', [
-            'post' => $post->load(['user.profile', 'group.owner']),
+            'post' => $post->load(['user.profile', 'group.owner', 'likes']),
             'user_id' => $user?$user->id:-1,
             'editable' => $editable,
             'is_member' => $is_member,

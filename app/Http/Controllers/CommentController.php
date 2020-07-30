@@ -22,7 +22,7 @@ class CommentController extends Controller
     {
         $this->authorize('viewAny', [Comment::class, $group, $post]);
 
-        return $post->comments()->with('user.profile')
+        return $post->comments()->with(['user.profile', 'likes'])
             ->simplePaginate(config('consts.comments_per_page'));
     }
 

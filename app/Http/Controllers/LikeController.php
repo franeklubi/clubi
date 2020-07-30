@@ -75,6 +75,28 @@ class LikeController extends Controller
     public function toggleComment(
         Request $request, Group $group, Post $post, Comment $comment
     ) {
+        $this->authorize('viewAnyComment', [Like::class, $group, $comment]);
 
+        $user = $request->user();
+        $state = null;
+
+        $like = $comment->likes()->where('user_id', $user->id)->first();
+
+        if ( $like == null ) {
+            $this->authorize('create', [Like::class, $group]);
+
+            $like = $comment->likes()->create(['user_id' => $user->id]);
+            $state = 'liked';
+        } else {
+            $this->authorize('delete', $like);
+
+            $like->delete();
+            $state = 'unliked';
+        }
+
+        return response()->json([
+            'state' => $state,
+            'like' => $like,
+        ]);
     }
 }

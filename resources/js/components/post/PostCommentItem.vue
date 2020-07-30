@@ -2,15 +2,15 @@
     <div class="container">
         <div class="d-flex pb-2">
             <!-- profile picture outside card -->
-            <div class="pr-2 pt-1">
+            <div class="pr-2 pt-2">
                 <img :src="comment.user.profile.profile_picture"
-                    class="rounded-circle w-100"
+                    class="rounded-circle"
                     style="max-width: 30px"
                 >
             </div>
 
             <!-- card -->
-            <div class="card w-100">
+            <div class="card" style="max-width: 75%;">
                 <span class="card-header">
                     <user-list-item
                         :user="comment.user"
@@ -29,29 +29,52 @@
                         </span>
                     </user-list-item>
                 </span>
-                <div v-if="comment.content" class="card-body">
-                    <p class="card-text">
+                <div class="card-body d-flex flex-column">
+                    <p class="card-text" v-if="comment.content">
                         {{ comment.content }}
                     </p>
+
+                    <img v-if="comment.picture"
+                        class="mb-2 rounded"
+                        :src="comment.picture" alt=""
+                        style="max-height: 30vh;"
+                    >
+
+                    <button class="btn w-auto"
+                        :class="likeButtonClass"
+                        @click="toggleLike"
+                        :disabled="!is_member"
+                    >
+                        <span class="font-weight-bold">
+                            {{ likes.length }}
+                        </span>
+                        <span :class="likeIconClass"></span>
+                    </button>
                 </div>
-                <img v-if="comment.picture"
-                    class="w-100 p-1" :src="comment.picture" alt=""
-                >
             </div>
         </div>
     </div>
 </template>
 
 <script>
-    import moment from 'moment';
-
     export default {
         props: {
+            post: Object,
             owner: Object,
             comment: Object,
             user_id: Number,
+            is_member: Boolean,
             post_author_id: Number,
             is_group_admin: Boolean,
+        },
+
+        data: function () {
+            return {
+                likes: this.comment.likes,
+                likes_link: '/groups/'+this.post.group.id_string+'/posts/'
+                    +this.post.id+'/comments/'+this.comment.id+'/likes',
+                feedback: '',
+            }
         },
 
         methods: {
@@ -60,12 +83,54 @@
                     this.$emit('delete-comment', this.comment);
                 }
             },
+
+            loadLikes() {
+                axios.get(this.likes_link).then((res) => {
+                    this.likes = res.data.likes;
+                }).catch((err) => {
+                    this.feedback = this.handleAxiosError(err);
+                })
+            },
+
+            toggleLike() {
+                axios.post(this.likes_link).then((res) => {
+                    if ( res.data.state == 'liked' ) {
+                        this.likes.push(res.data.like);
+                    } else {
+                        let index = this.likes.findIndex((like) => {
+                            return like.id == res.data.like.id;
+                        });
+
+                        this.likes.splice(index, 1);
+                    }
+                }).catch((err) => {
+                    this.feedback = this.handleAxiosError(err);
+                })
+            },
         },
 
         computed: {
-            relativeTime: function () {
-                return moment(this.comment.created_at).fromNow();
+            isLiked() {
+                let index = this.likes.findIndex((like) => {
+                    return like.user_id == this.user_id;
+                });
+
+                return index>-1;
             },
+
+            likeIconClass() {
+                return this.isLiked?'fas fa-heart':'far fa-heart';
+            },
+
+            likeButtonClass() {
+                return this.isLiked?'btn-primary':'btn-outline-primary';
+            },
+        },
+
+        created() {
+            if ( typeof this.comment.likes == 'undefined' ) {
+                this.loadLikes();
+            }
         },
     }
 </script>
