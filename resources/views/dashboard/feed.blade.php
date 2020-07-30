@@ -12,7 +12,7 @@
         </div>
         <div class="col-md-8">
             @guest
-                <div class="alert alert-info card-text">
+                <div class="alert alert-info">
                     You're not logged in! Please log in to see Your feed!
                 </div>
             @else
@@ -22,6 +22,11 @@
                             {{ session('status') }}
                         </div>
                     @endif
+                    <div class="alert alert-warning"
+                        v-if="{{ $posts->count() == 0 }}"
+                    >
+                        Join groups to see recent posts!
+                    </div>
 
                     <group-feed
                         :posts="{{ $posts }}"

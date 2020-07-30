@@ -64,12 +64,38 @@
                                 </li>
                             @endif
                         @else
+                            <li class="nav-item">
+                                <a class="nav-link"
+                                    href="{{ route('groups.create') }}"
+                                >
+                                    Create group
+                                </a>
+                            </li>
+
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle font-weight-bold" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->username }} <span class="caret"></span>
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item"
+                                        href="{{ route('settings.edit') }}"
+                                    >
+                                        Your groups
+                                    </a>
+
+                                    <a class="dropdown-item"
+                                        href="{{ route('settings.edit') }}"
+                                    >
+                                        Joined groups
+                                    </a>
+
+                                    <a class="dropdown-item"
+                                        href="{{ route('settings.edit') }}"
+                                    >
+                                        Settings
+                                    </a>
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

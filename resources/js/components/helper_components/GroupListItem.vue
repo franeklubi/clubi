@@ -1,12 +1,16 @@
 <template>
-    <div class="d-flex align-items-baseline">
-        <div class="background w-50">
-            <img :src="group.banner_picture"
-                class="w-100 rounded"
-                :style="{'max-height': banner_picture_size+'px'}"
-            >
-            <div class="centered">
-                <span class="text-light d-flex align-items-baseline">
+    <div class="d-flex align-items-center">
+        <div class="background mr-1 rounded w-100"
+            :style="{
+                'background-image': `url(${group.banner_picture})`,
+                'height': `${banner_picture_size}px`
+            }"
+        >
+            <div class="h-100">
+                <span class="d-flex justify-content-center align-items-center
+                    h-100 w-100"
+                    style="text-shadow: 2px 2px 5px black;"
+                >
                     <a class="font-weight-bold mr-1"
                         :href="group_link"
                     >{{ shortenedGroupName }}</a>
@@ -25,7 +29,7 @@
     export default {
         props: {
             group: Object,
-            banner_picture_size: {default: 40, type: Number},
+            banner_picture_size: {default: 37, type: Number},
         },
 
         data: function () {
@@ -50,16 +54,9 @@
     }
 
     .background {
-        position: relative;
         text-align: center;
         color: white;
-        filter: grayscale(50%);
-    }
-
-    .centered {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        background-size: cover;
+        background-position: center;
     }
 </style>

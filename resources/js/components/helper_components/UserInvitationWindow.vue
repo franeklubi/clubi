@@ -1,8 +1,11 @@
 <template>
     <div class="container">
         <div class="card">
-            <div class="card-header" v-if="feedback">
-                <div class="card-text alert alert-danger mt-2" role="alert">
+            <div class="card-header">
+                Invitations
+                <div class="card-text alert alert-danger mt-2"
+                    role="alert" v-if="feedback"
+                >
                     {{ feedback }}
                 </div>
             </div>
@@ -12,15 +15,16 @@
                     v-for="(invitation, index) in invitations"
                     :key="invitation.id"
                     :group="invitation.group"
-                    :banner_picture_size="30"
                     class="border-bottom pb-1 px-1"
                     :class="{'mb-3': index != invitations.length-1}"
                 >
                     <!-- join button -->
                     <button
                         @click="joinGroup(invitation)"
-                        class="ml-auto btn btn-primary"
-                    >Join</button>
+                        class="ml-auto btn btn-success"
+                    >
+                        <span class="fas fa-check" />
+                    </button>
 
                     <!-- cancel button -->
                     <button class="btn btn-light justify-content-center ml-1"
@@ -30,7 +34,7 @@
                     </button>
                 </group-list-item>
             </div>
-            <div v-else class="alert alert-info">
+            <div v-else class="card-text m-2 alert alert-info">
                 No available invitations
             </div>
         </div>
