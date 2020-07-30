@@ -19,4 +19,8 @@ class Post extends Model
     public function comments() {
         return $this->hasMany('App\Comment')->latest();
     }
+
+    public function likes() {
+        return $this->morphMany('App\Like', 'likeable');
+    }
 }

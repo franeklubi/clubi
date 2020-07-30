@@ -86,4 +86,8 @@ class User extends Authenticatable
     public function invitations() {
         return $this->hasMany('App\Invitation')->where('admin_accepted', true);
     }
+
+    public function liked() {
+        return $this->hasMany('App\Like');
+    }
 }

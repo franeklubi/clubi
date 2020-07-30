@@ -3,11 +3,9 @@
         <div class="card">
             <div class="card-header">
                 <div class="input-group">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text" id="">Username</span>
-                    </div>
                     <input type="text" class="form-control"
                         v-model="username_input"
+                        placeholder="Username"
                     >
                     <div class="input-group-append">
                         <button :class="['btn', inviteClass]"

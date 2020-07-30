@@ -13,7 +13,7 @@ class DashboardController extends Controller
         $groups = auth()->user()->memberOfGroups->pluck('id');
 
         $paginated_posts = \App\Post::whereIn('group_id', $groups)
-            ->with(['user.profile', 'group.owner'])
+            ->with(['user.profile', 'group.owner', 'likes'])
             ->latest()
             ->simplePaginate(config('consts.posts_per_page'));
 

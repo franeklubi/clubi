@@ -63,6 +63,7 @@ Route::middleware('auth')->group(function () {
         ->name('groups.membership');
 
 
+    // post routes
     Route::post('/groups/{group}/posts', 'PostController@store')
         ->middleware('can:view,group')
         ->name('posts.store');
@@ -71,7 +72,17 @@ Route::middleware('auth')->group(function () {
         ->middleware('can:view,group')
         ->name('posts.destroy');
 
+    Route::get('/groups/{group}/posts/{post}/likes', 'LikeController@indexPost')
+        ->middleware('can:view,group')
+        ->name('posts.likes.index');
 
+    Route::post(
+        '/groups/{group}/posts/{post}/likes',
+        'LikeController@togglePost'
+    )->middleware('can:view,group')->name('posts.likes.toggle');
+
+
+    // comment routes
     Route::post(
         '/groups/{group}/posts/{post}/comments',
         'CommentController@store'
@@ -82,6 +93,16 @@ Route::middleware('auth')->group(function () {
         '/groups/{group}/posts/{post}/comments/{comment}',
         'CommentController@destroy'
     )->middleware('can:view,group')->name('comments.destroy');
+
+    Route::get(
+        '/groups/{group}/posts/{post}/comments/{comment}/likes',
+        'LikeController@indexComment'
+    )->middleware('can:view,group')->name('comments.likes.index');
+
+    Route::post(
+        '/groups/{group}/posts/{post}/comments/{comment}/likes',
+        'LikeController@toggleComment'
+    )->middleware('can:view,group')->name('comments.likes.toggle');
 
 
     Route::get('/users/search/{search?}', function ($search = "") {
