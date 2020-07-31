@@ -42,7 +42,7 @@
                     </p>
 
                     <img style="max-height: 50vh;"
-                        class="mb-2 rounded" :src="post.picture"
+                        class="mb-2 rounded mw-100" :src="post.picture"
                         v-if="post.picture"
                     >
 
@@ -55,8 +55,6 @@
                         <span :class="likeIconClass"></span>
                     </button>
                 </div>
-
-
 
                 <post-comment-feed
                     :post="post"

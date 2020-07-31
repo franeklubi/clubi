@@ -38,7 +38,7 @@
                     </p>
 
                     <img v-if="comment.picture"
-                        class="mb-2 rounded"
+                        class="mb-2 rounded mw-100"
                         :src="comment.picture" alt=""
                         style="max-height: 30vh;"
                     >

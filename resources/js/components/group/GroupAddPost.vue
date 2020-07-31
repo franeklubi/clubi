@@ -2,7 +2,7 @@
     <div class="container">
         <div class="card no-border-top">
             <div class="card-body">
-                <div class="input-group mb-3">
+                <div class="input-group mb-2">
                     <textarea class="form-control" rows="4" id="post"
                         v-model="post_text"
                         placeholder="New post"
@@ -11,7 +11,7 @@
                         <div class="viewport" v-if="preview_image"
                             :style="{
                                 'background-image': `url(${preview_image})`,
-                                'width': '5vw',
+                                'width': '10vw',
                             }"
                         >
                             <span class="text-light fas fa-times cancel"
@@ -20,8 +20,9 @@
                         </div>
                         <label v-else for="file_input"
                             class="btn btn-outline-success h-100 d-flex"
+                            style="width: 10vw; font-size: 2rem"
                         >
-                            <div class="far fa-image my-auto" />
+                            <div class="far fa-image my-auto mx-auto" />
                         </label>
                     </div>
                 </div>
@@ -54,7 +55,6 @@
             deletePicture() {
                 this.picture_file = null;
                 this.preview_image = '';
-                console.log('success');
             },
 
             updatePreview(event) {
@@ -62,7 +62,6 @@
                 this.preview_image = window.URL.createObjectURL(
                     this.picture_file
                 );
-                console.log('updated');
             },
 
             addPost() {
