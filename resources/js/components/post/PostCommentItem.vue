@@ -21,7 +21,7 @@
                         class="hover"
                     >
                         <span v-if="comment.user_id == user_id || is_group_admin"
-                            class="ml-auto show"
+                            class="pl-3 ml-auto show"
                         >
                             <span @click="deleteCommentEvent" role="button"
                                 class="point fa fa-times"
@@ -31,7 +31,10 @@
                 </span>
                 <div class="card-body d-flex flex-column">
                     <p class="card-text" v-if="comment.content">
-                        {{ comment.content }}
+                        <read-more
+                            :content="comment.content"
+                            :char_cutoff="char_cutoff"
+                        />
                     </p>
 
                     <img v-if="comment.picture"
@@ -74,6 +77,7 @@
                 likes_link: '/groups/'+this.post.group.id_string+'/posts/'
                     +this.post.id+'/comments/'+this.comment.id+'/likes',
                 feedback: '',
+                char_cutoff: parseInt(process.env.MIX_READ_MORE_CHAR_CUTOFF),
             }
         },
 
@@ -137,10 +141,10 @@
 
 <style scoped>
     .show {
-        display: none;
+        visibility: hidden;
     }
 
     .hover:hover > .show {
-        display: block;
+        visibility: visible;
     }
 </style>

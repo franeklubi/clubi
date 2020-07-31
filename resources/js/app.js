@@ -81,6 +81,11 @@ Vue.component(
 );
 
 Vue.component(
+    'read-more',
+    require('./components/helper_components/ReadMore.vue').default
+);
+
+Vue.component(
     'user-invitation-window',
     require('./components/helper_components/UserInvitationWindow.vue').default
 );

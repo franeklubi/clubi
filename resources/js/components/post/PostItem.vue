@@ -35,7 +35,10 @@
                     <hr>
 
                     <p class="card-text">
-                        {{ post.content }}
+                        <read-more
+                            :content="post.content"
+                            :char_cutoff="char_cutoff"
+                        />
                     </p>
 
                     <img style="max-height: 50vh;"
@@ -89,6 +92,7 @@
                 owner: this.post.group.owner,
                 likes: this.post.likes,
                 feedback: '',
+                char_cutoff: parseInt(process.env.MIX_READ_MORE_CHAR_CUTOFF),
             }
         },
 
@@ -152,10 +156,10 @@
 
 <style scoped>
     .show {
-        display: none;
+        visibility: hidden;
     }
 
     .hover:hover > .show {
-        display: block;
+        visibility: visible;
     }
 </style>

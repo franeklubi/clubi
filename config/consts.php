@@ -51,4 +51,6 @@ return [
     'max_invitations_per_group' => env('MIX_MAX_INVITATIONS_PER_GROUP'),
 
     'min_username_length' => env('MIX_MIN_USERNAME_LENGTH'),
+
+    'read_more_char_cutoff' => env('MIX_READ_MORE_CHAR_CUTOFF'),
 ];
