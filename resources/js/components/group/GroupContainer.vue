@@ -1,7 +1,7 @@
 <template>
     <div class="container-fluid">
         <div class="row justify-content-start">
-            <div class="col-lg-4 col-xl-3">
+            <div class="col-lg-4 col-xl-3 mb-3">
                 <group-toggle-join
                     :is_member="is_member_temp"
                     @toggle="toggleJoin"

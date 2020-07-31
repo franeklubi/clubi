@@ -160,7 +160,7 @@
             },
 
             inviteClass() {
-                return this.canInvite?'btn-success':'btn-secondary';
+                return this.canInvite?'btn-outline-success':'btn-secondary';
             },
         },
     }

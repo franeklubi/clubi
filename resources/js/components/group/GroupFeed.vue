@@ -1,26 +1,31 @@
 <template>
     <div class="">
         <group-add-post
+            class="mb-3"
             v-if="(is_member || is_group_admin) && group_id_string"
             @add-post="addPost"
         />
-        {{ feedback }}
-        <div v-for="post in posts_to_render" :key="post.id">
-            <post-item
-                class="pb-3"
-                :post="post"
-                :user_id="user_id"
-                :is_member="is_member"
-                :display_group="display_group"
-                :is_group_admin="is_group_admin"
-                @delete-post="deletePost"
-            />
+        <div class="container">
+            <div class="alert alert-danger" v-if="feedback">
+                {{ feedback }}
+            </div>
+            <div v-for="post in posts_to_render" :key="post.id">
+                <post-item
+                    class="mb-2"
+                    :post="post"
+                    :user_id="user_id"
+                    :is_member="is_member"
+                    :display_group="display_group"
+                    :is_group_admin="is_group_admin"
+                    @delete-post="deletePost"
+                />
+            </div>
+            <button @click="loadPosts" v-if="next_page_url"
+                class="btn btn-secondary"
+            >
+                Load more posts
+            </button>
         </div>
-        <button @click="loadPosts" v-if="next_page_url"
-            class="btn btn-secondary"
-        >
-            Load more posts
-        </button>
     </div>
 </template>
 
