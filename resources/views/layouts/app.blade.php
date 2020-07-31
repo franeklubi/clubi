@@ -32,8 +32,12 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mx-auto w-50 order-md-2">
+                        <x-group-search />
+                    </ul>
+
                     <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+                    <ul class="navbar-nav mr-auto order-md-1">
                         <li class="nav-item">
                             <a class="nav-link"
                                 href="{{ route('dashboard.popular') }}"
@@ -43,12 +47,8 @@
                         </li>
                     </ul>
 
-                    <ul class="navbar-nav mx-auto w-50">
-                        <x-group-search />
-                    </ul>
-
                     <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="navbar-nav ml-auto order-12">
                         <!-- Authentication Links -->
                         @guest
                             <li class="nav-item">
