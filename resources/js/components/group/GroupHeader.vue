@@ -7,9 +7,6 @@
             }"
         >
             <div class="controls w-100 h-100 d-flex flex-column hover">
-                <div class="alert alert-danger" v-if="feedback">
-                    {{ feedback }}
-                </div>
                 <div class="c-top h-50 d-flex justify-content-between">
                     <!-- lock icon -->
                     <div class="">
@@ -54,6 +51,13 @@
                         >
                         <span :class="editIcon" class="text-shadow" />
                     </div>
+                </div>
+
+                <div class="alert alert-danger" v-if="feedback">
+                    {{ feedback }}
+                </div>
+                <div class="alert alert-success" v-if="edit_mode && success">
+                    Group updated!
                 </div>
 
                 <div class="c-bottom h-50 d-flex">
@@ -102,6 +106,7 @@
                 feedback: '',
                 edit_mode: this.create,
                 group_banner_remove: false,
+                success: false,
             }
         },
 
@@ -149,6 +154,12 @@
                     if ( this.create ) {
                         window.location.href = '/groups/'+res.data.string_id;
                     }
+                    this.success = true;
+                    setTimeout(() => {
+                        this.success = false;
+                    }, 1500);
+
+                    this.feedback = '';
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });

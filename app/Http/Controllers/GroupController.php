@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 
 use App\Http\Controllers\PostController;
 
+use Illuminate\Support\Facades\Storage;
+
 class GroupController extends Controller
 {
     /**
@@ -62,11 +64,17 @@ class GroupController extends Controller
 
         $validated_data = $request->validate(Group::rules());
 
+        // generate a unique id_sting
+        $id_string = Str::random(5);
+        while ( Group::where('id_string', $id_string)->count() > 0 ) {
+            $id_string = Str::random(5);
+        }
+
         if ( $request->has('banner_picture') ) {
             $request_file = $request->file('banner_picture');
 
             $picture_path = '/storage/'.$request_file->store(
-                'banner_pictures/'.$auth_user->id,
+                'banner_pictures/'.$id_string,
                 'public',
             );
 
@@ -89,11 +97,6 @@ class GroupController extends Controller
             $validated_data = array_merge(
                 $validated_data, ['banner_picture' => null]
             );
-        }
-
-        $id_string = Str::random(5);
-        while ( Group::where('id_string', $id_string)->count() > 0 ) {
-            $id_string = Str::random(5);
         }
 
         // create group
@@ -167,11 +170,26 @@ class GroupController extends Controller
 
         $validated_data = $request->validate(Group::rules());
 
+        $remove_picture = (
+            $request->has('remove_banner_picture')
+            && $request->input('remove_banner_picture')
+        );
+
+
+        if ( $request->has('banner_picture') || $remove_picture ) {
+            // remove the old picture
+            $old_path = $group->banner_picture;
+            if ( $old_path != config('consts.default_banner_picture_path') ) {
+                $relative_old_path = Str::after($old_path,'storage/');
+                Storage::disk('public')->delete($relative_old_path);
+            }
+        }
+
         if ( $request->has('banner_picture') ) {
             $request_file = $request->file('banner_picture');
 
             $picture_path = '/storage/'.$request_file->store(
-                'banner_pictures/'.$auth_user->id,
+                'banner_pictures/'.$group->id_string,
                 'public',
             );
 
@@ -189,10 +207,7 @@ class GroupController extends Controller
             $validated_data = array_merge(
                 $validated_data, ['banner_picture' => $picture_path]
             );
-        } else if (
-            $request->has('remove_banner_picture')
-            && $request->input('remove_banner_picture')
-        ) {
+        } else if ( $remove_picture ) {
             unset($validated_data['remove_banner_picture']);
             $validated_data = array_merge(
                 $validated_data, ['banner_picture' => null]

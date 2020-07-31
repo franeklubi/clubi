@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use Intervention\Image\Facades\Image;
 
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 class SettingsController extends Controller
 {
     /**
@@ -77,12 +80,26 @@ class SettingsController extends Controller
             'remove_profile_picture' => '',
         ]);
 
+        $remove_old_picture = false;
+        if (
+            $request->has('remove_profile_picture')
+            || $request->has('profile_picture')
+        ) {
+            $remove_old_picture = true;
+
+            // remove the old picture
+            $old_path = $request->user()->profile->profile_picture;
+            if ( $old_path != config('consts.default_profile_picture_path')) {
+                $relative_old_path = Str::after($old_path,'storage/');
+                Storage::disk('public')->delete($relative_old_path);
+            }
+        }
+
         if ( $request->has('profile_picture') ) {
             $request_file = $request->file('profile_picture');
 
-            $image_path = '/storage/'.$request_file->storeAs(
-                'profile_pictures',
-                "{$request->user()->id}.{$request_file->extension()}",
+            $image_path = '/storage/'.$request_file->store(
+                'profile_pictures/'.$request->user()->id,
                 'public',
             );
 
@@ -96,11 +113,11 @@ class SettingsController extends Controller
                 $validated_data, ['profile_picture' => $image_path]
             );
         } else if ( $request->has('remove_profile_picture') ) {
-            unset($validated_data['remove_profile_picture']);
             $validated_data = array_merge(
                 $validated_data, ['profile_picture' => null]
             );
         }
+        unset($validated_data['remove_profile_picture']);
 
         $user_data = ['username' => $validated_data['username']];
 
