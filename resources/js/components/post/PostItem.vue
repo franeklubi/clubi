@@ -34,7 +34,7 @@
 
                     <hr>
 
-                    <p class="card-text">
+                    <p class="card-text" v-if="post.content">
                         <read-more
                             :content="post.content"
                             :char_cutoff="char_cutoff"

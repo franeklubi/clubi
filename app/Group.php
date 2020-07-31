@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Group extends Model
 {
+    protected $appends = ['user_count', 'post_count'];
+
     protected $fillable = [
         'name', 'banner_picture', 'private'
     ];
@@ -40,6 +42,16 @@ class Group extends Model
     // accessor for the banner picture
     public function getBannerPictureAttribute($value) {
         return $value ? $value : config('consts.default_banner_picture_path');
+    }
+
+    // accessor for the user count
+    public function getUserCountAttribute() {
+        return $this->members()->count();
+    }
+
+    // accessor for the post count
+    public function getPostCountAttribute() {
+        return $this->posts()->count();
     }
 
     public function getRouteKeyName() {
