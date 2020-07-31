@@ -19,10 +19,21 @@ class Group extends Model
 
         $term = '%'.implode("%", str_split(str_replace(" ", "", $search))).'%';
 
+
+        $group_ids = [];
+
+        if ( auth()->check() ) {
+            $group_ids = auth()->user()->memberOfGroups
+                ->where('private', true)
+                ->pluck('id');
+        }
+
         return Group::where('private', false)
             ->where($columns[0], 'like', $term)
             ->orWhere('private', false)
             ->where($columns[1], 'like', $term)
+            ->orWhere('private', true)
+            ->whereIn('id', $group_ids)
             ->get();
     }
 

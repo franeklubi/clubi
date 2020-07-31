@@ -104,10 +104,8 @@ Route::middleware('auth')->group(function () {
         'LikeController@toggleComment'
     )->middleware('can:view,group')->name('comments.likes.toggle');
 
-    Route::post('/groups/search/', 'GroupController@search')
-        ->name('groups.search');
 
-
+    // invitation routes
     Route::get(
         '/groups/{group}/invitations',
         'InvitationController@groupIndex'
@@ -129,7 +127,7 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/groups/search/{search?}', 'GroupController@search')
+Route::post('/groups/search/', 'GroupController@search')
     ->name('groups.search');
 
 
