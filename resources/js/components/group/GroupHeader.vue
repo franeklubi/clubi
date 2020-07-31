@@ -23,7 +23,7 @@
 
                     <!-- buttons -->
                     <div class="ml-auto mr-4" v-if="edit_mode">
-                        <button type="button" class="btn btn-danger"
+                        <button type="button" class="btn btn-warning"
                             @click="removePicture"
                         >
                             Remove Background
@@ -40,6 +40,13 @@
                             @click="applyChanges"
                         >
                             <span class="fas fa-check" />
+                        </button>
+
+                        <button type="button" class="btn btn-danger d-block
+                            ml-auto"
+                            @click="deleteGroup"
+                        >
+                            Remove Group
                         </button>
                     </div>
 
@@ -66,7 +73,7 @@
                         v-if="!edit_mode"
                     >{{ group_name }}</a>
                     <input type="text" placeholder="Group name"
-                        class="form-control title w-50"
+                        class="form-control title w-75"
                         v-model="group_name"
                         v-if="edit_mode"
                     >
