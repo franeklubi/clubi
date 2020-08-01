@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Support\Facades\Cache;
+
 class Group extends Model
 {
     protected $appends = ['user_count', 'post_count'];
@@ -46,12 +48,26 @@ class Group extends Model
 
     // accessor for the user count
     public function getUserCountAttribute() {
-        return $this->members()->count();
+        $user_count = Cache::remember(
+            'user_count.group_'.$this->id,
+            now()->addSeconds(30),
+            function () {
+                return $this->members()->count();
+            }
+        );
+        return $user_count;
     }
 
     // accessor for the post count
     public function getPostCountAttribute() {
-        return $this->posts()->count();
+        $post_count = Cache::remember(
+            'post_count.group_'.$this->id,
+            now()->addSeconds(30),
+            function () {
+                return $this->posts()->count();
+            }
+        );
+        return $post_count;
     }
 
     public function getRouteKeyName() {
