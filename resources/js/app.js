@@ -76,6 +76,11 @@ Vue.component(
 
 // helper components
 Vue.component(
+    'edit-profile',
+    require('./components/helper_components/EditProfile.vue').default
+);
+
+Vue.component(
     'group-list-item',
     require('./components/helper_components/GroupListItem.vue').default
 );

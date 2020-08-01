@@ -50,7 +50,9 @@ class SettingsController extends Controller
      */
     public function edit()
     {
-        return view('settings.edit', ['user' => auth()->user()]);
+        return view('settings.edit', [
+            'user' => auth()->user()->load('profile')
+        ]);
     }
 
     /**
@@ -126,7 +128,7 @@ class SettingsController extends Controller
         $request->user()->profile->update($validated_data);
         $request->user()->update($user_data);
 
-        return redirect('settings')->with('status', 'Update successful!');
+        return response('OK');
     }
 
     /**
