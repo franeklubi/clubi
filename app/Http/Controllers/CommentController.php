@@ -22,8 +22,16 @@ class CommentController extends Controller
     {
         $this->authorize('viewAny', [Comment::class, $group, $post]);
 
+        $from_date_request = request('from_date');
+        $from_date = \Carbon\Carbon::parse($from_date_request)
+            ->toDateTimeString();
+
         return $post->comments()->with(['user.profile', 'likes'])
-            ->simplePaginate(config('consts.comments_per_page'));
+            ->when($from_date_request?true:false,
+                function ($query) use ($from_date) {
+                    return $query->where('created_at', '<=', $from_date);
+                }
+            )->simplePaginate(config('consts.comments_per_page'));
     }
 
     /**

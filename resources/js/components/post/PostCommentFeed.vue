@@ -42,6 +42,7 @@
                 next_page_url: `/groups/${this.post.group.id_string}/`
                     +`posts/${this.post.id}/comments`,
                 feedback: '',
+                from_date: this.post.comments?this.post.comments[0].created_at:null,
             }
         },
 
@@ -69,10 +70,17 @@
                 if ( this.next_page_url == null ) {
                     return;
                 }
-                axios.get(this.next_page_url).then((res) => {
+
+                axios.get(this.next_page_url, {
+                    params: {'from_date': this.from_date}
+                }).then((res) => {
                     this.next_page_url = res.data.next_page_url;
                     this.comments_to_render.push(...res.data.data);
                     this.feedback = '';
+
+                    if (this.from_date == null && this.comments_to_render[0]) {
+                        this.from_date = this.comments_to_render[0].created_at;
+                    }
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });

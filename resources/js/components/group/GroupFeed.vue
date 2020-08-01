@@ -82,7 +82,7 @@
                     this.posts_to_render.push(...res.data.data);
                     this.feedback = '';
 
-                    if ( typeof this.from_date == null ) {
+                    if ( this.from_date == null ) {
                         this.from_date = posts_to_render[0].created_at;
                     }
                 }).catch((err) => {
@@ -103,9 +103,5 @@
                     });
             },
         },
-
-        mounted() {
-            console.log('from', this.from_date);
-        }
     }
 </script>
