@@ -13,9 +13,17 @@ class DashboardController extends Controller
     public function posts() {
         $groups = auth()->user()->memberOfGroups->pluck('id');
 
+        $from_date_request = request('from_date');
+        $from_date = \Carbon\Carbon::parse($from_date_request)
+            ->toDateTimeString();
+
         $paginated_posts = \App\Post::whereIn('group_id', $groups)
             ->with(['user.profile', 'group.owner', 'likes'])
-            ->latest()
+            ->when($from_date_request?true:false,
+                function ($query) use ($from_date) {
+                    return $query->where('created_at', '<=', $from_date);
+                }
+            )->latest()
             ->simplePaginate(config('consts.posts_per_page'));
 
         return $paginated_posts;
