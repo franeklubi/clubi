@@ -11,7 +11,7 @@
                         <div class="viewport" v-if="preview_image"
                             :style="{
                                 'background-image': `url(${preview_image})`,
-                                'width': '10vw',
+                                'width': '12vw',
                             }"
                         >
                             <span class="text-light fas fa-times cancel"
@@ -20,7 +20,7 @@
                         </div>
                         <label v-else for="file_input"
                             class="btn btn-outline-success h-100 d-flex"
-                            style="width: 10vw; font-size: 2rem"
+                            style="width: 12vw; font-size: 5vw"
                         >
                             <div class="far fa-image my-auto mx-auto" />
                         </label>

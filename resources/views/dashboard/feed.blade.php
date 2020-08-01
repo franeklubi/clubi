@@ -13,9 +13,11 @@
     @else
         <div class="row justify-content-start">
             <div class="col-lg-4 mb-3">
-                <user-invitation-window
-                    :user="{{ $user }}"
-                />
+                <div class="container pt-3">
+                    <user-invitation-window
+                        :user="{{ $user }}"
+                    />
+                </div>
             </div>
             <div class="col-lg-8">
                 @if (session('status'))

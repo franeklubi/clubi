@@ -15,9 +15,8 @@
                 <span v-if="is_author" class="fa fa-pen-nib" />
                 <span v-if="is_owner" class="fa fa-shield-alt" />
                 <span v-else-if="user.is_admin == '1'" class="fa fa-tools" />
-
-                <span class="pl-1" />
-
+            </span>
+            <span class="pl-md-1" style="white-space: nowrap;">
                 <a :href="link" v-if="link">
                     {{ relativeTime }}
                 </a>
