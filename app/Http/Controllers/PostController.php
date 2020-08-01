@@ -18,9 +18,17 @@ class PostController extends Controller
      */
     public function index(\App\Group $group)
     {
+        $from_date_request = request('from_date');
+        $from_date = \Carbon\Carbon::parse($from_date_request)
+            ->toDateTimeString();
+
         return $group->posts()
             ->with(['user.profile', 'group.owner', 'likes'])
-            ->latest()
+            ->when($from_date_request?true:false,
+                function ($query) use ($from_date) {
+                    return $query->where('created_at', '<=', $from_date);
+                }
+            )->latest()
             ->simplePaginate(config('consts.posts_per_page'));
     }
 

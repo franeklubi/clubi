@@ -1,11 +1,10 @@
 <template>
     <div class="">
         <group-add-post
-            class="mb-3"
             v-if="(is_member || is_group_admin) && group_id_string"
             @add-post="addPost"
         />
-        <div class="container">
+        <div class="container mt-3">
             <div class="alert alert-danger" v-if="feedback">
                 {{ feedback }}
             </div>
@@ -21,7 +20,7 @@
                 />
             </div>
             <button @click="loadPosts" v-if="next_page_url"
-                class="btn btn-secondary"
+                class="btn btn-outline-secondary mx-auto d-block mt-3"
             >
                 Load more posts
             </button>
@@ -46,6 +45,7 @@
                 feedback: '',
                 posts_to_render: this.posts,
                 next_page_url: this.passed_next_page_url,
+                from_date: this.posts[0]?this.posts[0].created_at:null,
             }
         },
 
@@ -74,10 +74,17 @@
                 if ( this.next_page_url == null ) {
                     return;
                 }
-                axios.get(this.next_page_url).then((res) => {
+
+                axios.get(this.next_page_url, {
+                    params: {'from_date': this.from_date}
+                }).then((res) => {
                     this.next_page_url = res.data.next_page_url;
                     this.posts_to_render.push(...res.data.data);
                     this.feedback = '';
+
+                    if ( typeof this.from_date == null ) {
+                        this.from_date = posts_to_render[0].created_at;
+                    }
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });
@@ -96,5 +103,9 @@
                     });
             },
         },
+
+        mounted() {
+            console.log('from', this.from_date);
+        }
     }
 </script>
