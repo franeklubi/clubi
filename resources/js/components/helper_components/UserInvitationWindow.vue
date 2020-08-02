@@ -87,7 +87,8 @@
             },
 
             joinGroup(invitation) {
-                let post_path = '/groups/'+invitation.group.id_string+'/join';
+                let post_path = '/groups/'+invitation.group.id_string
+                    +'/membership';
 
                 axios.post(post_path).then((res) => {
                     window.location.href = '/groups/'

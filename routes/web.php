@@ -60,7 +60,7 @@ Route::middleware('auth')->group(function () {
 
             Route::patch('/', 'GroupController@update')->name('groups.update');
 
-            Route::post('/join', 'GroupMembershipController@store')
+            Route::post('/membership', 'GroupMembershipController@toggle')
                 ->name('groups.membership');
         });
     });

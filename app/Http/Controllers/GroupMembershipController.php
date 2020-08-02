@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class GroupMembershipController extends Controller
 {
-    public function store(Request $request, Group $group) {
+    public function toggle(Request $request, Group $group) {
         $user = $request->user();
 
         $res = $group->members()->toggle($user);

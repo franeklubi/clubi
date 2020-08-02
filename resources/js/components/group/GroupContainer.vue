@@ -51,7 +51,7 @@
 
         methods: {
             toggleJoin() {
-                let post_path = '/groups/'+this.group.id_string+'/join';
+                let post_path = '/groups/'+this.group.id_string+'/membership';
 
                 axios.post(post_path).then((res) => {
                     this.is_member_temp = !this.is_member_temp;
