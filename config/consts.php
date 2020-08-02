@@ -2,7 +2,7 @@
 
 // key-value pairs defining all the constants
 return [
-    'name' => 'club',
+    'name' => 'clubi',
 
     'profile_picture' => [
         'min_width' => 250,
