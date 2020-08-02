@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\User;
 use App\Group;
 
+use Illuminate\Support\Facades\Cache;
+
 class DashboardController extends Controller
 {
     // returns paginated posts for user
@@ -91,12 +93,19 @@ class DashboardController extends Controller
 
 
     public function popular(Request $request) {
-        $most_popular = Group::all()
-            ->where('private', false)
-            ->sortByDesc(function ($group, $key) {
-                return $group->posts()->count()
-                    +$group->comments()->count();
-            })->splice(0,10);
+        $most_popular = Cache::remember(
+            'most_popular.dashboard',
+            now()->addMinutes(5),
+            function () {
+                return Group::all()
+                    ->where('private', false)
+                    ->sortByDesc(function ($group, $key) {
+                        return $group->members()->count()
+                            +$group->posts()->count()
+                            +$group->comments()->count();
+                    })->splice(0,10);
+            }
+        );
 
         return view('groups.index', [
             'user' => $request->user(),
