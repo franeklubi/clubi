@@ -53,4 +53,9 @@ return [
     'min_username_length' => env('MIX_MIN_USERNAME_LENGTH'),
 
     'read_more_char_cutoff' => env('MIX_READ_MORE_CHAR_CUTOFF'),
+
+    'throttle' => [
+        'global_per_minute' => 1000,
+        'uploads_per_minute' => 20,
+    ],
 ];

@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+
+// function returning a generated string of throttle middleware
+function throttleUploads() {
+    $uploads_per_minute = config('consts.throttle.uploads_per_minute', 10);
+    return "throttle:$uploads_per_minute,1,uploads";
+}
+
+
 Auth::routes();
 
 
@@ -38,7 +46,9 @@ Route::middleware('auth')->group(function () {
     Route::prefix('settings')->group(function () {
         Route::get('/', 'SettingsController@edit')->name('settings.edit');
 
-        Route::patch('/', 'SettingsController@update')->name('settings.update');
+        Route::patch('/', 'SettingsController@update')
+            ->middleware(throttleUploads())
+            ->name('settings.update');
     });
 
 
@@ -48,7 +58,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/create', 'GroupController@create')
             ->name('groups.create');
 
-        Route::post('/', 'GroupController@store')->name('groups.store');
+        Route::post('/', 'GroupController@store')
+            ->middleware(throttleUploads())
+            ->name('groups.store');
 
         // group-specific modification routes
         Route::group([
@@ -58,7 +70,9 @@ Route::middleware('auth')->group(function () {
             Route::delete('/', 'GroupController@destroy')
                 ->name('groups.destroy');
 
-            Route::patch('/', 'GroupController@update')->name('groups.update');
+            Route::patch('/', 'GroupController@update')
+                ->middleware(throttleUploads())
+                ->name('groups.update');
 
             Route::post('/membership', 'GroupMembershipController@toggle')
                 ->name('groups.membership');
@@ -71,7 +85,9 @@ Route::middleware('auth')->group(function () {
         'prefix' => 'groups/{group}/posts',
         'middleware' => 'can:view,group',
     ], function () {
-        Route::post('/', 'PostController@store')->name('posts.store');
+        Route::post('/', 'PostController@store')
+            ->middleware(throttleUploads())
+            ->name('posts.store');
 
         // post-specific routes
         Route::prefix('{post}')->group(function () {
@@ -91,7 +107,9 @@ Route::middleware('auth')->group(function () {
         'prefix' => 'groups/{group}/posts/{post}/comments',
         'middleware' => 'can:view,group',
     ], function () {
-        Route::post('/', 'CommentController@store')->name('comments.store');
+        Route::post('/', 'CommentController@store')
+            ->middleware(throttleUploads())
+            ->name('comments.store');
 
         // comment-specific routes
         Route::prefix('{comment}')->group(function () {
