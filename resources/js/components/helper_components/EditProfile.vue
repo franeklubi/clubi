@@ -51,9 +51,9 @@
             <div class="input-group-prepend">
                 <span class="input-group-text">Description</span>
             </div>
-            <input id="description" type="text" class="form-control"
+            <textarea id="description" class="form-control"
                 v-model="temp_user.profile.description"
-            >
+            />
         </div>
 
         <button class="btn btn-primary w-75 mt-5" @click="applyChanges">

@@ -8,7 +8,7 @@
         </div>
         <div>
             <span style="white-space: nowrap;">
-                <span class="font-weight-bold text-dark">
+                <span class="font-weight-bold text-dark" ref="username_tooltip">
                     {{ user.username }}
                 </span>
 
@@ -50,6 +50,20 @@
                 }
                 return '';
             }
+        },
+
+        mounted() {
+            let content = this.user.profile.description;
+            if ( !content ) {
+                content = 'No description set.'
+            }
+
+            $(this.$refs.username_tooltip).popover({
+                title: 'Description:',
+                content: content,
+                placement: 'bottom',
+                trigger: 'hover',
+            });
         },
     }
 </script>
