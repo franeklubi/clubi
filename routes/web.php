@@ -16,137 +16,145 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 
-Route::get('/', 'DashboardController@feed')->name('dashboard.feed');
-
-Route::get('/popular', 'DashboardController@popular')
-    ->name('dashboard.popular');
-
-
+// routes that need authentication
 Route::middleware('auth')->group(function () {
     // dashboard routes
-    Route::get('/dashboard/posts', 'DashboardController@posts')
-        ->name('dashboard.posts');
-
-    Route::get('/dashboard/invitations', 'DashboardController@invitations')
-        ->name('dashboard.invitations');
-
     Route::get('/yourGroups', 'DashboardController@yourGroups')
         ->name('dashboard.yourGroups');
 
     Route::get('/joinedGroups', 'DashboardController@joinedGroups')
         ->name('dashboard.joinedGroups');
 
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/posts', 'DashboardController@posts')
+            ->name('dashboard.posts');
+
+        Route::get('/invitations', 'DashboardController@invitations')
+            ->name('dashboard.invitations');
+    });
+
 
     // settings routes
-    Route::get('/settings', 'SettingsController@edit')->name('settings.edit');
+    Route::prefix('settings')->group(function () {
+        Route::get('/', 'SettingsController@edit')->name('settings.edit');
 
-    Route::patch('/settings', 'SettingsController@update')
-        ->name('settings.update');
+        Route::patch('/', 'SettingsController@update')->name('settings.update');
+    });
+
 
     // group routes
-    Route::get('/groups/create', 'GroupController@create')
-        ->name('groups.create');
+    Route::prefix('groups')->group(function () {
+        // group creation routes
+        Route::get('/create', 'GroupController@create')
+            ->name('groups.create');
 
-    Route::post('/groups', 'GroupController@store')->name('groups.store');
+        Route::post('/', 'GroupController@store')->name('groups.store');
 
-    Route::delete('/groups/{group}', 'GroupController@destroy')
-        ->middleware('can:view,group')
-        ->name('groups.destroy');
+        // group-specific modification routes
+        Route::group([
+            'prefix' => '{group}',
+            'middleware' => 'can:view,group',
+        ], function () {
+            Route::delete('/', 'GroupController@destroy')
+                ->name('groups.destroy');
 
-    Route::patch('/groups/{group}', 'GroupController@update')
-        ->middleware('can:view,group')
-        ->name('groups.destroy');
+            Route::patch('/', 'GroupController@update')->name('groups.update');
 
-
-    Route::post('/groups/{group}/join', 'GroupMembershipController@store')
-        ->middleware('can:view,group')
-        ->name('groups.membership');
+            Route::post('/join', 'GroupMembershipController@store')
+                ->name('groups.membership');
+        });
+    });
 
 
     // post routes
-    Route::post('/groups/{group}/posts', 'PostController@store')
-        ->middleware('can:view,group')
-        ->name('posts.store');
+    Route::group([
+        'prefix' => 'groups/{group}/posts',
+        'middleware' => 'can:view,group',
+    ], function () {
+        Route::post('/', 'PostController@store')->name('posts.store');
 
-    Route::delete('/groups/{group}/posts/{post}', 'PostController@destroy')
-        ->middleware('can:view,group')
-        ->name('posts.destroy');
+        // post-specific routes
+        Route::prefix('{post}')->group(function () {
+            Route::delete('/', 'PostController@destroy')->name('posts.destroy');
 
-    Route::get('/groups/{group}/posts/{post}/likes', 'LikeController@indexPost')
-        ->middleware('can:view,group')
-        ->name('posts.likes.index');
+            Route::get('/likes', 'LikeController@indexPost')
+                ->name('posts.likes.index');
 
-    Route::post(
-        '/groups/{group}/posts/{post}/likes',
-        'LikeController@togglePost'
-    )->middleware('can:view,group')->name('posts.likes.toggle');
+            Route::post('/likes', 'LikeController@togglePost')
+                ->name('posts.likes.toggle');
+        });
+    });
 
 
     // comment routes
-    Route::post(
-        '/groups/{group}/posts/{post}/comments',
-        'CommentController@store'
-    )->middleware(['can:view,group'])
-        ->name('comments.store');
+    Route::group([
+        'prefix' => 'groups/{group}/posts/{post}/comments',
+        'middleware' => 'can:view,group',
+    ], function () {
+        Route::post('/', 'CommentController@store')->name('comments.store');
 
-    Route::delete(
-        '/groups/{group}/posts/{post}/comments/{comment}',
-        'CommentController@destroy'
-    )->middleware('can:view,group')->name('comments.destroy');
+        // comment-specific routes
+        Route::prefix('{comment}')->group(function () {
+            Route::delete('/', 'CommentController@destroy')
+                ->name('comments.destroy');
 
-    Route::get(
-        '/groups/{group}/posts/{post}/comments/{comment}/likes',
-        'LikeController@indexComment'
-    )->middleware('can:view,group')->name('comments.likes.index');
+            Route::get('/likes', 'LikeController@indexComment')
+                ->name('comments.likes.index');
 
-    Route::post(
-        '/groups/{group}/posts/{post}/comments/{comment}/likes',
-        'LikeController@toggleComment'
-    )->middleware('can:view,group')->name('comments.likes.toggle');
+            Route::post('/likes', 'LikeController@toggleComment')
+                ->name('comments.likes.toggle');
+        });
+    });
 
 
     // invitation routes
-    Route::get(
-        '/groups/{group}/invitations',
-        'InvitationController@groupIndex'
-    )->middleware('can:view,group')->name('invitations.groupIndex');
+    Route::group([
+        'prefix' => 'groups/{group}/invitations',
+        'middleware' => 'can:view,group',
+    ], function () {
+        Route::get('/', 'InvitationController@groupIndex')
+            ->name('invitations.groupIndex');
 
-    Route::post('/groups/{group}/invitations', 'InvitationController@store')
-        ->middleware('can:view,group')
-        ->name('invitations.store');
+        Route::post('/', 'InvitationController@store')
+            ->name('invitations.store');
 
-    Route::delete(
-        '/groups/{group}/invitations/{invitation}',
-        'InvitationController@destroy'
-    )->middleware('can:view,group')->name('invitations.destroy');
+        // invitation-specific routes
+        Route::prefix('{invitation}')->group(function () {
+            Route::delete('/', 'InvitationController@destroy')
+                ->name('invitations.destroy');
 
-    Route::patch(
-        '/groups/{group}/invitations/{invitation}',
-        'InvitationController@adminConfirm'
-    )->middleware('can:view,group')->name('invitations.adminConfirm');
+            Route::patch('/', 'InvitationController@adminConfirm')
+                ->name('invitations.adminConfirm');
+        });
+    });
 });
 
 
-Route::post('/groups/search/', 'GroupController@search')
-    ->name('groups.search');
+// public routes
+Route::get('/', 'DashboardController@feed')->name('dashboard.feed');
 
+Route::get('/popular', 'DashboardController@popular')
+    ->name('dashboard.popular');
 
-Route::get('/groups/{group}', 'GroupController@show')
-    ->name('groups.show');
+Route::prefix('groups')->group(function () {
+    Route::post('/search/', 'GroupController@search')
+        ->name('groups.search');
 
+    // indexing group's contents
+    Route::group([
+        'prefix' => '{group}',
+        'middleware' => 'can:view,group',
+    ], function () {
+        Route::get('/', 'GroupController@show')
+            ->name('groups.show');
 
-Route::get(
-    '/groups/{group}/posts',
-    'PostController@index'
-)->middleware('can:view,group')->name('posts.index');
+        Route::get('/posts', 'PostController@index')
+            ->name('posts.index');
 
+        Route::get('/posts/{post}', 'PostController@show')
+            ->name('posts.show');
 
-Route::get('/groups/{group}/posts/{post}', 'PostController@show')
-    ->middleware('can:view,group')
-    ->name('posts.show');
-
-
-Route::get(
-    '/groups/{group}/posts/{post}/comments',
-    'CommentController@index'
-)->middleware('can:view,group')->name('comments.index');
+        Route::get('/posts/{post}/comments', 'CommentController@index')
+            ->name('comments.index');
+    });
+});

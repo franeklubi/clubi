@@ -9,18 +9,18 @@ use Illuminate\Database\Eloquent\Model;
 // cases in which an invitation could be created:
 //     - if group is private:
 //         - if a member invites:
-//             * admin has to accept first
-//             * target user has to accept
-//             * invitation is destroyed
+//             1. admin has to accept first
+//             2. target user has to accept/join group
+//             3. invitation is destroyed
 //         - if admin invites:
-//             * admin_accepted is set to true
-//             * target user has to accept
-//             * invitation is destroyed
+//             1. admin_accepted is set to true
+//             2. target user has to accept/join group
+//             3. invitation is destroyed
 //     - if group is public:
 //         - if a member invites:
-//             * admin_accepted is set to true
-//             * user has to accept
-//             * invitation is destroyed
+//             1. admin_accepted is set to true
+//             2. target user has to accept/join group
+//             3. invitation is destroyed
 class Invitation extends Model
 {
     protected $fillable = ['from_id', 'group_id', 'user_id'];
