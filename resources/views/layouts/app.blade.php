@@ -27,8 +27,11 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('consts.name') }}
+                <a class="navbar-brand pb-2 pt-0" href="{{ url('/') }}">
+                    <img src="{{ asset('const_assets/logo_transparent_small.png') }}"
+                        class="align-self-start"
+                        height="22"
+                    >
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
