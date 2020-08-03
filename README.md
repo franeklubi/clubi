@@ -2,14 +2,14 @@
 
 ![logo.png](./assets/logo.png)
 
-### **C**lubi is a group-oriented social media platform written in Laravel.
+### Clubi is a group-oriented social media platform written in Laravel.
 
 ---
 * [Features](#features)
 ---
 
 # Features
-* easy (public or private) group creation and management
+* allows for easy (public or private) group creation and management
 * distinguishes between users, group admins, and site admins
 * implements user-specific feed containing latest posts from all groups the user has joined
 * implements invitation system with specified controls such as: necessary admin approval for invitations to private groups
@@ -20,3 +20,4 @@
     - post author
     - group admin
     - site admin
+* implements 'Load more' functionality on posts and comments
