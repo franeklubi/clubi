@@ -6,6 +6,7 @@
 
 ---
 * [Features](#features)
+* [Contributing](#contributing)
 ---
 
 # Features
@@ -21,3 +22,14 @@
     - group admin
     - site admin
 * implements 'Load more' functionality on posts and comments
+
+# Contributing
+
+Clubi welcomes contributions of any kind :)
+
+To start contributing clone the repository and run `./dev_setup.sh` to help get You started. This script will:
+* install composer and npm packages
+* compile js assets
+* copy the .env.example to .env
+* generate secure key with artisan
+* open .env in vim for You to modify it
