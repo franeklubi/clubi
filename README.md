@@ -9,6 +9,9 @@
 * [Contributing](#contributing)
 ---
 
+![responsive.png](./assets/responsive.png)
+*Showcase of the responsive design*
+
 # Features
 * allows for easy (public or private) group creation and management
 * distinguishes between users, group admins, and site admins
@@ -21,7 +24,8 @@
     - post author
     - group admin
     - site admin
-* implements 'Load more' functionality on posts and comments
+* implements 'Load more' functionality for posts and comments
+* uses responsive design
 
 # Contributing
 
