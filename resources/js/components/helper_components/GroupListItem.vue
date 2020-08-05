@@ -1,26 +1,24 @@
 <template>
-    <div class="d-flex align-items-center">
+    <div class="d-flex align-items-center w-100">
         <div class="background mr-1 rounded w-100"
             :style="{
                 'background-image': `url(${group.banner_picture})`,
                 'height': `${banner_picture_size}px`
             }"
         >
-            <div class="h-100">
-                <span class="d-flex justify-content-center align-items-center
-                    h-100 w-100"
-                    style="text-shadow: 2px 2px 5px black;"
+            <div class="d-flex justify-content-center align-items-center
+                h-100 px-2"
+            >
+                <a class="font-weight-bold title mr-2"
+                    :href="group_link"
                 >
-                    <a class="font-weight-bold mr-1"
-                        :href="group_link"
-                    >{{ shortenedGroupName }}</a>
+                    {{ group.name }}
+                </a>
 
-                    <span v-if="group.private == '1'" class="fas fa-lock" />
-                </span>
+                <span v-if="group.private == '1'" class="fas fa-lock" />
             </div>
         </div>
 
-        <!-- slot for buttons or whatever -->
         <slot></slot>
     </div>
 </template>
@@ -37,13 +35,6 @@
                 group_link: '/groups/'+this.group.id_string,
             }
         },
-
-        computed: {
-            shortenedGroupName() {
-                let name = this.group.name;
-                return name.length>10?name.substr(0, 10)+'...':name;
-            }
-        }
     }
 </script>
 
@@ -54,9 +45,18 @@
     }
 
     .background {
-        text-align: center;
         color: white;
         background-size: cover;
         background-position: center;
+
+        min-width: 0;
+    }
+
+    .title {
+        text-shadow: 2px 2px 5px black;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>

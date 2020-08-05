@@ -13,7 +13,7 @@
                         :is_owner="owner.id == post.user.id"
                         class="hover"
                     >
-                        <span v-if="display_group" style="white-space: nowrap;">
+                        <span v-if="display_group" class="truncate">
                             <span class="ml-2 fas fa-arrow-right"
                                 :href="group_link"
                             >
@@ -159,5 +159,11 @@
 
     .hover:hover > .show {
         visibility: visible;
+    }
+
+    .truncate {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>

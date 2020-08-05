@@ -73,7 +73,7 @@
                         v-if="!edit_mode"
                     >{{ group_name }}</a>
                     <input type="text" placeholder="Group name"
-                        class="form-control title w-75"
+                        class="form-control title"
                         v-model="group_name"
                         v-if="edit_mode"
                     >
@@ -276,6 +276,12 @@
         align-self: flex-end;
 
         padding-left: 0.5rem;
+
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        max-width: 65%;
     }
 
     .counts {
