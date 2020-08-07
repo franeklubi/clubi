@@ -4,6 +4,8 @@
 
 ### Clubi is a group-oriented social media platform written in Laravel.
 
+Visit us at: http://clubi.franeklubi.com/
+
 ---
 * [Features](#features)
 * [Contributing](#contributing)
