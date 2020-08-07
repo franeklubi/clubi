@@ -6,8 +6,19 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <div class="alert alert-info">
-                    You're not logged in! Visit <a href="/popular">Popular groups</a> or log in to see Your feed!
+                    You're not logged in! Visit <a href="/popular">Popular groups</a>, or log in to see Your feed!
                 </div>
+
+                @if ( $posts->count() != 0 )
+                    <h2>Random posts:</h2>
+                @endif
+
+                <group-feed
+                    :posts="{{ $posts }}"
+                    :user_id="{{ -1 }}"
+                    :display_group="true"
+                    :is_member="false"
+                />
             </div>
         </div>
     @else

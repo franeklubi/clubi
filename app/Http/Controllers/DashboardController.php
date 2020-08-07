@@ -6,11 +6,38 @@ use Illuminate\Http\Request;
 
 use App\User;
 use App\Group;
+use App\Post;
 
 use Illuminate\Support\Facades\Cache;
 
 class DashboardController extends Controller
 {
+    // returns one page of random posts
+    public function randomPosts() {
+        $random_public_posts = Cache::remember(
+            'random_public_posts.dashboard',
+            now()->addMinutes(5),
+            function () {
+                $public_groups_ids = Group::where('private', false)
+                    ->pluck('id');
+
+                $public_posts = Post::whereIn('group_id', $public_groups_ids)
+                    ->get();
+
+                $public_posts_count = $public_posts->count();
+
+                return $public_posts->random(
+                    $public_posts_count>config('consts.posts_per_page')?
+                        config('consts.posts_per_page')
+                        : $public_posts_count
+                )->load(['user.profile', 'group.owner', 'likes']);
+            }
+        );
+
+        return $random_public_posts;
+    }
+
+
     // returns paginated posts for user
     public function posts() {
         $groups = auth()->user()->memberOfGroups->pluck('id');
@@ -49,6 +76,8 @@ class DashboardController extends Controller
                     'page' => 2,
                 ]);
             }
+        } else {
+            $posts = $this->randomPosts();
         }
 
         return view('dashboard.feed', [
@@ -97,8 +126,7 @@ class DashboardController extends Controller
             'most_popular.dashboard',
             now()->addMinutes(5),
             function () {
-                return Group::all()
-                    ->where('private', false)
+                return Group::where('private', false)->get()
                     ->sortByDesc(function ($group, $key) {
                         return $group->members()->count()
                             +$group->posts()->count()
