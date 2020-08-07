@@ -30,9 +30,11 @@
                         </button>
 
                         <input @change="updatePreview" type="file"
-                            class="inputfile" id="file_input"
+                            class="inputfile" :id="'file_input'+_uid"
                         >
-                        <label for="file_input" class="btn btn-info mt-2">
+                        <label :for="'file_input'+_uid"
+                            class="btn btn-info mt-2"
+                        >
                             <span class="far fa-image text-light" />
                         </label>
 

@@ -18,7 +18,7 @@
                                 @click="deletePicture"
                             />
                         </div>
-                        <label v-else for="file_input"
+                        <label v-else :for="'file_input'+_uid"
                             class="btn btn-outline-success h-100 d-flex"
                             style="width: 12vw; font-size: 5vw"
                         >
@@ -29,7 +29,7 @@
 
                 <!-- hidden input -->
                 <input @change="updatePreview" type="file"
-                    class="inputfile" id="file_input" ref="fileupload"
+                    class="inputfile" :id="'file_input'+_uid" ref="fileupload"
                 >
 
                 <button type="button" class="btn btn-outline-primary w-100"
