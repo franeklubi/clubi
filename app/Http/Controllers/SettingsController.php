@@ -105,7 +105,9 @@ class SettingsController extends Controller
                 'public',
             );
 
-            $image = Image::make(public_path($image_path))->fit(
+            $image = Image::make(public_path($image_path));
+            $image->orientate();
+            $image->fit(
                 config('consts.profile_picture.fit_width'),
                 config('consts.profile_picture.fit_height')
             );

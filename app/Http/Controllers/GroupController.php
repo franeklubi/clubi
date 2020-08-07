@@ -79,6 +79,7 @@ class GroupController extends Controller
             );
 
             $picture = Image::make(public_path($picture_path));
+            $picture->orientate();
             $picture->resize(
                 config('consts.banner_picture.fit_width'),
                 config('consts.banner_picture.fit_height'),
@@ -194,6 +195,7 @@ class GroupController extends Controller
             );
 
             $picture = Image::make(public_path($picture_path));
+            $picture->orientate();
             $picture->resize(
                 config('consts.banner_picture.fit_width'),
                 config('consts.banner_picture.fit_height'),

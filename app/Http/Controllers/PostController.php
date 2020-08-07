@@ -83,6 +83,7 @@ class PostController extends Controller
             );
 
             $picture = Image::make(public_path($picture_path));
+            $picture->orientate();
             $picture->resize(
                 config('consts.post_picture.fit_width'),
                 config('consts.post_picture.fit_height'),
