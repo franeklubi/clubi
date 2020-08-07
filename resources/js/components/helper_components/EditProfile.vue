@@ -14,7 +14,7 @@
         </div>
 
         <!-- buttons -->
-        <div class="d-flex" style="width: 50vh;">
+        <div class="d-flex buttons-sizing">
             <!-- change picture -->
             <label for="file_input"
                 class="btn btn-info picture-button-left w-75"
@@ -35,7 +35,7 @@
 
 
         <!-- change username -->
-        <div class="input-group mt-2 w-50">
+        <div class="input-group mt-2 w-75">
             <div class="input-group-prepend">
                 <span class="input-group-text">Username</span>
             </div>
@@ -47,7 +47,7 @@
 
 
         <!-- change description -->
-        <div class="input-group mt-2 w-50">
+        <div class="input-group mt-2 w-75">
             <div class="input-group-prepend">
                 <span class="input-group-text">Description</span>
             </div>
@@ -134,8 +134,10 @@
 
 <style scoped>
     .viewport {
-        width: 50vh;
-        height: 50vh;
+        width: 50vw;
+        height: 50vw;
+        max-width: 50vh;
+        max-height: 50vh;
 
         color: white;
         background-size: cover;
@@ -145,6 +147,11 @@
         border-top-left-radius: 0.4rem;
         border-bottom-right-radius: 0;
         border-bottom-left-radius: 0;
+    }
+
+    .buttons-sizing {
+        width: 50vw;
+        max-width: 50vh;
     }
 
     .picture-button-left {
