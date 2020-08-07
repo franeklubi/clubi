@@ -70,3 +70,13 @@
         },
     }
 </script>
+
+
+<style scoped>
+    @media (max-width: 576px) {
+        .container-fluid {
+            padding:0;
+            margin:0;
+        }
+    }
+</style>

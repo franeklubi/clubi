@@ -26,7 +26,7 @@
                         <button type="button" class="btn btn-warning"
                             @click="removePicture"
                         >
-                            Remove Background
+                            <span class="fas fa-times" />
                         </button>
 
                         <input @change="updatePreview" type="file"
