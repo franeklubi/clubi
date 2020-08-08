@@ -28,14 +28,16 @@ class GroupController extends Controller
     // return search results
     public function search(Request $request) {
         $validated_data = $request->validate([
-            'query' => ['string', 'max:30'],
+            'query' => ['string', 'max:30', 'nullable'],
         ]);
 
-        $groups = Group::search($validated_data['query']);
+        $query = $validated_data['query'];
+
+        $groups = Group::search($query?$query:'');
 
         return view('groups.index', [
             'user' => $request->user(),
-            'groups' => $groups,
+            'groups' => $groups?$groups:collect([]),
             'zero_warning' => 'No groups found :(',
         ]);
     }
