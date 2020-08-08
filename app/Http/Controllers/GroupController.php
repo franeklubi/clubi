@@ -31,9 +31,9 @@ class GroupController extends Controller
             'query' => ['string', 'max:30', 'nullable'],
         ]);
 
-        $query = $validated_data['query'];
+        $query = request('query')?request('query'):'';
 
-        $groups = Group::search($query?$query:'');
+        $groups = Group::search($query);
 
         return view('groups.index', [
             'user' => $request->user(),
