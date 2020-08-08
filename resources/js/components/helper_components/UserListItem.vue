@@ -4,6 +4,7 @@
             <img :src="user.profile.profile_picture"
                 class="rounded-circle w-100"
                 :style="{'max-width': profile_picture_size+'px'}"
+                :alt="user.username+'_avatar'"
             >
         </div>
         <div>

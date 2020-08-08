@@ -44,6 +44,7 @@
                     <img style="max-height: 50vh;"
                         class="mb-2 rounded mw-100" :src="post.picture"
                         v-if="post.picture"
+                        :alt="'post'+post.id+'_image'"
                     >
 
                     <button class="btn w-100"

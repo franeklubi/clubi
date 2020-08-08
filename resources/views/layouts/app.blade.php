@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <meta name="Description" content="Clubi is a group-oriented social media platform">
+
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -31,6 +33,7 @@
                     <img src="{{ asset('const_assets/logo_transparent_small.png') }}"
                         class="align-self-start"
                         height="22"
+                        alt="clubi_logo"
                     >
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">

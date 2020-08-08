@@ -6,6 +6,7 @@
                 <img :src="comment.user.profile.profile_picture"
                     class="rounded-circle"
                     style="max-width: 30px"
+                    :alt="comment.user.username+'_avatar'"
                 >
             </div>
 
@@ -39,7 +40,8 @@
 
                     <img v-if="comment.picture"
                         class="mb-2 rounded mw-100"
-                        :src="comment.picture" alt=""
+                        :src="comment.picture"
+                        :alt="'comment'+comment.id+'_picture'"
                         style="max-height: 30vh;"
                     >
 
