@@ -148,6 +148,10 @@ Route::get('/popular', 'DashboardController@popular')
     ->name('dashboard.popular');
 
 Route::prefix('groups')->group(function () {
+    Route::redirect('/', '/');
+
+    Route::redirect('/search/', '/');
+
     Route::post('/search/', 'GroupController@search')
         ->name('groups.search');
 
