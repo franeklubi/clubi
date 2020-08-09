@@ -58,6 +58,8 @@ class LikeController extends Controller
 
             $like = $post->likes()->create(['user_id' => $user->id]);
             $state = 'liked';
+
+            event(new \App\Events\Liked($like));
         } else {
             $this->authorize('delete', $like);
 
@@ -87,6 +89,8 @@ class LikeController extends Controller
 
             $like = $comment->likes()->create(['user_id' => $user->id]);
             $state = 'liked';
+
+            event(new \App\Events\Liked($like));
         } else {
             $this->authorize('delete', $like);
 

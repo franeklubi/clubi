@@ -90,4 +90,8 @@ class User extends Authenticatable
     public function liked() {
         return $this->hasMany('App\Like');
     }
+
+    public function notifications() {
+        return $this->hasMany('App\Notification');
+    }
 }

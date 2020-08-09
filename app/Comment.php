@@ -19,4 +19,12 @@ class Comment extends Model
     public function likes() {
         return $this->morphMany('App\Like', 'likeable');
     }
+
+    // link for the Liked event
+    public function link() {
+        return route('posts.show', [
+            'group' => $this->post->group->id_string,
+            'post' => $this->post->id,
+        ]);
+    }
 }
