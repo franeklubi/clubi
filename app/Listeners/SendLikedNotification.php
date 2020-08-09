@@ -43,7 +43,7 @@ class SendLikedNotification
         }
 
 
-        \App\Notification::create([
+        \App\Notification::firstOrCreate([
             'user_id' => $user_id,
             'from_id' => $from_user->id,
             'message' => $message,
