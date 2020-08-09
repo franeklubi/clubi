@@ -47,6 +47,7 @@
                         <button type="button" class="btn btn-danger d-block
                             ml-auto"
                             @click="deleteGroup"
+                            v-if="!create"
                         >
                             Remove Group
                         </button>
