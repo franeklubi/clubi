@@ -35,7 +35,7 @@
 
 
         <!-- change username -->
-        <div class="input-group mt-2 w-75">
+        <div class="input-group mt-2 w-100">
             <div class="input-group-prepend">
                 <span class="input-group-text">Username</span>
             </div>
@@ -47,12 +47,13 @@
 
 
         <!-- change description -->
-        <div class="input-group mt-2 w-75">
+        <div class="input-group mt-2 w-100">
             <div class="input-group-prepend">
                 <span class="input-group-text">Description</span>
             </div>
             <textarea id="description" class="form-control"
                 v-model="temp_user.profile.description"
+                rows="5"
             />
         </div>
 
