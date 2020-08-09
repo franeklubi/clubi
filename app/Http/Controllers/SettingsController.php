@@ -69,6 +69,8 @@ class SettingsController extends Controller
                 'required',
                 'unique:users,username,'.$request->user()->id,
                 'alpha_dash',
+                'min:'.config('consts.min_username_length'),
+                'max:20',
             ],
             'description' => '',
             'profile_picture' => [

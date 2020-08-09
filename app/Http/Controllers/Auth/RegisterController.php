@@ -53,9 +53,9 @@ class RegisterController extends Controller
             'username' => [
                 'min:'.config('consts.min_username_length'),
                 'required',
-                'string',
                 'max:20',
                 'unique:users',
+                'alpha_dash',
             ],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
