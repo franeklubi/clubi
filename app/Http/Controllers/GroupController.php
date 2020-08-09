@@ -25,6 +25,14 @@ class GroupController extends Controller
         //
     }
 
+    // redirectGet is a helper function to redirect to
+    // dashboard if someone tries to access '/groups' with GET
+    // I'm not using a closure-based route because that would disallow
+    // route caching
+    public function redirectGet() {
+        return redirect()->route('dashboard.feed');
+    }
+
     // return search results
     public function search(Request $request) {
         $validated_data = $request->validate([

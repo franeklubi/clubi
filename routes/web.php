@@ -148,7 +148,7 @@ Route::get('/popular', 'DashboardController@popular')
     ->name('dashboard.popular');
 
 Route::prefix('groups')->group(function () {
-    Route::redirect('/', '/');
+    Route::get('/', 'GroupController@redirectGet')->name('groups.redirect');
 
     Route::any('/search/', 'GroupController@search')
         ->name('groups.search');
