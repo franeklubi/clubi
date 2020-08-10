@@ -17,14 +17,12 @@
                             {{ feedback }}
                         </div>
                     </li>
-                    <li class="list-group-item"
+                    <li class="list-group-item notification-list-item"
                         v-for="notification in notifications"
                         :key="notification.id"
                         style="white-space: pre-line;"
-                    >
-                        <a :href="notification.link"
-                        >{{ notification.message }}</a>
-                    </li>
+                        @click="clickNotification"
+                    >{{ notification.message }}</li>
                 </ul>
             </div>
         </div>
@@ -56,6 +54,7 @@
                 if ( !this.fetched ) {
                     this.getNotifications();
                     this.fetched = true;
+                    this.markReadNotifications();
                 }
             },
 
@@ -77,6 +76,21 @@
                     this.feedback = this.handleAxiosError(err);
                 });
             },
+
+            clickNotification() {
+                window.location.href = '/';
+            },
+
+            markReadNotifications() {
+                let post_url = this.url + '/count';
+
+                axios.post(post_url).then((res) => {
+                    console.log(res);
+                    this.unseen_count = 0;
+                }).catch((err) => {
+                    this.feedback = this.handleAxiosError(err);
+                });
+            }
         },
 
         created() {
@@ -134,5 +148,14 @@
 
             width: 80vw;
         }
+    }
+
+    .notification-list-item {
+        cursor: pointer;
+        color: #222222;
+    }
+
+    .notification-list-item:hover {
+        background-color: #eeeeee;
     }
 </style>

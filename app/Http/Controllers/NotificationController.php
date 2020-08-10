@@ -40,6 +40,14 @@ class NotificationController extends Controller
     }
 
 
+    public function markReadNotifications() {
+        $count = auth()->user()->notifications()
+            ->where('seen', false)->update(['seen' => true]);
+
+        return response()->json(['updated' => $count]);
+    }
+
+
     /**
      * Update the specified resource in storage.
      *
