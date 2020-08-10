@@ -43,11 +43,11 @@ class SendLikedNotification
         }
 
 
-        \App\Notification::firstOrCreate([
-            'user_id' => $user_id,
-            'from_id' => $from_user->id,
-            'message' => $message,
-            'link' => $event->likeable_link,
-        ]);
+        createNotification(
+            $user_id,
+            $message,
+            $from_user->id,
+            $event->likeable_link
+        );
     }
 }
