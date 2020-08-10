@@ -60,4 +60,6 @@ return [
     ],
 
     'notifications_per_page' => env('MIX_NOTIFICATIONS_PER_PAGE'),
+
+    'max_notification_message_length' => 20,
 ];

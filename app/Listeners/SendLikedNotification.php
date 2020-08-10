@@ -42,6 +42,17 @@ class SendLikedNotification
             $message .= 'comment!';
         }
 
+        // attach text content of likeable
+        $content = $event->like->likeable->content;
+        if ( $content ) {
+            $max_length = config('consts.max_notification_message_length');
+
+            $message .= "\n".substr($content, 0, $max_length);
+
+            // if content longer than message length
+            strlen($content) > $max_length?
+                $message .= '...':false;
+        }
 
         createNotification(
             $user_id,

@@ -20,10 +20,10 @@
                     <li class="list-group-item"
                         v-for="notification in notifications"
                         :key="notification.id"
+                        style="white-space: pre-line;"
                     >
-                        <a :href="notification.link">
-                            {{ notification.message }}
-                        </a>
+                        <a :href="notification.link"
+                        >{{ notification.message }}</a>
                     </li>
                 </ul>
             </div>
@@ -132,7 +132,7 @@
         .box-position {
             left: 0;
 
-            width: 90vw;
+            width: 80vw;
         }
     }
 </style>
