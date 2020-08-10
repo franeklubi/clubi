@@ -86,6 +86,11 @@ Vue.component(
 );
 
 Vue.component(
+    'notification-window',
+    require('./components/helper_components/NotificationWindow.vue').default
+);
+
+Vue.component(
     'read-more',
     require('./components/helper_components/ReadMore.vue').default
 );

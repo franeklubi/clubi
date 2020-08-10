@@ -19,6 +19,14 @@ Auth::routes();
 
 // routes that need authentication
 Route::middleware('auth')->group(function () {
+    // notification routes
+    Route::get('/notifications', 'NotificationController@index')
+        ->name('notifications.index');
+
+    Route::get('/notifications/count', 'NotificationController@unseenCount')
+        ->name('notifications.count');
+
+
     // dashboard routes
     Route::get('/yourGroups', 'DashboardController@yourGroups')
         ->name('dashboard.yourGroups');

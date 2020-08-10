@@ -58,4 +58,6 @@ return [
         'global_per_minute' => 1000,
         'uploads_per_minute' => 20,
     ],
+
+    'notifications_per_page' => env('MIX_NOTIFICATIONS_PER_PAGE'),
 ];

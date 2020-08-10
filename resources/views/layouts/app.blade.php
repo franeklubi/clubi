@@ -77,7 +77,13 @@
                                 </a>
                             </li>
 
-                            <li class="nav-item dropdown">
+                            <li class="nav-item">
+                                <notification-window />
+                            </li>
+
+                            <li class="nav-item dropdown align-items-center
+                                d-flex"
+                            >
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle font-weight-bold" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->username }} <span class="caret"></span>
                                 </a>
