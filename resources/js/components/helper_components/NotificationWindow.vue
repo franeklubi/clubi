@@ -11,19 +11,26 @@
                 <div class="card-header">
                     Notifications
                 </div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item" v-if="feedback">
-                        <div class="alert alert-danger">
-                            {{ feedback }}
-                        </div>
-                    </li>
-                    <li class="list-group-item notification-list-item"
-                        v-for="notification in notifications"
-                        :key="notification.id"
-                        style="white-space: pre-line;"
-                        @click="clickNotification"
-                    >{{ notification.message }}</li>
-                </ul>
+                <div class="notification-list">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" v-if="feedback">
+                            <div class="alert alert-danger">
+                                {{ feedback }}
+                            </div>
+                        </li>
+                        <li class="list-group-item notification-list-item"
+                            v-for="notification in notifications"
+                            :key="notification.id"
+                            style="white-space: pre-line;"
+                            @click="clickNotification"
+                        >{{ notification.message }}</li>
+                        <li class="list-group-item"><button
+                            class="btn btn-link"
+                            @click="loadNotifications"
+                            v-if="next_page_url"
+                        >Load more</button></li>
+                    </ul>
+                </div>
             </div>
         </div>
     </div>
@@ -38,12 +45,13 @@
         data: function () {
             return {
                 notifications: [],
-                next_page_url: '',
+                next_page_url: '/notifications',
                 unseen_count: 0,
                 url: '/notifications',
                 box_opened: false,
                 fetched: false,
                 feedback: '',
+                from_date: null,
             }
         },
 
@@ -52,7 +60,7 @@
                 this.box_opened = !this.box_opened;
 
                 if ( !this.fetched ) {
-                    this.getNotifications();
+                    this.loadNotifications();
                     this.fetched = true;
                     this.markReadNotifications();
                 }
@@ -68,10 +76,16 @@
                 });
             },
 
-            getNotifications() {
-                axios.get(this.url).then((res) => {
+            loadNotifications() {
+                axios.get(this.next_page_url, {
+                    params: {'from_date': this.from_date}
+                }).then((res) => {
                     this.next_page_url = res.data.notifications.next_page_url;
-                    this.notifications = res.data.notifications.data;
+                    this.notifications.push(...res.data.notifications.data);
+
+                    // set from_date
+                    this.from_date = this.notifications[0]?
+                        this.notifications[0].created_at:null;
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });
@@ -85,7 +99,6 @@
                 let post_url = this.url + '/count';
 
                 axios.post(post_url).then((res) => {
-                    console.log(res);
                     this.unseen_count = 0;
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
@@ -130,12 +143,17 @@
     .box {
         font-size: 1rem;
 
-        z-index: 2;
+        z-index: 3;
 
         width: 30vw;
 
         position: absolute;
         top: 2.3rem;
+    }
+
+    .notification-list {
+        max-height: 45vh;
+        overflow-y: auto;
     }
 
     .box-position {
