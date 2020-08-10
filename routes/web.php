@@ -29,6 +29,9 @@ Route::middleware('auth')->group(function () {
 
         Route::post('/count', 'NotificationController@markReadNotifications')
             ->name('notifications.markRead');
+
+        Route::delete('/{notification}', 'NotificationController@destroy')
+            ->name('notification.destroy');
     });
 
 

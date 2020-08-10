@@ -47,19 +47,6 @@ class NotificationController extends Controller
         return response()->json(['updated' => $count]);
     }
 
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Notification  $notification
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Notification $notification)
-    {
-        //
-    }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -68,6 +55,14 @@ class NotificationController extends Controller
      */
     public function destroy(Notification $notification)
     {
-        //
+        $deleted = null;
+        if ( $notification->user == auth()->user() ) {
+            $deleted = $notification->delete();
+        }
+
+        return response()->json([
+            'notification' => $notification,
+            'deleted' => $deleted,
+        ]);
     }
 }

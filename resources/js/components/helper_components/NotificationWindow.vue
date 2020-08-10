@@ -22,7 +22,7 @@
                             v-for="notification in notifications"
                             :key="notification.id"
                             style="white-space: pre-line;"
-                            @click="clickNotification"
+                            @click="clickNotification(notification)"
                         >{{ notification.message }}</li>
                         <li class="list-group-item"><button
                             class="btn btn-link"
@@ -91,8 +91,24 @@
                 });
             },
 
-            clickNotification() {
-                window.location.href = '/';
+            clickNotification(notification) {
+                let delete_url = this.url+'/'+notification.id;
+
+                axios.delete(delete_url).then((res) => {
+                    console.log(res);
+
+                    let index = this.notifications.findIndex((n) => {
+                        return n.id == res.data.notification.id
+                    });
+
+                    this.notifications.splice(index, 1);
+
+                    if ( notification.link ) {
+                        window.location.href = notification.link;
+                    }
+                }).catch((err) => {
+                    this.feedback = this.handleAxiosError(err);
+                });
             },
 
             markReadNotifications() {
