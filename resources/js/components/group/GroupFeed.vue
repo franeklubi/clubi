@@ -91,16 +91,11 @@
             },
 
             deletePost(post) {
-                axios.delete('/groups/'+post.group.id_string+'/posts/'+post.id)
-                    .then((res) => {
-                        let index = this.posts_to_render.findIndex((post) => {
-                            return post.id == res.data.post.id
-                        });
+                let index = this.posts_to_render.findIndex((arr_post) => {
+                    return arr_post.id == post.id
+                });
 
-                        this.posts_to_render.splice(index, 1);
-                    }).catch((err) => {
-                        this.feedback = this.handleAxiosError(err);
-                    });
+                this.posts_to_render.splice(index, 1);
             },
         },
     }

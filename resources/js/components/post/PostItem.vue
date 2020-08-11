@@ -97,9 +97,17 @@
 
         methods: {
             deletePostEvent() {
-                if ( confirm('Are you sure?') ) {
-                    this.$emit('delete-post', this.post);
+                if ( !confirm('Are you sure?') ) {
+                    return;
                 }
+
+                axios.delete(
+                    '/groups/'+this.post.group.id_string+'/posts/'+this.post.id
+                ).then((res) => {
+                    this.$emit('delete-post', this.post);
+                }).catch((err) => {
+                    this.feedback = this.handleAxiosError(err);
+                });
             },
 
             loadLikes() {
