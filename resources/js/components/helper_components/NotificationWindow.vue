@@ -14,8 +14,15 @@
                 <div class="notification-list">
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item" v-if="feedback">
-                            <div class="alert alert-danger">
+                            <div class="alert alert-danger m-0">
                                 {{ feedback }}
+                            </div>
+                        </li>
+                        <li class="list-group-item"
+                            v-if="notifications.length == 0"
+                        >
+                            <div class="alert alert-info m-0">
+                                No notifications
                             </div>
                         </li>
                         <li class="list-group-item notification-list-item"
@@ -24,11 +31,12 @@
                             style="white-space: pre-line;"
                             @click="clickNotification(notification)"
                         >{{ notification.message }}</li>
-                        <li class="list-group-item"><button
-                            class="btn btn-link"
-                            @click="loadNotifications"
-                            v-if="next_page_url"
-                        >Load more</button></li>
+                        <li v-if="next_page_url" class="list-group-item">
+                            <button
+                                class="btn btn-link"
+                                @click="loadNotifications"
+                            >Load more</button>
+                        </li>
                     </ul>
                 </div>
             </div>
