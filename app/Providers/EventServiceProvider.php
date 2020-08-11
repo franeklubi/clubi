@@ -21,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Liked' => [
             'App\Listeners\SendLikedNotification'
         ],
+        'App\Events\Commented' => [
+            'App\Listeners\SendCommentedNotification'
+        ],
     ];
 
     /**

@@ -2,11 +2,11 @@
 
 namespace App\Listeners;
 
-use App\Events\Liked;
+use App\Events\Commented;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
-class SendLikedNotification
+class SendCommentedNotification
 {
     /**
      * Create the event listener.
@@ -21,29 +21,24 @@ class SendLikedNotification
     /**
      * Handle the event.
      *
-     * @param  Liked  $event
+     * @param  Commented  $event
      * @return void
      */
-    public function handle(Liked $event)
+    public function handle(Commented $event)
     {
-        $from_user = $event->like->user;
-        $user_id = $event->like->likeable->user_id;
+        $from_user = $event->comment->user;
+        $user_id = $event->comment->post->user_id;
 
         // stop propagation of the event and do nothing
-        // if someone likes their likeable
+        // if someone comments on their post
         if ( $from_user->id == $user_id ) {
             return false;
         }
 
-        $message = "$from_user->username liked your ";
-        if ( $event->like->likeable_type == 'App\Post' ) {
-            $message .= 'post!';
-        } else {
-            $message .= 'comment!';
-        }
+        $message = "$from_user->username commented on your post! ";
 
-        // attach text content of likeable
-        $content = $event->like->likeable->content;
+        // attach text content of the comment
+        $content = $event->comment->content;
         if ( $content ) {
             $max_length = config('consts.max_notification_message_length');
 
@@ -60,7 +55,7 @@ class SendLikedNotification
             $user_id,
             $message,
             $from_user->id,
-            $event->likeable_link
+            $event->post_link,
         );
     }
 }

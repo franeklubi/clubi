@@ -97,6 +97,8 @@ class CommentController extends Controller
 
         $comment = $post->comments()->create($validated_data);
 
+        event(new \App\Events\Commented($comment));
+
         return response($comment->load(['user.profile', 'likes']));
     }
 
