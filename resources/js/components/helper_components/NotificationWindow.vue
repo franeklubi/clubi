@@ -80,7 +80,6 @@
 
                 if ( !this.fetched ) {
                     this.loadNotifications();
-                    this.markReadNotifications();
                 }
             },
 
@@ -105,6 +104,9 @@
                     this.from_date = this.notifications[0]?
                         this.notifications[0].created_at:null;
 
+                    if ( !this.fetched ) {
+                        this.markReadNotifications();
+                    }
                     this.fetched = true;
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
