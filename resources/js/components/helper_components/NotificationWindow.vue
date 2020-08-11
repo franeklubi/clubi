@@ -8,8 +8,13 @@
         </div>
         <div class="box box-position" :class="{'invisible': !box_opened}">
             <div class="card">
-                <div class="card-header">
+                <div class="card-header d-flex justify-content-between">
                     Notifications
+                    <button class="btn btn-link clear p-0 m-0 align-self-end"
+                        @click="clearNotifications"
+                    >
+                            clear all
+                    </button>
                 </div>
                 <div class="notification-list">
                     <ul class="list-group list-group-flush">
@@ -134,7 +139,17 @@
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });
-            }
+            },
+
+            clearNotifications() {
+                axios.delete(this.url).then((res) => {
+                    this.notifications = [];
+                }).catch((err) => {
+                    console.log(err);
+                    this.feedback = this.handleAxiosError(err);
+                    console.log(this.feedback);
+                });
+            },
         },
 
         created() {
@@ -210,5 +225,9 @@
 
     .unseen {
         background-color: #e2f0fb;
+    }
+
+    .clear {
+        font-size: 0.8rem;
     }
 </style>

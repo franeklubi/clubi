@@ -24,6 +24,9 @@ Route::middleware('auth')->group(function () {
         Route::get('/', 'NotificationController@index')
             ->name('notifications.index');
 
+        Route::delete('/', 'NotificationController@destroyAll')
+            ->name('notifications.destroyAll');
+
         Route::get('/count', 'NotificationController@unseenCount')
             ->name('notifications.count');
 

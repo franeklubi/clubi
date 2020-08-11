@@ -65,4 +65,13 @@ class NotificationController extends Controller
             'deleted' => $deleted,
         ]);
     }
+
+    public function destroyAll()
+    {
+        $deleted_count = auth()->user()->notifications()->delete();
+
+        return response()->json([
+            'deleted_count' => $deleted_count,
+        ]);
+    }
 }
