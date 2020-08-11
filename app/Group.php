@@ -112,4 +112,10 @@ class Group extends Model
             'remove_banner_picture' => 'boolean',
         ];
     }
+
+    public function link() {
+        return route('groups.show', [
+            'group' => $this->id_string,
+        ]);
+    }
 }

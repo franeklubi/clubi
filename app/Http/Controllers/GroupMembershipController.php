@@ -18,8 +18,14 @@ class GroupMembershipController extends Controller
             $invitation->delete();
         }
 
+        $status = count($res['attached'])==0?'left':'joined';
+
+        if ( $status == 'joined' ) {
+            event(new \App\Events\Joined($user, $group));
+        }
+
         return response()->json([
-            'status' => count($res['attached'])==0?'left':'joined',
+            'status' => $status,
         ]);
     }
 }
