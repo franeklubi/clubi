@@ -19,7 +19,7 @@
                             </div>
                         </li>
                         <li class="list-group-item"
-                            v-if="notifications.length == 0"
+                            v-if="notifications.length == 0 && fetched"
                         >
                             <div class="alert alert-info m-0">
                                 No notifications
@@ -31,7 +31,9 @@
                             style="white-space: pre-line;"
                             @click="clickNotification(notification)"
                         >{{ notification.message }}</li>
-                        <li v-if="next_page_url" class="list-group-item">
+                        <li v-if="next_page_url && fetched"
+                            class="list-group-item"
+                        >
                             <button
                                 class="btn btn-link"
                                 @click="loadNotifications"
@@ -69,7 +71,6 @@
 
                 if ( !this.fetched ) {
                     this.loadNotifications();
-                    this.fetched = true;
                     this.markReadNotifications();
                 }
             },
@@ -94,6 +95,8 @@
                     // set from_date
                     this.from_date = this.notifications[0]?
                         this.notifications[0].created_at:null;
+
+                    this.fetched = true;
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
                 });
