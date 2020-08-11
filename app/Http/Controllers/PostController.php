@@ -105,6 +105,8 @@ class PostController extends Controller
 
         $post = $group->posts()->create($validated_data);
 
+        event(new \App\Events\Posted($post));
+
         return response($post->load(['user.profile', 'group.owner', 'likes']));
     }
 

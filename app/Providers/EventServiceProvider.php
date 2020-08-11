@@ -27,6 +27,9 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Joined' => [
             'App\Listeners\SendJoinedNotification'
         ],
+        'App\Events\Posted' => [
+            'App\Listeners\SendPostedNotification'
+        ],
     ];
 
     /**
