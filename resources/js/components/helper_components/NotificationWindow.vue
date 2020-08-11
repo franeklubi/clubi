@@ -18,6 +18,7 @@
                                 {{ feedback }}
                             </div>
                         </li>
+
                         <li class="list-group-item"
                             v-if="notifications.length == 0 && fetched"
                         >
@@ -25,12 +26,15 @@
                                 No notifications
                             </div>
                         </li>
+
                         <li class="list-group-item notification-list-item"
                             v-for="notification in notifications"
                             :key="notification.id"
                             style="white-space: pre-line;"
+                            :class="{'unseen': notification.seen == '0'}"
                             @click="clickNotification(notification)"
                         >{{ notification.message }}</li>
+
                         <li v-if="next_page_url && fetched"
                             class="list-group-item"
                         >
@@ -201,6 +205,10 @@
     }
 
     .notification-list-item:hover {
-        background-color: #eeeeee;
+        filter: brightness(95%);
+    }
+
+    .unseen {
+        background-color: #e2f0fb;
     }
 </style>
