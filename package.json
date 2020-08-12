@@ -24,6 +24,8 @@
         "vue-template-compiler": "^2.6.10"
     },
     "dependencies": {
-        "moment": "^2.27.0"
+        "anchorme": "^2.1.2",
+        "moment": "^2.27.0",
+        "sanitize-html": "^1.27.2"
     }
 }

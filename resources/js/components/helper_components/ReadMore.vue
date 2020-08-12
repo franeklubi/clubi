@@ -1,8 +1,11 @@
 <template>
-    <span style="white-space: pre-line;">{{ tailoredContent }}<button class="btn btn-link" @click="setClicked" v-if="!clicked">Read more</button></span>
+    <span style="white-space: pre-line;" v-html="sanitizedContent"><button class="btn btn-link" @click="setClicked" v-if="!clicked">Read more</button></span>
 </template>
 
 <script>
+    import sanitizeHtml from 'sanitize-html';
+    import anchorme from 'anchorme';
+
     export default {
         props: {
             content: String,
@@ -28,6 +31,13 @@
                 }
 
                 return this.content.substr(0, this.char_cutoff)+'...';
+            },
+
+            sanitizedContent() {
+                return anchorme(sanitizeHtml(this.tailoredContent, {
+                    allowedTags: [],
+                    allowedAttributes: {},
+                }));
             },
         },
     }
