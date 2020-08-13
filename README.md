@@ -16,6 +16,11 @@ Visit us at: https://clubi.franeklubi.com/
 
 # Features
 * allows for easy (public or private) group creation and management
+* displays notifications, such as:
+    - new post in Your group
+    - someone has liked Your post/comment
+    - someone has joined Your group
+    - someone has left a comment on Your post
 * distinguishes between users, group admins, and site admins
 * implements user-specific feed containing latest posts from all groups the user has joined
 * implements invitation system with specified controls such as: necessary admin approval for invitations to private groups
