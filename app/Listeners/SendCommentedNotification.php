@@ -42,7 +42,7 @@ class SendCommentedNotification
         if ( $content ) {
             $max_length = config('consts.max_notification_message_length');
 
-            $message .= "\n\"".substr($content, 0, $max_length);
+            $message .= "\n\"".mb_substr($content, 0, $max_length);
 
             // if content longer than message length
             strlen($content) > $max_length?
