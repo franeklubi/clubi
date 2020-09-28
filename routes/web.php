@@ -18,7 +18,7 @@ Auth::routes();
 
 
 // routes that need authentication
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     // notification routes
     Route::prefix('notifications')->group(function () {
         Route::get('/', 'NotificationController@index')
