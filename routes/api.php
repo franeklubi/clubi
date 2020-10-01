@@ -3,8 +3,14 @@
 use Illuminate\Support\Facades\Route;
 
 
-Route::post('/login', 'AuthController@login');
+Route::post('/login', 'AuthController@login')->name('api.login');
 
-Route::post('/register', 'AuthController@register');
+Route::post('/register', 'AuthController@register')->name('api.register');
 
-Route::get('/profile/{user?}', 'UserController@profile');
+Route::prefix('profile')->group(function () {
+    Route::get('/{user?}', 'UserController@profile')->name('api.profile');
+
+    Route::post('/', '\App\Http\Controllers\SettingsController@update')
+        ->middleware(['auth:sanctum', throttleUploads()])
+        ->name('api.profile.update');
+});
