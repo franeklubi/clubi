@@ -58,7 +58,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::prefix('settings')->group(function () {
         Route::get('/', 'SettingsController@edit')->name('settings.edit');
 
-        Route::patch('/', 'SettingsController@update')
+        Route::post('/', 'SettingsController@update')
             ->middleware(throttleUploads())
             ->name('settings.update');
     });
@@ -82,7 +82,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/', 'GroupController@destroy')
                 ->name('groups.destroy');
 
-            Route::patch('/', 'GroupController@update')
+            Route::post('/', 'GroupController@update')
                 ->middleware(throttleUploads())
                 ->name('groups.update');
 
@@ -153,7 +153,7 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/', 'InvitationController@destroy')
                 ->name('invitations.destroy');
 
-            Route::patch('/', 'InvitationController@adminConfirm')
+            Route::post('/', 'InvitationController@adminConfirm')
                 ->name('invitations.adminConfirm');
         });
     });

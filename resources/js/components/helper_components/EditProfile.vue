@@ -100,8 +100,6 @@
 
                 let data = new FormData;
 
-                data.append('_method', 'PATCH');
-
                 data.append('username', this.temp_user.username);
 
                 if ( this.temp_user.profile.description != null ) {
