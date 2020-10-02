@@ -28,24 +28,6 @@ Route::prefix('groups')->group(function () {
 
     Route::any('/search', 'GroupController@search')
         ->name('groups.search');
-
-    // indexing group's contents
-    Route::group([
-        'prefix' => '{group}',
-        'middleware' => 'can:view,group',
-    ], function () {
-        Route::get('/', 'GroupController@show')
-            ->name('groups.show');
-
-        Route::get('/posts', 'PostController@index')
-            ->name('posts.index');
-
-        Route::get('/posts/{post}', 'PostController@show')
-            ->name('posts.show');
-
-        Route::get('/posts/{post}/comments', 'CommentController@index')
-            ->name('comments.index');
-    });
 });
 
 
@@ -189,4 +171,22 @@ Route::middleware('auth:sanctum')->group(function () {
                 ->name('invitations.adminConfirm');
         });
     });
+});
+
+// indexing group's contents
+Route::group([
+    'prefix' => '/groups/{group}',
+    'middleware' => 'can:view,group',
+], function () {
+    Route::get('/', 'GroupController@show')
+        ->name('groups.show');
+
+    Route::get('/posts', 'PostController@index')
+        ->name('posts.index');
+
+    Route::get('/posts/{post}', 'PostController@show')
+        ->name('posts.show');
+
+    Route::get('/posts/{post}/comments', 'CommentController@index')
+        ->name('comments.index');
 });
