@@ -173,6 +173,8 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 });
 
+
+// public routes
 // indexing group's contents
 Route::group([
     'prefix' => '/groups/{group}',

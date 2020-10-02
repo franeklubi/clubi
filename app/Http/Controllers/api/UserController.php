@@ -9,12 +9,7 @@ use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
+    // profile returns user's profile
     public function profile($user_id = null)
     {
         $user = User::find($user_id);

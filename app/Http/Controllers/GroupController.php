@@ -41,12 +41,17 @@ class GroupController extends Controller
 
         $query = request('query')?request('query'):'';
 
-        $groups = Group::search($query);
+        $groups = Group::search($query) ?? collect([]);
+
+        $zero_warning = 'No groups found :(';
 
         $response_data = [
-            'groups' => $groups?$groups:collect([]),
-            'zero_warning' => 'No groups found :(',
+            'groups' => $groups,
         ];
+
+        if ( $groups->count() == 0 ) {
+            $response_data['zero_warning'] = $zero_warning;
+        }
 
         if ( $request->expectsJson() ) {
             return response()->json($response_data);
