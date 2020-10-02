@@ -40,7 +40,7 @@ class DashboardController extends Controller
 
     // returns paginated posts for user
     public function posts() {
-        $groups = auth()->user()->memberOfGroups->pluck('id');
+        $groups = getAuthUser()->memberOfGroups->pluck('id');
 
         $from_date_request = request('from_date');
         $from_date = \Carbon\Carbon::parse($from_date_request)
@@ -64,8 +64,8 @@ class DashboardController extends Controller
         $next_page_url = '';
         $user = null;
 
-        if ( auth()->check() ) {
-            $user = auth()->user();
+        if ( checkAuthUser() ) {
+            $user = getAuthUser();
             $paginated_posts = $this->posts();
 
             // creating a collection of the first page of posts
@@ -97,7 +97,7 @@ class DashboardController extends Controller
 
     public function invitations() {
         return response()->json([
-            'invitations' => auth()->user()->invitations->load('group')
+            'invitations' => getAuthUser()->invitations->load('group')
         ]);
     }
 

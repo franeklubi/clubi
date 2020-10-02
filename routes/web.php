@@ -17,6 +17,38 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 
+// public routes
+Route::get('/', 'DashboardController@feed')->name('dashboard.feed');
+
+Route::get('/popular', 'DashboardController@popular')
+    ->name('dashboard.popular');
+
+Route::prefix('groups')->group(function () {
+    Route::get('/', 'GroupController@redirectGet')->name('groups.redirect');
+
+    Route::any('/search', 'GroupController@search')
+        ->name('groups.search');
+
+    // indexing group's contents
+    Route::group([
+        'prefix' => '{group}',
+        'middleware' => 'can:view,group',
+    ], function () {
+        Route::get('/', 'GroupController@show')
+            ->name('groups.show');
+
+        Route::get('/posts', 'PostController@index')
+            ->name('posts.index');
+
+        Route::get('/posts/{post}', 'PostController@show')
+            ->name('posts.show');
+
+        Route::get('/posts/{post}/comments', 'CommentController@index')
+            ->name('comments.index');
+    });
+});
+
+
 // routes that need authentication
 Route::middleware('auth:sanctum')->group(function () {
     // notification routes
@@ -156,37 +188,5 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/', 'InvitationController@adminConfirm')
                 ->name('invitations.adminConfirm');
         });
-    });
-});
-
-
-// public routes
-Route::get('/', 'DashboardController@feed')->name('dashboard.feed');
-
-Route::get('/popular', 'DashboardController@popular')
-    ->name('dashboard.popular');
-
-Route::prefix('groups')->group(function () {
-    Route::get('/', 'GroupController@redirectGet')->name('groups.redirect');
-
-    Route::any('/search/', 'GroupController@search')
-        ->name('groups.search');
-
-    // indexing group's contents
-    Route::group([
-        'prefix' => '{group}',
-        'middleware' => 'can:view,group',
-    ], function () {
-        Route::get('/', 'GroupController@show')
-            ->name('groups.show');
-
-        Route::get('/posts', 'PostController@index')
-            ->name('posts.index');
-
-        Route::get('/posts/{post}', 'PostController@show')
-            ->name('posts.show');
-
-        Route::get('/posts/{post}/comments', 'CommentController@index')
-            ->name('comments.index');
     });
 });

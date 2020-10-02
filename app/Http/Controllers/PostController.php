@@ -125,8 +125,8 @@ class PostController extends Controller
         $editable = false;
         $is_member = false;
         $user = null;
-        if ( auth()->check() ) {
-            $user = auth()->user();
+        if ( checkAuthUser() ) {
+            $user = getAuthUser();
             $editable = $user->can('update', $group);
             $is_member = $user->memberOfGroups->contains($group);
         }

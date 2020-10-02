@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 
 // function returning a generated string of throttle middleware
 function throttleUploads() {
@@ -20,4 +21,30 @@ function createNotification(
         'from_id' => $from_id,
         'link' => $link,
     ]);
+}
+
+
+function getAuthUser() {
+    $user = auth()->user();
+
+    if ( !$user ) {
+        $user = sanctumUser();
+    }
+
+    return $user;
+}
+
+
+function checkAuthUser() {
+    return auth()->check() || sanctumCheck();
+}
+
+
+function sanctumCheck() {
+    return Auth::guard('sanctum')->check();
+};
+
+
+function sanctumUser() {
+    return Auth::guard('sanctum')->user();
 }
