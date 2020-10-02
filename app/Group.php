@@ -32,12 +32,17 @@ class Group extends Model
                 ->pluck('id');
         }
 
+        // oh god that's a long ORM call
         return Group::where('private', false)
-            ->where($columns[0], 'like', $term)
+                ->where($columns[0], 'like', $term)
             ->orWhere('private', false)
-            ->where($columns[1], 'like', $term)
+                ->where($columns[1], 'like', $term)
             ->orWhere('private', true)
-            ->whereIn('id', $group_ids)
+                ->whereIn('id', $group_ids)
+                ->where($columns[0], 'like', $term)
+            ->orWhere('private', true)
+                ->whereIn('id', $group_ids)
+                ->where($columns[1], 'like', $term)
             ->get();
     }
 
