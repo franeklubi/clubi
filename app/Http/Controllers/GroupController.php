@@ -41,13 +41,25 @@ class GroupController extends Controller
 
         $query = request('query')?request('query'):'';
 
-        $groups = Group::search($query);
+        $groups = Group::search($query) ?? collect([]);
 
-        return view('groups.index', [
-            'user' => $request->user(),
-            'groups' => $groups?$groups:collect([]),
-            'zero_warning' => 'No groups found :(',
-        ]);
+        $zero_warning = 'No groups found :(';
+
+        $response_data = [
+            'groups' => $groups,
+        ];
+
+        if ( $groups->count() == 0 ) {
+            $response_data['zero_warning'] = $zero_warning;
+        }
+
+        if ( $request->expectsJson() ) {
+            return response()->json($response_data);
+        }
+
+        $response_data['user'] = $request->user();
+
+        return view('groups.index', $response_data);
     }
 
     /**
@@ -128,7 +140,7 @@ class GroupController extends Controller
      * @param  \App\Group  $group
      * @return \Illuminate\Http\Response
      */
-    public function show(Group $group)
+    public function show(Request $request, Group $group)
     {
         $this->authorize('view', $group);
 
@@ -136,8 +148,8 @@ class GroupController extends Controller
         $editable = false;
         $is_member = false;
         $user = null;
-        if ( auth()->check() ) {
-            $user = auth()->user();
+        if ( checkAuthUser() ) {
+            $user = getAuthUser();
             $editable = $user->can('update', $group);
             $is_member = $user->memberOfGroups->contains($group);
         }
@@ -156,14 +168,23 @@ class GroupController extends Controller
             ]);
         }
 
-        return view('groups.show', [
+        $response_data = [
             'group' => $group,
-            'posts' => $posts,
-            'user_id' => $user?$user->id:-1,
-            'next_page' => $next_page_url,
             'editable' => $editable,
             'is_member' => $is_member,
+        ];
+
+        if ( $request->expectsJson() ) {
+            return response()->json($response_data);
+        }
+
+        $response_data = array_merge($response_data, [
+            'posts' => $posts,
+            'next_page' => $next_page_url,
+            'user_id' => $user?$user->id:-1,
         ]);
+
+        return view('groups.show', $response_data);
     }
 
     /**
@@ -245,7 +266,9 @@ class GroupController extends Controller
         $group->delete();
 
         $message = "Group $group->name has been deleted.";
-        $request->session()->flash('status', $message);
+        if ( $request->session ) {
+            $request->session()->flash('status', $message);
+        }
 
         return response()->json(['group' => $group]);
     }

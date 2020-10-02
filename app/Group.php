@@ -26,8 +26,8 @@ class Group extends Model
 
         $group_ids = [];
 
-        if ( auth()->check() ) {
-            $group_ids = auth()->user()->memberOfGroups
+        if ( checkAuthUser() ) {
+            $group_ids = getAuthUser()->memberOfGroups
                 ->where('private', true)
                 ->pluck('id');
         }

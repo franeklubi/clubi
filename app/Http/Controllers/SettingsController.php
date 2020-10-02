@@ -51,7 +51,7 @@ class SettingsController extends Controller
     public function edit()
     {
         return view('settings.edit', [
-            'user' => auth()->user()->load('profile')
+            'user' => getAuthUser()->load('profile')
         ]);
     }
 
@@ -132,7 +132,7 @@ class SettingsController extends Controller
         $request->user()->profile->update($validated_data);
         $request->user()->update($user_data);
 
-        return response('OK');
+        return response()->json(['message' => 'OK']);
     }
 
     /**

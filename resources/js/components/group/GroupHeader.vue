@@ -143,7 +143,6 @@
 
                 if ( !this.create ) {
                     url += '/'+this.group.id_string;
-                    post_data.append('_method', 'PATCH');
                 }
 
                 // check if a different image has been selected

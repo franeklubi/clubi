@@ -39,8 +39,13 @@ class GroupPolicy
      */
     public function view(?User $user, Group $group)
     {
+        // fetch optional sanctum user
+        if ( $user == null ) {
+            $user = sanctumUser();
+        }
+
         // if group is not private
-        if ( !$group->private ) {
+        if ( $group->private != '1' && $group->private != 'true' ) {
             return true;
         }
 

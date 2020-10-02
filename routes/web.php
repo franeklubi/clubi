@@ -17,8 +17,22 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 
+// public routes
+Route::get('/', 'DashboardController@feed')->name('dashboard.feed');
+
+Route::get('/popular', 'DashboardController@popular')
+    ->name('dashboard.popular');
+
+Route::prefix('groups')->group(function () {
+    Route::get('/', 'GroupController@redirectGet')->name('groups.redirect');
+
+    Route::any('/search', 'GroupController@search')
+        ->name('groups.search');
+});
+
+
 // routes that need authentication
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:sanctum')->group(function () {
     // notification routes
     Route::prefix('notifications')->group(function () {
         Route::get('/', 'NotificationController@index')
@@ -58,7 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::prefix('settings')->group(function () {
         Route::get('/', 'SettingsController@edit')->name('settings.edit');
 
-        Route::patch('/', 'SettingsController@update')
+        Route::post('/', 'SettingsController@update')
             ->middleware(throttleUploads())
             ->name('settings.update');
     });
@@ -82,7 +96,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/', 'GroupController@destroy')
                 ->name('groups.destroy');
 
-            Route::patch('/', 'GroupController@update')
+            Route::post('/', 'GroupController@update')
                 ->middleware(throttleUploads())
                 ->name('groups.update');
 
@@ -153,7 +167,7 @@ Route::middleware('auth')->group(function () {
             Route::delete('/', 'InvitationController@destroy')
                 ->name('invitations.destroy');
 
-            Route::patch('/', 'InvitationController@adminConfirm')
+            Route::post('/', 'InvitationController@adminConfirm')
                 ->name('invitations.adminConfirm');
         });
     });
@@ -161,32 +175,20 @@ Route::middleware('auth')->group(function () {
 
 
 // public routes
-Route::get('/', 'DashboardController@feed')->name('dashboard.feed');
+// indexing group's contents
+Route::group([
+    'prefix' => '/groups/{group}',
+    'middleware' => 'can:view,group',
+], function () {
+    Route::get('/', 'GroupController@show')
+        ->name('groups.show');
 
-Route::get('/popular', 'DashboardController@popular')
-    ->name('dashboard.popular');
+    Route::get('/posts', 'PostController@index')
+        ->name('posts.index');
 
-Route::prefix('groups')->group(function () {
-    Route::get('/', 'GroupController@redirectGet')->name('groups.redirect');
+    Route::get('/posts/{post}', 'PostController@show')
+        ->name('posts.show');
 
-    Route::any('/search/', 'GroupController@search')
-        ->name('groups.search');
-
-    // indexing group's contents
-    Route::group([
-        'prefix' => '{group}',
-        'middleware' => 'can:view,group',
-    ], function () {
-        Route::get('/', 'GroupController@show')
-            ->name('groups.show');
-
-        Route::get('/posts', 'PostController@index')
-            ->name('posts.index');
-
-        Route::get('/posts/{post}', 'PostController@show')
-            ->name('posts.show');
-
-        Route::get('/posts/{post}/comments', 'CommentController@index')
-            ->name('comments.index');
-    });
+    Route::get('/posts/{post}/comments', 'CommentController@index')
+        ->name('comments.index');
 });

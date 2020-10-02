@@ -18,7 +18,7 @@ class NotificationController extends Controller
         $from_date = \Carbon\Carbon::parse($from_date_request)
             ->toDateTimeString();
 
-        $paginated_notifications = auth()->user()->notifications()
+        $paginated_notifications = getAuthUser()->notifications()
             ->when($from_date_request?true:false,
                 function ($query) use ($from_date) {
                     return $query->where('created_at', '<=', $from_date);
@@ -34,14 +34,14 @@ class NotificationController extends Controller
 
     public function unseenCount() {
         return response()->json([
-            'count' => auth()->user()->notifications()
+            'count' => getAuthUser()->notifications()
                 ->where('seen', false)->count()
         ]);
     }
 
 
     public function markReadNotifications() {
-        $count = auth()->user()->notifications()
+        $count = getAuthUser()->notifications()
             ->where('seen', false)->update(['seen' => true]);
 
         return response()->json(['updated' => $count]);
@@ -56,7 +56,7 @@ class NotificationController extends Controller
     public function destroy(Notification $notification)
     {
         $deleted = null;
-        if ( $notification->user == auth()->user() ) {
+        if ( $notification->user == getAuthUser() ) {
             $deleted = $notification->delete();
         }
 
@@ -68,7 +68,7 @@ class NotificationController extends Controller
 
     public function destroyAll()
     {
-        $deleted_count = auth()->user()->notifications()->delete();
+        $deleted_count = getAuthUser()->notifications()->delete();
 
         return response()->json([
             'deleted_count' => $deleted_count,

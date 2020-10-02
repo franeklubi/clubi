@@ -40,7 +40,7 @@ class DashboardController extends Controller
 
     // returns paginated posts for user
     public function posts() {
-        $groups = auth()->user()->memberOfGroups->pluck('id');
+        $groups = getAuthUser()->memberOfGroups->pluck('id');
 
         $from_date_request = request('from_date');
         $from_date = \Carbon\Carbon::parse($from_date_request)
@@ -59,13 +59,13 @@ class DashboardController extends Controller
     }
 
 
-    public function feed() {
+    public function feed(Request $request) {
         $posts = [];
         $next_page_url = '';
         $user = null;
 
-        if ( auth()->check() ) {
-            $user = auth()->user();
+        if ( checkAuthUser() ) {
+            $user = getAuthUser();
             $paginated_posts = $this->posts();
 
             // creating a collection of the first page of posts
@@ -80,17 +80,24 @@ class DashboardController extends Controller
             $posts = $this->randomPosts();
         }
 
-        return view('dashboard.feed', [
-            'user' => $user,
+        $response_data = [
             'posts' => $posts,
             'next_page_url' => $next_page_url,
-        ]);
+        ];
+
+        if ( $request->expectsJson() ) {
+            return response()->json($response_data);
+        }
+
+        $response_data['user'] = $user;
+
+        return view('dashboard.feed', $response_data);
     }
 
 
     public function invitations() {
         return response()->json([
-            'invitations' => auth()->user()->invitations->load('group')
+            'invitations' => getAuthUser()->invitations->load('group')
         ]);
     }
 
@@ -100,11 +107,21 @@ class DashboardController extends Controller
 
         $zero_warning = "You haven't created any groups yet! Create one and it'll show up here.";
 
-        return view('groups.index', [
-            'user' => $request->user(),
+        $response_data = [
             'groups' => $groups,
-            'zero_warning' => $zero_warning,
-        ]);
+        ];
+
+        if ( $groups->count() == 0 ) {
+            $response_data['zero_warning'] = $zero_warning;
+        }
+
+        if ( $request->expectsJson() ) {
+            return response()->json($response_data);
+        }
+
+        $response_data['user'] = $request->user();
+
+        return view('groups.index', $response_data);
     }
 
 
@@ -113,11 +130,21 @@ class DashboardController extends Controller
 
         $zero_warning = "You haven't joined any groups yet! Join one and it'll show up here.";
 
-        return view('groups.index', [
-            'user' => $request->user(),
+        $response_data = [
             'groups' => $groups,
-            'zero_warning' => $zero_warning,
-        ]);
+        ];
+
+        if ( $groups->count() == 0 ) {
+            $response_data['zero_warning'] = $zero_warning;
+        }
+
+        if ( $request->expectsJson() ) {
+            return response()->json($response_data);
+        }
+
+        $response_data['user'] = $request->user();
+
+        return view('groups.index', $response_data);
     }
 
 
@@ -135,10 +162,20 @@ class DashboardController extends Controller
             }
         );
 
-        return view('groups.index', [
-            'user' => $request->user(),
+        $response_data = [
             'groups' => $most_popular,
-            'zero_warning' => 'Nothing there yet...',
-        ]);
+        ];
+
+        if ( $most_popular->count() == 0 ) {
+            $response_data['zero_warning'] = 'Nothing there yet...';
+        }
+
+        if ( $request->expectsJson() ) {
+            return response()->json($response_data);
+        }
+
+        $response_data['user'] = $request->user();
+
+        return view('groups.index', $response_data);
     }
 }

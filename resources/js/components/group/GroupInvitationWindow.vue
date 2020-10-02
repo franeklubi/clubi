@@ -115,10 +115,10 @@
                     return;
                 }
 
-                let patch_url = '/groups/'+this.group.id_string+'/invitations/'
+                let post_url = '/groups/'+this.group.id_string+'/invitations/'
                     +invitation.id;
 
-                axios.patch(patch_url).then((res) => {
+                axios.post(post_url).then((res) => {
                     let index = this.invitations.findIndex((invitation) => {
                         return invitation.id == res.data.invitation.id;
                     });
