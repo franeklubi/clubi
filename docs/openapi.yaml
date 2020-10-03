@@ -1,0 +1,107 @@
+openapi: 3.0.3
+info:
+  title: clubi
+  version: 1.0.0
+  contact:
+    email: franek@franeklubi.com
+    name: franeklubi
+    url: 'http://franeklubi.com'
+  license:
+    name: MIT License
+    url: 'https://github.com/franeklubi/clubi/blob/master/LICENSE'
+servers:
+  - url: 'https://clubi.franeklubi.com/api'
+    variables: {}
+paths:
+  /register:
+    summary: Register a new user
+    post:
+      summary: Exchange a new user info for auth token
+      operationId: register.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+                  description: >-
+                    Password confirmation field (should be identical to
+                    password)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                success:
+                  value: |-
+                    {
+                        "user": {
+                            "username": "franeklubi",
+                            "id": 1
+                        },
+                        "token": "1|YE0BqnqzzXA5rOHCuZ6Uu9CP7lVc8qrXcyoWxO1V"
+                    }
+                no_data:
+                  value: |-
+                    {
+                        "username": [
+                            "The username field is required."
+                        ],
+                        "email": [
+                            "The email field is required."
+                        ],
+                        "password": [
+                            "The password field is required."
+                        ]
+                    }
+  /login:
+    summary: Login an existing user
+    post:
+      summary: Exchange an existing user's info for auth token
+      operationId: login.POST
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                success:
+                  value: |-
+                    {
+                        "user": {
+                            "id": 1,
+                            "is_admin": "0",
+                            "username": "franeklubi"
+                        },
+                        "token": "2|1YseBF2yz0wKhmzNaxZ2wnwPZhv7AYNeR4YB4TM0"
+                    }
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                no_data:
+                  value: |-
+                    {
+                        "message": "The given data was invalid.",
+                        "errors": {
+                            "email": [
+                                "The email field is required."
+                            ],
+                            "password": [
+                                "The password field is required."
+                            ],
+                            "device_name": [
+                                "The device name field is required."
+                            ]
+                        }
+                    }
