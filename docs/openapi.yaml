@@ -64,6 +64,8 @@ paths:
                             "The password field is required."
                         ]
                     }
+      tags:
+        - Account
   /login:
     summary: Login an existing user
     post:
@@ -118,6 +120,8 @@ paths:
                             ]
                         }
                     }
+      tags:
+        - Account
   '/profile/{username}':
     summary: Get user's profile info
     get:
@@ -144,12 +148,21 @@ paths:
                             "username": "franeklubi",
                             "profile": {
                                 "profile_picture": "/const_assets/default_profile_picture.png",
-                                "description": null
+                                "description": "example description"
                             }
                         }
                     }
-                wrong_or_no_id:
+                wrong_or_empty_username:
                   value: |-
                     {
                         "user": null
                     }
+      tags:
+        - Public
+tags:
+  - name: Account
+    description: Paths pertaining to user's account
+  - name: Public
+    description: Paths accessible without authentication
+  - name: Auth
+    description: Paths accessible only after authentication
