@@ -10,12 +10,12 @@ use App\Http\Controllers\Controller;
 class UserController extends Controller
 {
     // profile returns user's profile
-    public function profile($user_id = null)
+    public function profile($username = null)
     {
-        $user = User::find($user_id);
+        $user = User::where('username', $username)->get();
 
         $response_data = [
-            'user' => $user ? $user->load('profile') : null,
+            'user' => !$user->isEmpty() ? $user->load('profile') : null,
         ];
 
         return response()->json($response_data);
