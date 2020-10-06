@@ -118,17 +118,17 @@ paths:
                             ]
                         }
                     }
-  '/profile/{user_id}':
+  '/profile/{username}':
     summary: Get user's profile info
     get:
       summary: Get user with profile info
       parameters:
         - in: path
-          name: user_id
+          name: username
           schema:
             type: integer
           required: true
-          description: user's id
+          description: username
       responses:
         '200':
           description: Successful profile fetch
