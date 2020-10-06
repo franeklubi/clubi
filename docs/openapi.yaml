@@ -12,6 +12,7 @@ info:
 servers:
   - url: 'https://clubi.franeklubi.com/api'
     variables: {}
+    description: official clubi server
 paths:
   /register:
     summary: Register a new user
@@ -68,6 +69,18 @@ paths:
     post:
       summary: Exchange an existing user's info for auth token
       operationId: login.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                device_name:
+                  type: string
       responses:
         '200':
           description: OK
@@ -104,4 +117,39 @@ paths:
                                 "The device name field is required."
                             ]
                         }
+                    }
+  '/profile/{user_id}':
+    summary: Get user's profile info
+    get:
+      summary: Get user with profile info
+      parameters:
+        - in: path
+          name: user_id
+          schema:
+            type: integer
+          required: true
+          description: user's id
+      responses:
+        '200':
+          description: Successful profile fetch
+          content:
+            application/json:
+              examples:
+                success:
+                  value: |-
+                    {
+                        "user": {
+                            "id": 1,
+                            "is_admin": "0",
+                            "username": "franeklubi",
+                            "profile": {
+                                "profile_picture": "/const_assets/default_profile_picture.png",
+                                "description": null
+                            }
+                        }
+                    }
+                wrong_or_no_id:
+                  value: |-
+                    {
+                        "user": null
                     }
