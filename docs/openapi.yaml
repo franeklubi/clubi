@@ -126,6 +126,7 @@ paths:
     summary: Get user's profile info
     get:
       summary: Get user with profile info
+      operationId: profile.GET
       parameters:
         - in: path
           name: username
@@ -159,6 +160,183 @@ paths:
                     }
       tags:
         - Public
+  /api:
+    summary: Dashboard
+    get:
+      summary: Random posts or user's feed
+      description: >-
+        Returns one page of random posts if not authenticated OR user's feed if
+        authenticated
+      operationId: dashboard.GET
+      tags:
+        - Public
+      responses:
+        '200':
+          description: >-
+            Cached, random posts for unauthenticated user.
+
+            Make note of the `next_page_url` - now it is empty, but you can use
+            it as an indicator as to whether there are more posts to load - and
+            them load them using GET on that link.
+          content:
+            application/json:
+              examples:
+                unauthenticated:
+                  value: |
+                    {
+                        "posts": [
+                            {
+                                "id": 1,
+                                "created_at": "2020-08-06T20:21:32.000000Z",
+                                "updated_at": "2020-08-06T20:21:32.000000Z",
+                                "user_id": "2",
+                                "group_id": "1",
+                                "content": "Co tam świry",
+                                "picture": null,
+                                "user": {
+                                    "id": 2,
+                                    "is_admin": "0",
+                                    "username": "siema",
+                                    "profile": {
+                                        "profile_picture": "/const_assets/default_profile_picture.png",
+                                        "description": null
+                                    }
+                                },
+                                "group": {
+                                    "id": 1,
+                                    "created_at": "2020-08-06T20:21:25.000000Z",
+                                    "updated_at": "2020-08-06T21:29:37.000000Z",
+                                    "owner_id": "2",
+                                    "name": "ELOOO",
+                                    "id_string": "jnx4R",
+                                    "banner_picture": "/storage/banner_pictures/jnx4R/rwmS1VqaRvcmFy2HVl3t3JdsGw5VyfKUaRObG8qt.jpeg",
+                                    "private": "0",
+                                    "user_count": 6,
+                                    "post_count": 7,
+                                    "owner": {
+                                        "id": 2,
+                                        "is_admin": "0",
+                                        "username": "siema"
+                                    }
+                                },
+                                "likes": [
+                                    {
+                                        "id": 3,
+                                        "user_id": "2",
+                                        "likeable_id": "1",
+                                        "likeable_type": "App\\Post"
+                                    },
+                                    {
+                                        "id": 4,
+                                        "user_id": "1",
+                                        "likeable_id": "1",
+                                        "likeable_type": "App\\Post"
+                                    },
+                                    {
+                                        "id": 9,
+                                        "user_id": "3",
+                                        "likeable_id": "1",
+                                        "likeable_type": "App\\Post"
+                                    }
+                                ]
+                            }
+                        ],
+                        "next_page_url": ""
+                    }
+components:
+  schemas:
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        owner_id:
+          type: integer
+        name:
+          type: string
+        id_string:
+          description: unique string id
+          type: string
+        banner_picture:
+          description: relative url to banner picture
+          type: string
+        private:
+          type: boolean
+        user_count:
+          type: integer
+        post_count:
+          type: integer
+        owner:
+          type: object
+          properties:
+            id:
+              type: integer
+            is_admin:
+              type: boolean
+            usename:
+              type: string
+
+    Like:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+
+    Profile:
+      type: object
+      properties:
+        profile_picture:
+          description: relative url path to profile picture
+          type: string
+        description:
+          type: string
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        is_admin:
+          type: boolean
+        username:
+          type: string
+        profile:
+          $ref: '#/components/schemas/Profile'
+
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        user_id:
+          type: integer
+        group_id:
+          type: integer
+        content:
+          type: string
+        picture:
+          description: relative url path to picture if posted
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        group:
+          $ref: '#/components/schemas/Group'
+        likes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Like'
+
+
 tags:
   - name: Account
     description: Paths pertaining to user's account
