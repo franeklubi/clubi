@@ -139,6 +139,8 @@ paths:
           description: Successful profile fetch
           content:
             application/json:
+              schema:
+                $ref: '#/components/schemas/UserWithProfile'
               examples:
                 success:
                   value: |-
@@ -160,7 +162,7 @@ paths:
                     }
       tags:
         - Public
-  /api:
+  /:
     summary: Dashboard
     get:
       summary: Random posts or user's feed
@@ -180,69 +182,10 @@ paths:
             them load them using GET on that link.
           content:
             application/json:
-              examples:
-                unauthenticated:
-                  value: |
-                    {
-                        "posts": [
-                            {
-                                "id": 1,
-                                "created_at": "2020-08-06T20:21:32.000000Z",
-                                "updated_at": "2020-08-06T20:21:32.000000Z",
-                                "user_id": "2",
-                                "group_id": "1",
-                                "content": "Co tam świry",
-                                "picture": null,
-                                "user": {
-                                    "id": 2,
-                                    "is_admin": "0",
-                                    "username": "siema",
-                                    "profile": {
-                                        "profile_picture": "/const_assets/default_profile_picture.png",
-                                        "description": null
-                                    }
-                                },
-                                "group": {
-                                    "id": 1,
-                                    "created_at": "2020-08-06T20:21:25.000000Z",
-                                    "updated_at": "2020-08-06T21:29:37.000000Z",
-                                    "owner_id": "2",
-                                    "name": "ELOOO",
-                                    "id_string": "jnx4R",
-                                    "banner_picture": "/storage/banner_pictures/jnx4R/rwmS1VqaRvcmFy2HVl3t3JdsGw5VyfKUaRObG8qt.jpeg",
-                                    "private": "0",
-                                    "user_count": 6,
-                                    "post_count": 7,
-                                    "owner": {
-                                        "id": 2,
-                                        "is_admin": "0",
-                                        "username": "siema"
-                                    }
-                                },
-                                "likes": [
-                                    {
-                                        "id": 3,
-                                        "user_id": "2",
-                                        "likeable_id": "1",
-                                        "likeable_type": "App\\Post"
-                                    },
-                                    {
-                                        "id": 4,
-                                        "user_id": "1",
-                                        "likeable_id": "1",
-                                        "likeable_type": "App\\Post"
-                                    },
-                                    {
-                                        "id": 9,
-                                        "user_id": "3",
-                                        "likeable_id": "1",
-                                        "likeable_type": "App\\Post"
-                                    }
-                                ]
-                            }
-                        ],
-                        "next_page_url": ""
-                    }
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
 components:
   schemas:
     Group:
@@ -298,6 +241,16 @@ components:
           type: string
 
     User:
+      type: object
+      properties:
+        id:
+          type: integer
+        is_admin:
+          type: boolean
+        username:
+          type: string
+
+    UserWithProfile:
       type: object
       properties:
         id:
