@@ -140,7 +140,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserWithProfile'
+                $ref: '#/components/schemas/User'
               examples:
                 success:
                   value: |-
@@ -186,6 +186,23 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Post'
+  /popular:
+    summary: Popular groups
+    get:
+      summary: Returns an array of the most popular groups
+      description: ''
+      operationId: popular.GET
+      responses:
+        '200':
+          description: Array of the most popular groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+      tags:
+        - Public
 components:
   schemas:
     Group:
@@ -214,6 +231,7 @@ components:
         post_count:
           type: integer
         owner:
+          description: 'OWNER MIGHT NOT BE LOADED, CHECK BEFORE USING'
           type: object
           properties:
             id:
@@ -222,7 +240,6 @@ components:
               type: boolean
             usename:
               type: string
-
     Like:
       type: object
       properties:
@@ -230,7 +247,6 @@ components:
           type: integer
         user_id:
           type: integer
-
     Profile:
       type: object
       properties:
@@ -239,19 +255,11 @@ components:
           type: string
         description:
           type: string
-
     User:
       type: object
-      properties:
-        id:
-          type: integer
-        is_admin:
-          type: boolean
-        username:
-          type: string
-
-    UserWithProfile:
-      type: object
+      description: >-
+        PROFILE MIGHT NOT BE LOADED, CHECK IF THE PROFILE IS LOADED BEFORE
+        ACCESSING
       properties:
         id:
           type: integer
@@ -261,7 +269,6 @@ components:
           type: string
         profile:
           $ref: '#/components/schemas/Profile'
-
     Post:
       type: object
       properties:
@@ -288,8 +295,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Like'
-
-
 tags:
   - name: Account
     description: Paths pertaining to user's account
