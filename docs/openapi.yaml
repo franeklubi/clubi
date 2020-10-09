@@ -169,7 +169,7 @@ paths:
       description: >-
         Returns one page of random posts if not authenticated OR user's feed if
         authenticated
-      operationId: dashboard.GET
+      operationId: root.GET
       tags:
         - Public
       responses:
@@ -201,6 +201,111 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Group'
+      tags:
+        - Public
+  /groups/search:
+    summary: Lets You search for groups
+    get:
+      summary: Searches for groups by provided query
+      description: ''
+      operationId: groups.search.GET
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: Groups' name or unique string id
+      responses:
+        '200':
+          description: Array of found groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+                  zero_warning:
+                    description: Appears when there are no groups returned
+                    type: string
+      tags:
+        - Public
+  '/groups/{group_string_id}':
+    summary: Get group's info
+    get:
+      summary: Get group's info
+      operationId: groups.GET
+      parameters:
+        - in: path
+          name: group_string_id
+          description: Group's unique string id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns group's info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    $ref: '#/components/schemas/Group'
+                  editable:
+                    type: boolean
+                  is_member:
+                    type: boolean
+      tags:
+        - Public
+  '/groups/{group_string_id}/posts':
+    summary: Return paginated posts for a group
+    get:
+      summary: Get paginated posts for a group
+      operationId: groups.posts.GET
+      parameters:
+        - in: path
+          name: group_string_id
+          description: Group's unique string id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns group's posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+      tags:
+        - Public
+  '/groups/{group_string_id}/posts/{post_id}/comments':
+    summary: Return paginated comments for a post
+    get:
+      summary: Get paginated comments for a post
+      operationId: groups.posts.comments.GET
+      parameters:
+        - in: path
+          name: group_string_id
+          description: Group's unique string id
+          schema:
+            type: string
+          required: true
+        - in: path
+          name: post_id
+          description: Post's id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Returns posts's comments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
       tags:
         - Public
 components:
@@ -295,6 +400,56 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Like'
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        post_id:
+          type: integer
+        user_id:
+          type: integer
+        content:
+          type: string
+        picture:
+          description: relative url of the image if posted
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        likes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Like'
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          type: integer
+        first_page_url:
+          type: string
+        from:
+          type: integer
+        next_page_url:
+          type: string
+        path:
+          type: string
+        per_page":
+          type: string
+        prev_page_url:
+          type: string
+        to:
+          type: integer
+        data:
+          type: array
+          description: 'Depends on endpoint, will return either paginated posts or comments'
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Post'
+              - $ref: '#/components/schemas/Comment'
 tags:
   - name: Account
     description: Paths pertaining to user's account
