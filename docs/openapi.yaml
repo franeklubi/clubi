@@ -516,10 +516,53 @@ paths:
       tags:
         - Auth
         - Dashboard
+  /settings/:
+    summary: Update user's info and profile
+    post:
+      summary: Post user's info and profile
+      operationId: settings.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                description:
+                  type: string
+                profile_picture:
+                  type: string
+                  format: binary
+                remove_profile_picture:
+                  type: boolean
+              required:
+                - username
+      responses:
+        '200':
+          description: Update user's info and profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityError'
+      tags:
+        - Auth
+        - Settings
 components:
   responses:
     UnauthorizedError:
-      description: Access token is missing or invalid
+      description: Bearer token is missing or invalid
+    UnprocessableEntityError:
+      description: Unprocessable entity
   securitySchemes:
     bearerAuth:
       type: http
