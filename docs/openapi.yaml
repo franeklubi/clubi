@@ -1,0 +1,1238 @@
+openapi: 3.0.3
+info:
+  title: clubi
+  version: 1.0.0
+  contact:
+    email: franek@franeklubi.com
+    name: franeklubi
+    url: 'http://franeklubi.com'
+  license:
+    name: MIT License
+    url: 'https://github.com/franeklubi/clubi/blob/master/LICENSE'
+servers:
+  - url: 'https://clubi.franeklubi.com/api'
+    variables: {}
+    description: official clubi server
+paths:
+  /register:
+    summary: Register a new user
+    post:
+      security: []
+      summary: Exchange a new user info for auth token
+      operationId: register.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                password:
+                  type: string
+                password_confirmation:
+                  type: string
+                  description: >-
+                    Password confirmation field (should be identical to
+                    password)
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                success:
+                  value: |-
+                    {
+                        "user": {
+                            "username": "franeklubi",
+                            "id": 1
+                        },
+                        "token": "1|YE0BqnqzzXA5rOHCuZ6Uu9CP7lVc8qrXcyoWxO1V"
+                    }
+                no_data:
+                  value: |-
+                    {
+                        "username": [
+                            "The username field is required."
+                        ],
+                        "email": [
+                            "The email field is required."
+                        ],
+                        "password": [
+                            "The password field is required."
+                        ]
+                    }
+      tags:
+        - Account
+        - Public
+  /login:
+    summary: Login an existing user
+    post:
+      security: []
+      summary: Exchange an existing user's info for auth token
+      operationId: login.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                device_name:
+                  type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              examples:
+                success:
+                  value: |-
+                    {
+                        "user": {
+                            "id": 1,
+                            "is_admin": "0",
+                            "username": "franeklubi"
+                        },
+                        "token": "2|1YseBF2yz0wKhmzNaxZ2wnwPZhv7AYNeR4YB4TM0"
+                    }
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
+                no_data:
+                  value: |-
+                    {
+                        "message": "The given data was invalid.",
+                        "errors": {
+                            "email": [
+                                "The email field is required."
+                            ],
+                            "password": [
+                                "The password field is required."
+                            ],
+                            "device_name": [
+                                "The device name field is required."
+                            ]
+                        }
+                    }
+      tags:
+        - Account
+        - Public
+  '/profile/{username}':
+    summary: Get user's profile info
+    get:
+      security: []
+      summary: Get user with profile info
+      operationId: profile.GET
+      parameters:
+        - in: path
+          name: username
+          schema:
+            type: integer
+          required: true
+          description: username
+      responses:
+        '200':
+          description: Successful profile fetch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                success:
+                  value: |-
+                    {
+                        "user": {
+                            "id": 1,
+                            "is_admin": "0",
+                            "username": "franeklubi",
+                            "profile": {
+                                "profile_picture": "/const_assets/default_profile_picture.png",
+                                "description": "example description"
+                            }
+                        }
+                    }
+                wrong_or_empty_username:
+                  value: |-
+                    {
+                        "user": null
+                    }
+      tags:
+        - Public
+        - Account
+  /:
+    summary: Dashboard
+    get:
+      security: []
+      summary: Get random posts or paginated user's feed
+      description: >-
+        Returns one page of random posts if not authenticated OR user's feed if
+        authenticated
+      operationId: root.GET
+      tags:
+        - Public
+        - Dashboard
+      responses:
+        '200':
+          description: >-
+            Cached, random posts for unauthenticated user.
+
+            Make note of the `next_page_url` - now it is empty, but you can use
+            it as an indicator as to whether there are more posts to load - and
+            them load them using GET on that link.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  next_page_url:
+                    type: string
+  /popular:
+    summary: Popular groups
+    get:
+      security: []
+      summary: Get an array of the most popular groups
+      operationId: popular.GET
+      responses:
+        '200':
+          description: Array of the most popular groups
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Group'
+      tags:
+        - Public
+        - Dashboard
+  /groups/search:
+    summary: Search for groups
+    get:
+      security: []
+      summary: Search for groups by provided query
+      description: >-
+        If user's logged in, They can also search for private groups they'd
+        joined
+      operationId: groups.search.GET
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+          description: Groups' name or unique string id
+      responses:
+        '200':
+          description: Array of found groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+                  zero_warning:
+                    description: Appears when there are no groups returned
+                    type: string
+      tags:
+        - Public
+        - Groups
+  '/groups/{group_string_id}':
+    summary: Get group's info
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+    get:
+      security: []
+      summary: Get group's info
+      operationId: groups.group.GET
+      responses:
+        '200':
+          description: Returns group's info
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    $ref: '#/components/schemas/Group'
+                  editable:
+                    type: boolean
+                  is_member:
+                    type: boolean
+      tags:
+        - Public
+        - Groups
+    delete:
+      summary: Delete the specified group
+      operationId: groups.group.DELETE
+      responses:
+        '200':
+          description: Returns the deleted group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Groups
+    post:
+      summary: Update the specified group
+      operationId: groups.group.POST
+      requestBody:
+        $ref: '#/components/requestBodies/Group'
+      responses:
+        '200':
+          description: Returns the updated group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityError'
+      tags:
+        - Auth
+        - Groups
+  '/groups/{group_string_id}/posts':
+    summary: Return paginated posts for a group
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+    get:
+      security: []
+      summary: Get paginated posts for a group
+      operationId: groups.group.posts.GET
+      responses:
+        '200':
+          description: Returns group's posts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+      tags:
+        - Public
+        - Posts
+    post:
+      summary: Create a post
+      operationId: groups.group.posts.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Returns created post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+      tags:
+        - Auth
+        - Posts
+  '/groups/{group_string_id}/posts/{post_id}/comments':
+    summary: Retur paginated comments for a post
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: string
+        required: true
+    get:
+      security: []
+      summary: Get paginated comments for a post
+      operationId: groups.group.posts.post.comments.GET
+      responses:
+        '200':
+          description: Return posts's comments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+      tags:
+        - Public
+        - Comments
+    post:
+      summary: Create a comment on a specified post
+      operationId: groups.group.posts.post.comments.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Return created comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Comments
+  /notifications/:
+    summary: Return user's paginated notifications or delete them
+    get:
+      summary: Get user's notifications
+      operationId: notifications.GET
+      responses:
+        '200':
+          description: Return paginated user's notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Notifications
+    delete:
+      summary: Delete all user's notifications
+      operationId: notifications.DELETE
+      responses:
+        '200':
+          description: Delete all user's notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted_count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Notifications
+  /notifications/count:
+    summary: Return number of unread notifications or mark them as read
+    get:
+      summary: Get user's number of unread notifications
+      operationId: notifications.count.GET
+      responses:
+        '200':
+          description: Return number of unread notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Notifications
+    post:
+      summary: Mark all unread notifications as read
+      operationId: notifications.count.POST
+      responses:
+        '200':
+          description: Return number of unread notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Notifications
+  '/notifications/{notification_id}':
+    summary: Remove specific notification
+    delete:
+      parameters:
+        - in: path
+          name: notification_id
+          description: Notification's id
+          schema:
+            type: integer
+          required: true
+      summary: Delete notification
+      operationId: notifications.notification.DELETE
+      responses:
+        '200':
+          description: Return deleted notification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notification:
+                    $ref: '#/components/schemas/Notification'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Notifications
+  /yourGroups:
+    summary: Return user-owned groups
+    get:
+      summary: Get user-owned groups
+      operationId: yourGroups.GET
+      responses:
+        '200':
+          description: Return user-owned groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Dashboard
+  /joinedGroups:
+    summary: Return user-joined groups
+    get:
+      summary: Get user-joined groups
+      operationId: joinedGroups.GET
+      responses:
+        '200':
+          description: Return user-joined groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Dashboard
+  /dashboard/posts:
+    summary: Return paginated posts from user's feed
+    get:
+      summary: Get paginated posts from user's feed
+      operationId: dashboard.posts.GET
+      responses:
+        '200':
+          description: Return paginated posts from user's feed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Dashboard
+  /dashboard/invitations:
+    summary: Return user's group invitations
+    get:
+      summary: Get user's group invitations
+      operationId: dashboard.invitations.GET
+      responses:
+        '200':
+          description: Return user's group invitations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Dashboard
+  /settings/:
+    summary: Update user's info and profile
+    post:
+      summary: Post user's info and profile
+      operationId: settings.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                description:
+                  type: string
+                profile_picture:
+                  type: string
+                  format: binary
+                remove_profile_picture:
+                  type: boolean
+              required:
+                - username
+      responses:
+        '200':
+          description: Update user's info and profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityError'
+      tags:
+        - Auth
+        - Settings
+  /groups:
+    summary: Create a group
+    post:
+      summary: Create a group
+      operationId: groups.POST
+      requestBody:
+        $ref: '#/components/requestBodies/Group'
+      responses:
+        '200':
+          description: Created group's unique string id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  string_id:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityError'
+      tags:
+        - Auth
+        - Groups
+  '/groups/{group_string_id}/membership':
+    summary: Toggle user's membership to group
+    post:
+      summary: Toggle user's membership to group
+      operationId: groups.group.membership.POST
+      parameters:
+        - in: path
+          name: group_string_id
+          description: Group's unique string id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Status after operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - joined
+                      - left
+      tags:
+        - Auth
+        - Groups
+  '/groups/{group_string_id}/posts/{post_id}':
+    summary: Delete post
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: integer
+        required: true
+    delete:
+      summary: Delete specified post
+      operationId: groups.group.posts.post.POST
+      responses:
+        '200':
+          description: Returns deleted post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Posts
+  '/groups/{group_string_id}/posts/{post_id}/likes':
+    summary: Get likes or like post
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Get post's likes
+      operationId: groups.group.posts.post.likes.GET
+      responses:
+        '200':
+          description: Returns index of post's likes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Like'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Posts
+    post:
+      summary: Toggle like on a given post
+      description: ''
+      operationId: groups.group.posts.post.likes.POST
+      responses:
+        '200':
+          description: Returns like object and state after the toggle
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: string
+                    enum:
+                      - liked
+                      - unliked
+                  like:
+                    $ref: '#/components/schemas/Like'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Posts
+  '/groups/{group_string_id}/posts/{post_id}/comments/{comment_id}':
+    summary: Delete the specified comment
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: comment_id
+        description: comment's id
+        schema:
+          type: integer
+        required: true
+    delete:
+      summary: Delete the specified comment
+      description: ''
+      operationId: groups.group.posts.post.comments.comment.DELETE
+      responses:
+        '200':
+          description: Return the deleted comment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    $ref: '#/components/schemas/Comment'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Comments
+  '/groups/{group_string_id}/posts/{post_id}/comments/{comment_id}/likes':
+    summary: Index or toggle liked status on the specified comment
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: comment_id
+        description: comment's id
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Index likes for comment
+      operationId: groups.group.posts.post.comments.comment.likes.GET
+      responses:
+        '200':
+          description: Return likes array for comment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  likes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Like'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Comments
+    post:
+      summary: Toggle liked status on the specified comment
+      operationId: groups.group.posts.post.comments.comment.likes.POST
+      responses:
+        '200':
+          description: >-
+            Return liked status after the operation and the corresponding like
+            object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: string
+                    enum:
+                      - liked
+                      - unliked
+                  like:
+                    $ref: '#/components/schemas/Like'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Comments
+  '/groups/{group_string_id}/invitations':
+    summary: Index group's invitations or make one
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+    get:
+      summary: Return group's invitations
+      operationId: groups.group.invitations.GET
+      responses:
+        '200':
+          description: Return group's invitations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Invitations
+    post:
+      summary: Create an invitation
+      operationId: groups.group.invitations.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+                - username
+      responses:
+        '200':
+          description: Return the created invitation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitation:
+                    $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityError'
+      tags:
+        - Auth
+        - Invitations
+  '/groups/{group_string_id}/invitations/{invitation_id}':
+    summary: Delete or admin-confirm an invitation
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: invitation_id
+        description: Invitation's id
+        schema:
+          type: integer
+        required: true
+    delete:
+      summary: Delete an invitation
+      operationId: groups.group.invitations.invitation.DELETE
+      responses:
+        '200':
+          description: Return the deleted invitation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitation:
+                    $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Invitations
+    post:
+      summary: Admin-confirm an invitation
+      description: >-
+        When an invitation is made from inside of a private group by a user
+        without special priviliges, admin has to confirm it first. This endpoint
+        will only work for group's or site admin
+      operationId: groups.group.invitations.invitation.POST
+      responses:
+        '200':
+          description: Return confirmed invitation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitation:
+                    $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Invitations
+components:
+  requestBodies:
+    Group:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              banner_picture:
+                type: string
+                format: binary
+              private:
+                type: boolean
+              remove_banner_picture:
+                type: boolean
+            required:
+              - name
+  responses:
+    UnauthorizedError:
+      description: Bearer token is missing or invalid
+    UnprocessableEntityError:
+      description: Unprocessable entity
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque token
+  schemas:
+    Group:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        owner_id:
+          type: integer
+        name:
+          type: string
+        id_string:
+          description: unique string id
+          type: string
+        banner_picture:
+          description: relative url to banner picture
+          type: string
+        private:
+          type: boolean
+        user_count:
+          type: integer
+        post_count:
+          type: integer
+        owner:
+          description: 'OWNER MIGHT NOT BE LOADED, CHECK BEFORE USING'
+          type: object
+          properties:
+            id:
+              type: integer
+            is_admin:
+              type: boolean
+            usename:
+              type: string
+    Like:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+    Profile:
+      type: object
+      properties:
+        profile_picture:
+          description: relative url path to profile picture
+          type: string
+        description:
+          type: string
+    User:
+      type: object
+      description: >-
+        PROFILE MIGHT NOT BE LOADED, CHECK IF THE PROFILE IS LOADED BEFORE
+        ACCESSING
+      properties:
+        id:
+          type: integer
+        is_admin:
+          type: boolean
+        username:
+          type: string
+        profile:
+          $ref: '#/components/schemas/Profile'
+    Post:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        user_id:
+          type: integer
+        group_id:
+          type: integer
+        content:
+          type: string
+        picture:
+          description: relative url path to picture if posted
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        group:
+          $ref: '#/components/schemas/Group'
+        likes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Like'
+    Comment:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        post_id:
+          type: integer
+        user_id:
+          type: integer
+        content:
+          type: string
+        picture:
+          description: relative url of the image if posted
+          type: string
+        user:
+          $ref: '#/components/schemas/User'
+        likes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Like'
+    Pagination:
+      type: object
+      properties:
+        current_page:
+          type: integer
+        first_page_url:
+          type: string
+        from:
+          type: integer
+        next_page_url:
+          type: string
+        path:
+          type: string
+        per_page":
+          type: string
+        prev_page_url:
+          type: string
+        to:
+          type: integer
+        data:
+          type: array
+          description: 'Depends on endpoint, will return either paginated posts or comments'
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Post'
+              - $ref: '#/components/schemas/Comment'
+              - $ref: '#/components/schemas/Notification'
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        user_id:
+          type: integer
+        from_id:
+          description: Sender's id
+          type: integer
+        message:
+          type: string
+        link:
+          description: Link to follow if clicked
+          type: string
+        seen:
+          type: boolean
+    Invitation:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        from_id:
+          type: integer
+        group_id:
+          type: integer
+        user_id:
+          type: integer
+        admin_accepted:
+          type: boolean
+        user_accepted:
+          type: boolean
+        named_state:
+          description: You'd show this state in Your gui
+          type: string
+        group:
+          $ref: '#/components/schemas/Group'
+tags:
+  - name: Public
+    description: Paths accessible without authentication
+  - name: Auth
+    description: Paths accessible only after authentication
+  - name: Account
+    description: Paths pertaining to user's account
+  - name: Settings
+  - name: Dashboard
+  - name: Notifications
+  - name: Invitations
+  - name: Groups
+  - name: Posts
+  - name: Comments
+security:
+  - bearerAuth: []
