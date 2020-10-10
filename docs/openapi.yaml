@@ -252,17 +252,17 @@ paths:
         - Groups
   '/groups/{group_string_id}':
     summary: Get group's info
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
     get:
       security: []
       summary: Get group's info
-      operationId: groups.GET
-      parameters:
-        - in: path
-          name: group_string_id
-          description: Group's unique string id
-          schema:
-            type: string
-          required: true
+      operationId: groups.group.GET
       responses:
         '200':
           description: Returns group's info
@@ -280,12 +280,52 @@ paths:
       tags:
         - Public
         - Groups
+    delete:
+      summary: Delete the specified group
+      operationId: groups.group.DELETE
+      responses:
+        '200':
+          description: Returns the deleted group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Groups
+    post:
+      summary: Update the specified group
+      operationId: groups.group.POST
+      requestBody:
+        $ref: '#/components/requestBodies/Group'
+      responses:
+        '200':
+          description: Returns the updated group
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  group:
+                    $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityError'
+      tags:
+        - Auth
+        - Groups
   '/groups/{group_string_id}/posts':
     summary: Return paginated posts for a group
     get:
       security: []
       summary: Get paginated posts for a group
-      operationId: groups.posts.GET
+      operationId: groups.group.posts.GET
       parameters:
         - in: path
           name: group_string_id
@@ -308,7 +348,7 @@ paths:
     get:
       security: []
       summary: Get paginated comments for a post
-      operationId: groups.posts.comments.GET
+      operationId: groups.group.posts.post.comments.GET
       parameters:
         - in: path
           name: group_string_id
@@ -416,8 +456,7 @@ paths:
             type: integer
           required: true
       summary: Delete notification
-      description: ''
-      operationId: ''
+      operationId: notifications.notification.DELETE
       responses:
         '200':
           description: Return deleted notification
@@ -557,7 +596,77 @@ paths:
       tags:
         - Auth
         - Settings
+  /groups:
+    summary: Create a group
+    post:
+      summary: Create a group
+      operationId: groups.POST
+      requestBody:
+        $ref: '#/components/requestBodies/Group'
+      responses:
+        '200':
+          description: Created group's unique string id
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  string_id:
+                    type: string
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityError'
+      tags:
+        - Auth
+        - Groups
+  '/groups/{group_string_id}/membership':
+    summary: Toggle user's membership to group
+    post:
+      summary: Toggle user's membership to group
+      operationId: groups.group.membership.POST
+      parameters:
+        - in: path
+          name: group_string_id
+          description: Group's unique string id
+          schema:
+            type: string
+          required: true
+      responses:
+        '200':
+          description: Status after operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - joined
+                      - left
+      tags:
+        - Auth
+        - Groups
 components:
+  requestBodies:
+    Group:
+      content:
+        multipart/form-data:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              banner_picture:
+                type: string
+                format: binary
+              private:
+                type: boolean
+              remove_banner_picture:
+                type: boolean
+            required:
+              - name
   responses:
     UnauthorizedError:
       description: Bearer token is missing or invalid
