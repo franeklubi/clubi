@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: clubi
-  version: 1.0.0
+  version: 1.0.1
   contact:
     email: franek@franeklubi.com
     name: franeklubi
@@ -136,7 +136,7 @@ paths:
         - in: path
           name: username
           schema:
-            type: integer
+            type: string
           required: true
           description: username
       responses:
