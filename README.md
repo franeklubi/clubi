@@ -8,6 +8,7 @@ Visit us at: https://clubi.franeklubi.com/
 
 ---
 * [Features](#features)
+* [Documentation](#documentation)
 * [Contributing](#contributing)
 ---
 
@@ -15,6 +16,7 @@ Visit us at: https://clubi.franeklubi.com/
 *Showcase of the responsive design*
 
 # Features
+* open api with token auth that's prepared for potential app development (go to [documentation](#documentation) to learn more)
 * allows for easy (public or private) group creation and management
 * displays notifications, such as:
     - new post in Your group
@@ -33,6 +35,10 @@ Visit us at: https://clubi.franeklubi.com/
     - site admin
 * implements 'Load more' functionality for posts and comments
 * uses responsive design
+
+# Documentation
+
+For API documentation, visit this link: [generated swagger doc](https://generator.swagger.io/?url=https://raw.githubusercontent.com/franeklubi/clubi/master/docs/openapi.yaml)
 
 # Contributing
 
