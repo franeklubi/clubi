@@ -322,17 +322,17 @@ paths:
         - Groups
   '/groups/{group_string_id}/posts':
     summary: Return paginated posts for a group
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
     get:
       security: []
       summary: Get paginated posts for a group
       operationId: groups.group.posts.GET
-      parameters:
-        - in: path
-          name: group_string_id
-          description: Group's unique string id
-          schema:
-            type: string
-          required: true
       responses:
         '200':
           description: Returns group's posts
@@ -342,6 +342,30 @@ paths:
                 $ref: '#/components/schemas/Pagination'
       tags:
         - Public
+        - Posts
+    post:
+      summary: Create a post
+      operationId: groups.group.posts.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Returns created post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+      tags:
+        - Auth
         - Posts
   '/groups/{group_string_id}/posts/{post_id}/comments':
     summary: Retur paginated comments for a post
@@ -648,6 +672,92 @@ paths:
       tags:
         - Auth
         - Groups
+  '/groups/{group_string_id}/posts/{post_id}':
+    summary: Delete post
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: string
+        required: true
+    delete:
+      summary: Delete specified post
+      operationId: groups.group.posts.post.POST
+      responses:
+        '200':
+          description: Returns deleted post
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Posts
+  '/groups/{group_string_id}/posts/{post_id}/likes':
+    summary: Get likes or like post
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: string
+        required: true
+    get:
+      summary: Get post's likes
+      operationId: groups.group.posts.post.likes.GET
+      responses:
+        '200':
+          description: Returns index of post's likes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Like'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Posts
+    post:
+      summary: Toggle like on a given post
+      description: ''
+      operationId: groups.group.posts.post.likes.POST
+      responses:
+        '200':
+          description: Returns like object and state after the toggle
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: string
+                    enum:
+                      - liked
+                      - unliked
+                  like:
+                    $ref: '#/components/schemas/Like'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Posts
 components:
   requestBodies:
     Group:
