@@ -17,6 +17,7 @@ paths:
   /register:
     summary: Register a new user
     post:
+      security: []
       summary: Exchange a new user info for auth token
       operationId: register.POST
       requestBody:
@@ -69,6 +70,7 @@ paths:
   /login:
     summary: Login an existing user
     post:
+      security: []
       summary: Exchange an existing user's info for auth token
       operationId: login.POST
       requestBody:
@@ -125,6 +127,7 @@ paths:
   '/profile/{username}':
     summary: Get user's profile info
     get:
+      security: []
       summary: Get user with profile info
       operationId: profile.GET
       parameters:
@@ -165,6 +168,7 @@ paths:
   /:
     summary: Dashboard
     get:
+      security: []
       summary: Random posts or user's feed
       description: >-
         Returns one page of random posts if not authenticated OR user's feed if
@@ -189,6 +193,7 @@ paths:
   /popular:
     summary: Popular groups
     get:
+      security: []
       summary: Returns an array of the most popular groups
       description: ''
       operationId: popular.GET
@@ -204,10 +209,13 @@ paths:
       tags:
         - Public
   /groups/search:
-    summary: Lets You search for groups
+    summary: Search for groups
     get:
-      summary: Searches for groups by provided query
-      description: ''
+      security: []
+      summary: Search for groups by provided query
+      description: >-
+        If user's logged in, They can also search for private groups they'd
+        joined
       operationId: groups.search.GET
       parameters:
         - in: query
@@ -235,6 +243,7 @@ paths:
   '/groups/{group_string_id}':
     summary: Get group's info
     get:
+      security: []
       summary: Get group's info
       operationId: groups.GET
       parameters:
@@ -263,6 +272,7 @@ paths:
   '/groups/{group_string_id}/posts':
     summary: Return paginated posts for a group
     get:
+      security: []
       summary: Get paginated posts for a group
       operationId: groups.posts.GET
       parameters:
@@ -282,8 +292,9 @@ paths:
       tags:
         - Public
   '/groups/{group_string_id}/posts/{post_id}/comments':
-    summary: Return paginated comments for a post
+    summary: Retur paginated comments for a post
     get:
+      security: []
       summary: Get paginated comments for a post
       operationId: groups.posts.comments.GET
       parameters:
@@ -308,7 +319,111 @@ paths:
                 $ref: '#/components/schemas/Pagination'
       tags:
         - Public
+  /notifications/:
+    summary: Return user's paginated notifications or delete them
+    get:
+      summary: Get user's notifications
+      operationId: notifications.GET
+      responses:
+        '200':
+          description: Return paginated user's notifications
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+    delete:
+      summary: Delete all user's notifications
+      operationId: notifications.DELETE
+      responses:
+        '200':
+          description: Delete all user's notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  deleted_count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+  /notifications/count:
+    summary: Return number of unread notifications or mark them as read
+    get:
+      summary: Get user's number of unread notifications
+      operationId: notifications.count.GET
+      responses:
+        '200':
+          description: Return number of unread notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+    post:
+      summary: Mark all unread notifications as read
+      operationId: notifications.count.POST
+      responses:
+        '200':
+          description: Return number of unread notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+  '/notifications/{notification_id}':
+    summary: Remove specific notification
+    delete:
+      parameters:
+        - in: path
+          name: notification_id
+          description: Notification's id
+          schema:
+            type: integer
+          required: true
+      summary: Delete notification
+      description: ''
+      operationId: ''
+      responses:
+        '200':
+          description: Return deleted notification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notification:
+                    $ref: '#/components/schemas/Notification'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
 components:
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque token
   schemas:
     Group:
       type: object
@@ -450,6 +565,28 @@ components:
             oneOf:
               - $ref: '#/components/schemas/Post'
               - $ref: '#/components/schemas/Comment'
+              - $ref: '#/components/schemas/Notification'
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        user_id:
+          type: integer
+        from_id:
+          description: Sender's id
+          type: integer
+        message:
+          type: string
+        link:
+          description: Link to follow if clicked
+          type: string
+        seen:
+          type: boolean
 tags:
   - name: Account
     description: Paths pertaining to user's account
@@ -457,3 +594,5 @@ tags:
     description: Paths accessible without authentication
   - name: Auth
     description: Paths accessible only after authentication
+security:
+  - bearerAuth: []
