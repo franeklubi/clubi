@@ -67,6 +67,7 @@ paths:
                     }
       tags:
         - Account
+        - Public
   /login:
     summary: Login an existing user
     post:
@@ -124,6 +125,7 @@ paths:
                     }
       tags:
         - Account
+        - Public
   '/profile/{username}':
     summary: Get user's profile info
     get:
@@ -165,17 +167,19 @@ paths:
                     }
       tags:
         - Public
+        - Account
   /:
     summary: Dashboard
     get:
       security: []
-      summary: Random posts or user's feed
+      summary: Get random posts or paginated user's feed
       description: >-
         Returns one page of random posts if not authenticated OR user's feed if
         authenticated
       operationId: root.GET
       tags:
         - Public
+        - Dashboard
       responses:
         '200':
           description: >-
@@ -187,15 +191,19 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Post'
+                type: object
+                properties:
+                  posts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Post'
+                  next_page_url:
+                    type: string
   /popular:
     summary: Popular groups
     get:
       security: []
-      summary: Returns an array of the most popular groups
-      description: ''
+      summary: Get an array of the most popular groups
       operationId: popular.GET
       responses:
         '200':
@@ -208,6 +216,7 @@ paths:
                   $ref: '#/components/schemas/Group'
       tags:
         - Public
+        - Dashboard
   /groups/search:
     summary: Search for groups
     get:
@@ -240,6 +249,7 @@ paths:
                     type: string
       tags:
         - Public
+        - Groups
   '/groups/{group_string_id}':
     summary: Get group's info
     get:
@@ -269,6 +279,7 @@ paths:
                     type: boolean
       tags:
         - Public
+        - Groups
   '/groups/{group_string_id}/posts':
     summary: Return paginated posts for a group
     get:
@@ -291,6 +302,7 @@ paths:
                 $ref: '#/components/schemas/Pagination'
       tags:
         - Public
+        - Posts
   '/groups/{group_string_id}/posts/{post_id}/comments':
     summary: Retur paginated comments for a post
     get:
@@ -319,6 +331,7 @@ paths:
                 $ref: '#/components/schemas/Pagination'
       tags:
         - Public
+        - Comments
   /notifications/:
     summary: Return user's paginated notifications or delete them
     get:
@@ -335,6 +348,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       tags:
         - Auth
+        - Notifications
     delete:
       summary: Delete all user's notifications
       operationId: notifications.DELETE
@@ -352,6 +366,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       tags:
         - Auth
+        - Notifications
   /notifications/count:
     summary: Return number of unread notifications or mark them as read
     get:
@@ -371,6 +386,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       tags:
         - Auth
+        - Notifications
     post:
       summary: Mark all unread notifications as read
       operationId: notifications.count.POST
@@ -388,6 +404,7 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       tags:
         - Auth
+        - Notifications
   '/notifications/{notification_id}':
     summary: Remove specific notification
     delete:
@@ -415,6 +432,90 @@ paths:
           $ref: '#/components/responses/UnauthorizedError'
       tags:
         - Auth
+        - Notifications
+  /yourGroups:
+    summary: Return user-owned groups
+    get:
+      summary: Get user-owned groups
+      operationId: yourGroups.GET
+      responses:
+        '200':
+          description: Return user-owned groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Dashboard
+  /joinedGroups:
+    summary: Return user-joined groups
+    get:
+      summary: Get user-joined groups
+      operationId: joinedGroups.GET
+      responses:
+        '200':
+          description: Return user-joined groups
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  groups:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Group'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Dashboard
+  /dashboard/posts:
+    summary: Return paginated posts from user's feed
+    get:
+      summary: Get paginated posts from user's feed
+      operationId: dashboard.posts.GET
+      responses:
+        '200':
+          description: Return paginated posts from user's feed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Dashboard
+  /dashboard/invitations:
+    summary: Return user's group invitations
+    get:
+      summary: Get user's group invitations
+      operationId: dashboard.invitations.GET
+      responses:
+        '200':
+          description: Return user's group invitations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Dashboard
 components:
   responses:
     UnauthorizedError:
@@ -587,12 +688,43 @@ components:
           type: string
         seen:
           type: boolean
+    Invitation:
+      type: object
+      properties:
+        id:
+          type: integer
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        from_id:
+          type: integer
+        group_id:
+          type: integer
+        user_id:
+          type: integer
+        admin_accepted:
+          type: boolean
+        user_accepted:
+          type: boolean
+        named_state:
+          description: You'd show this state in Your gui
+          type: string
+        group:
+          $ref: '#/components/schemas/Group'
 tags:
-  - name: Account
-    description: Paths pertaining to user's account
   - name: Public
     description: Paths accessible without authentication
   - name: Auth
     description: Paths accessible only after authentication
+  - name: Account
+    description: Paths pertaining to user's account
+  - name: Settings
+  - name: Dashboard
+  - name: Notifications
+  - name: Invitations
+  - name: Groups
+  - name: Posts
+  - name: Comments
 security:
   - bearerAuth: []
