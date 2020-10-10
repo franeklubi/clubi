@@ -369,32 +369,58 @@ paths:
         - Posts
   '/groups/{group_string_id}/posts/{post_id}/comments':
     summary: Retur paginated comments for a post
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: string
+        required: true
     get:
       security: []
       summary: Get paginated comments for a post
       operationId: groups.group.posts.post.comments.GET
-      parameters:
-        - in: path
-          name: group_string_id
-          description: Group's unique string id
-          schema:
-            type: string
-          required: true
-        - in: path
-          name: post_id
-          description: Post's id
-          schema:
-            type: string
-          required: true
       responses:
         '200':
-          description: Returns posts's comments
+          description: Return posts's comments
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Pagination'
       tags:
         - Public
+        - Comments
+    post:
+      summary: Create a comment on a specified post
+      operationId: groups.group.posts.post.comments.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+                picture:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Return created comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
         - Comments
   /notifications/:
     summary: Return user's paginated notifications or delete them
@@ -685,7 +711,7 @@ paths:
         name: post_id
         description: Post's id
         schema:
-          type: string
+          type: integer
         required: true
     delete:
       summary: Delete specified post
@@ -715,7 +741,7 @@ paths:
         name: post_id
         description: Post's id
         schema:
-          type: string
+          type: integer
         required: true
     get:
       summary: Get post's likes
@@ -758,6 +784,114 @@ paths:
       tags:
         - Auth
         - Posts
+  '/groups/{group_string_id}/posts/{post_id}/comments/{comment_id}':
+    summary: Delete the specified comment
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: comment_id
+        description: comment's id
+        schema:
+          type: integer
+        required: true
+    delete:
+      summary: Delete the specified comment
+      description: ''
+      operationId: groups.group.posts.post.comments.comment.DELETE
+      responses:
+        '200':
+          description: Return the deleted comment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  comment:
+                    $ref: '#/components/schemas/Comment'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Comments
+  '/groups/{group_string_id}/posts/{post_id}/comments/{comment_id}/likes':
+    summary: Index or toggle liked status on the specified comment
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: post_id
+        description: Post's id
+        schema:
+          type: integer
+        required: true
+      - in: path
+        name: comment_id
+        description: comment's id
+        schema:
+          type: integer
+        required: true
+    get:
+      summary: Index likes for comment
+      description: ''
+      operationId: groups.group.posts.post.comments.comment.likes.GET
+      responses:
+        '200':
+          description: Return likes array for comment
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  likes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Like'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Comments
+    post:
+      summary: Toggle liked status on the specified comment
+      description: ''
+      operationId: groups.group.posts.post.comments.comment.likes.POST
+      responses:
+        '200':
+          description: >-
+            Return liked status after the operation and the corresponding like
+            object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  state:
+                    type: string
+                    enum:
+                      - liked
+                      - unliked
+                  like:
+                    $ref: '#/components/schemas/Like'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Comments
 components:
   requestBodies:
     Group:
