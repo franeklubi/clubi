@@ -847,7 +847,6 @@ paths:
         required: true
     get:
       summary: Index likes for comment
-      description: ''
       operationId: groups.group.posts.post.comments.comment.likes.GET
       responses:
         '200':
@@ -868,7 +867,6 @@ paths:
         - Comments
     post:
       summary: Toggle liked status on the specified comment
-      description: ''
       operationId: groups.group.posts.post.comments.comment.likes.POST
       responses:
         '200':
@@ -892,6 +890,120 @@ paths:
       tags:
         - Auth
         - Comments
+  '/groups/{group_string_id}/invitations':
+    summary: Index group's invitations or make one
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+    get:
+      summary: Return group's invitations
+      operationId: groups.group.invitations.GET
+      responses:
+        '200':
+          description: Return group's invitations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Invitations
+    post:
+      summary: Create an invitation
+      operationId: groups.group.invitations.POST
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+              required:
+                - username
+      responses:
+        '200':
+          description: Return the created invitation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitation:
+                    $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '422':
+          $ref: '#/components/responses/UnprocessableEntityError'
+      tags:
+        - Auth
+        - Invitations
+  '/groups/{group_string_id}/invitations/{invitation_id}':
+    summary: Delete or admin-confirm an invitation
+    parameters:
+      - in: path
+        name: group_string_id
+        description: Group's unique string id
+        schema:
+          type: string
+        required: true
+      - in: path
+        name: invitation_id
+        description: Invitation's id
+        schema:
+          type: integer
+        required: true
+    delete:
+      summary: Delete an invitation
+      operationId: groups.group.invitations.invitation.DELETE
+      responses:
+        '200':
+          description: Return the deleted invitation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitation:
+                    $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Invitations
+    post:
+      summary: Admin-confirm an invitation
+      description: >-
+        When an invitation is made from inside of a private group by a user
+        without special priviliges, admin has to confirm it first. This endpoint
+        will only work for group's or site admin
+      operationId: groups.group.invitations.invitation.POST
+      responses:
+        '200':
+          description: Return confirmed invitation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invitation:
+                    $ref: '#/components/schemas/Invitation'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      tags:
+        - Auth
+        - Invitations
 components:
   requestBodies:
     Group:
