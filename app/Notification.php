@@ -8,6 +8,13 @@ class Notification extends Model
 {
     protected $fillable = ['from_id', 'user_id', 'message', 'link'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'from_id' => 'integer',
+        'seen' => 'boolean',
+    ];
+
     public function user() {
         return $this->belongsTo('App\User');
     }

@@ -8,6 +8,12 @@ class Post extends Model
 {
     protected $fillable = ['user_id', 'group_id', 'content', 'picture'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'group_id' => 'integer',
+    ];
+
     public function user() {
         return $this->belongsTo('App\User');
     }

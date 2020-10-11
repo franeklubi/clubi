@@ -45,7 +45,7 @@ class GroupPolicy
         }
 
         // if group is not private
-        if ( $group->private != '1' && $group->private != 'true' ) {
+        if ( $group->private != '1' && $group->private != 'true' && $group->private != true ) {
             return true;
         }
 

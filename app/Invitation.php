@@ -27,6 +27,15 @@ class Invitation extends Model
 
     protected $appends = ['named_state'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'from_id' => 'integer',
+        'group_id' => 'integer',
+        'admin_accepted' => 'boolean',
+        'user_accepted' => 'boolean',
+    ];
+
     public function getNamedStateAttribute() {
         if ( !$this->admin_accepted && !$this->user_accepted ) {
             return 'Pending for admin approval.';

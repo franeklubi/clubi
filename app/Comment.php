@@ -8,6 +8,12 @@ class Comment extends Model
 {
     protected $fillable = ['user_id', 'comment_id', 'content', 'picture'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'post_id' => 'integer',
+    ];
+
     public function post() {
         return $this->belongsTo('App\Post');
     }
