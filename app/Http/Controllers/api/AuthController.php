@@ -42,7 +42,10 @@ class AuthController extends Controller
         $validator = app(RegisterController::class)->validator($request->all());
 
         if($validator->fails()){
-            return response()->json($validator->messages(), );
+            return response()->json([
+                'message' => 'The given data was invalid.',
+                'errors' => $validator->errors(),
+            ], 422);
         }
 
         $user = app(RegisterController::class)->create($request->all());
