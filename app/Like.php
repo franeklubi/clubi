@@ -8,6 +8,12 @@ class Like extends Model
 {
     protected $fillable = ['user_id'];
 
+    protected $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'likeable_id' => 'integer',
+    ];
+
     protected $hidden = [
         'created_at',
         'updated_at',

@@ -14,6 +14,12 @@ class Group extends Model
         'name', 'banner_picture', 'private'
     ];
 
+    protected $casts = [
+        'id' => 'integer',
+        'owner_id' => 'integer',
+        'private' => 'boolean',
+    ];
+
     public static function search(string $search) {
         $columns = ['name', 'id_string'];
 

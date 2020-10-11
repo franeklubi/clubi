@@ -79,7 +79,7 @@ class PostPolicy
             return false;
         }
 
-        if ( $user == $post->user || $user == $group->owner ) {
+        if ( $user->id == $post->user->id || $user->id == $group->owner_id ) {
             return true;
         }
 
