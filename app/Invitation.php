@@ -25,6 +25,11 @@ class Invitation extends Model
 {
     protected $fillable = ['from_id', 'group_id', 'user_id'];
 
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
+
     protected $appends = ['named_state'];
 
     protected $casts = [

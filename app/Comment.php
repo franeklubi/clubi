@@ -14,6 +14,10 @@ class Comment extends Model
         'post_id' => 'integer',
     ];
 
+    protected $hidden = [
+        'updated_at',
+    ];
+
     public function post() {
         return $this->belongsTo('App\Post');
     }

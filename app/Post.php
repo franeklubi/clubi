@@ -14,6 +14,10 @@ class Post extends Model
         'group_id' => 'integer',
     ];
 
+    protected $hidden = [
+        'updated_at',
+    ];
+
     public function user() {
         return $this->belongsTo('App\User');
     }

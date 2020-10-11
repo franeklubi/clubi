@@ -15,6 +15,10 @@ class Notification extends Model
         'seen' => 'boolean',
     ];
 
+    protected $hidden = [
+        'updated_at',
+    ];
+
     public function user() {
         return $this->belongsTo('App\User');
     }

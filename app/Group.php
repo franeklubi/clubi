@@ -20,6 +20,10 @@ class Group extends Model
         'private' => 'boolean',
     ];
 
+    protected $hidden = [
+        'updated_at',
+    ];
+
     public static function search(string $search) {
         $columns = ['name', 'id_string'];
 
