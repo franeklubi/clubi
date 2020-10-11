@@ -1,7 +1,7 @@
 openapi: 3.0.3
 info:
   title: clubi
-  version: 1.0.1
+  version: 1.0.2
   contact:
     email: franek@franeklubi.com
     name: franeklubi
@@ -52,18 +52,26 @@ paths:
                         },
                         "token": "1|YE0BqnqzzXA5rOHCuZ6Uu9CP7lVc8qrXcyoWxO1V"
                     }
+        '422':
+          description: Unprocessable Entity
+          content:
+            application/json:
+              examples:
                 no_data:
                   value: |-
                     {
-                        "username": [
-                            "The username field is required."
-                        ],
-                        "email": [
-                            "The email field is required."
-                        ],
-                        "password": [
-                            "The password field is required."
-                        ]
+                        "message": "The given data was invalid.",
+                        "errors": {
+                            "username": [
+                                "The username field is required."
+                            ],
+                            "email": [
+                                "The email field is required."
+                            ],
+                            "password": [
+                                "The password field is required."
+                            ]
+                        }
                     }
       tags:
         - Account
@@ -635,10 +643,8 @@ paths:
               schema:
                 type: object
                 properties:
-                  invitations:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/Invitation'
+                  message:
+                    type: string
         '401':
           $ref: '#/components/responses/UnauthorizedError'
         '422':
