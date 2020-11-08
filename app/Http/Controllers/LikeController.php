@@ -20,6 +20,21 @@ class LikeController extends Controller
     {
         $this->authorize('viewAnyPost', [Like::class, $group, $post]);
 
+        $likes = $post->like_count;
+
+        return response()->json([
+            'likes' => $likes,
+        ]);
+    }
+
+    /**
+     * @param Group $group
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function showUsers(Group $group, Post $post)
+    {
         $likes = $post->likes;
 
         return response()->json([
