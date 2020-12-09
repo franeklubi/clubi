@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Group;
 use App\Post;
 use App\Comment;
+use MongoDB\Driver\Exception\CommandException;
 
 class LikeController extends Controller
 {
@@ -25,29 +26,32 @@ class LikeController extends Controller
         return response()->json([
             'likes' => $likes,
         ]);
+
+
     }
 
-    /**
-     * @param Group $group
-     * @param Post $post
-     * @return \Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
-     */
-    public function showUsers(Group $group, Post $post)
-    {
-        $likes = $post->likes;
-
-        return response()->json([
-            'likes' => $likes,
-        ]);
-    }
+//    /**
+//     * @param Group $group
+//     * @param Post $post
+//     * @param Comment $comment
+//     * @return \Illuminate\Http\JsonResponse
+//     * @throws \Illuminate\Auth\Access\AuthorizationException
+//     */
+//    public function showUsers(Group $group, Post $post, Comment $comment)
+//    {
+//        $likes = $post && $comment->likes;
+//
+//        return response()->json([
+//            'likes' => $likes,
+//        ]);
+//    }
 
 
     public function indexComment(Group $group, Post $post, Comment $comment)
     {
         $this->authorize('viewAnyComment', [Like::class, $group, $comment]);
 
-        $likes = $comment->likes;
+        $likes = $comment->like_count;
 
         return response()->json([
             'likes' => $likes,
