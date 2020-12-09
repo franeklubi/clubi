@@ -8,6 +8,10 @@ class Comment extends Model
 {
     protected $fillable = ['user_id', 'comment_id', 'content', 'picture'];
 
+    protected $appends = ['like_count'];
+
+
+
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
@@ -17,6 +21,14 @@ class Comment extends Model
     protected $hidden = [
         'updated_at',
     ];
+
+
+    public function getLikeCountAttribute()
+    {
+        return $this->likes()->count();
+    }
+
+
 
     public function post() {
         return $this->belongsTo('App\Post');
@@ -29,6 +41,8 @@ class Comment extends Model
     public function likes() {
         return $this->morphMany('App\Like', 'likeable');
     }
+
+
 
     // link for the Liked event
     public function link() {
