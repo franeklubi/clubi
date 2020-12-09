@@ -88,8 +88,6 @@
                     +'/posts/'+this.post.id,
                 likes_link: '/groups/'+this.post.group.id_string
                     +'/posts/'+this.post.id+'/likes',
-                like_users_link: '/groups/'+this.post.group.id_string
-                    +'/posts/'+this.post.id+'/likes/users',
                 owner: this.post.group.owner,
                 likes: this.post.like_count,
                 feedback: '',
@@ -122,18 +120,6 @@
                 })
             },
 
-            loadLikeUsers() {
-                axios.get(this.like_users_link).then((res) => {
-                    if (res.data.likes) {
-                        let index = res.data.likes.findIndex((like) => {
-                            return like.user_id == this.user_id;
-                        });
-                        this.userLiked = index ? false : true;
-                    }
-                }).catch((err) => {
-                    this.feedback = this.handleAxiosError(err);
-                })
-            },
 
             toggleLike() {
                 axios.post(this.likes_link).then((res) => {
@@ -169,7 +155,7 @@
                 this.loadLikes();
             }
 
-            this.loadLikeUsers();
+
         }
     }
 </script>

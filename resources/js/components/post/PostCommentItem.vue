@@ -77,8 +77,7 @@
                 likes_link: '/groups/'+this.post.group.id_string+'/posts/'
                     +this.post.id+'/comments/'+this.comment.id+'/likes',
 
-                like_users_link: '/groups/'+this.post.group.id_string
-                    +'/posts/'+this.comment.id+'/likes/users',
+
                 likes: this.comment.like_count,
                 feedback: '',
 
@@ -105,18 +104,7 @@
                 })
             },
 
-            loadLikeUsers() {
-                axios.get(this.like_users_link).then((res) => {
-                    if (res.data.likes) {
-                        let index = res.data.likes.findIndex((like) => {
-                            return like.user_id == this.user_id;
-                        });
-                        this.userLiked = index ? false : true;
-                    }
-                }).catch((err) => {
-                    this.feedback = this.handleAxiosError(err);
-                })
-            },
+
 
 
             toggleLike() {
@@ -152,7 +140,7 @@
             if ( typeof this.comment.likes == 'undefined' ) {
                 this.loadLikes();
             }
-            this.loadLikeUsers();
+
         }
     }
 </script>

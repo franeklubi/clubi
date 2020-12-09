@@ -30,21 +30,20 @@ class LikeController extends Controller
 
     }
 
-//    /**
-//     * @param Group $group
-//     * @param Post $post
-//     * @param Comment $comment
-//     * @return \Illuminate\Http\JsonResponse
-//     * @throws \Illuminate\Auth\Access\AuthorizationException
-//     */
-//    public function showUsers(Group $group, Post $post, Comment $comment)
-//    {
-//        $likes = $post && $comment->likes;
-//
-//        return response()->json([
-//            'likes' => $likes,
-//        ]);
-//    }
+    /**
+     * @param Group $group
+     * @param Post $post
+     * @return \Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function showUsers(Group $group, Post $post)
+    {
+        $likes = $post->likes;
+
+        return response()->json([
+            'likes' => $likes,
+        ]);
+    }
 
 
     public function indexComment(Group $group, Post $post, Comment $comment)
