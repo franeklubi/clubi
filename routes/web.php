@@ -122,6 +122,11 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/likes', 'LikeController@indexPost')
                 ->name('posts.likes.index');
 
+            Route::get('/likes/users', 'LikeController@showUsers')
+                ->name('posts.likes.index');
+
+
+
             Route::post('/likes', 'LikeController@togglePost')
                 ->name('posts.likes.toggle');
         });
@@ -143,6 +148,9 @@ Route::middleware('auth:sanctum')->group(function () {
                 ->name('comments.destroy');
 
             Route::get('/likes', 'LikeController@indexComment')
+                ->name('comments.likes.index');
+
+            Route::get('/likes/users', 'CommentController@showUsers')
                 ->name('comments.likes.index');
 
             Route::post('/likes', 'LikeController@toggleComment')

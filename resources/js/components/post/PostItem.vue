@@ -52,7 +52,7 @@
                         @click="toggleLike"
                         :disabled="!is_member"
                     >
-                        <span class="font-weight-bold">{{ likes.length }}</span>
+                        <span class="font-weight-bold">{{ likes }}</span>
                         <span :class="likeIconClass"></span>
                     </button>
                 </div>
@@ -89,9 +89,11 @@
                 likes_link: '/groups/'+this.post.group.id_string
                     +'/posts/'+this.post.id+'/likes',
                 owner: this.post.group.owner,
-                likes: this.post.likes,
+                likes: this.post.like_count,
                 feedback: '',
                 char_cutoff: parseInt(process.env.MIX_READ_MORE_CHAR_CUTOFF),
+                like_users: this.post.likes,
+                userLiked: false
             }
         },
 
@@ -118,16 +120,15 @@
                 })
             },
 
+
             toggleLike() {
                 axios.post(this.likes_link).then((res) => {
                     if ( res.data.state == 'liked' ) {
-                        this.likes.push(res.data.like);
+                        this.likes = this.likes + 1;
+                        this.userLiked = true;
                     } else {
-                        let index = this.likes.findIndex((like) => {
-                            return like.id == res.data.like.id;
-                        });
-
-                        this.likes.splice(index, 1);
+                        this.likes = this.likes - 1;
+                        this.userLiked = false;
                     }
                 }).catch((err) => {
                     this.feedback = this.handleAxiosError(err);
@@ -137,11 +138,7 @@
 
         computed: {
             isLiked() {
-                let index = this.likes.findIndex((like) => {
-                    return like.user_id == this.user_id;
-                });
-
-                return index>-1;
+                return this.userLiked;
             },
 
             likeIconClass() {
@@ -157,6 +154,8 @@
             if ( typeof this.post.likes == 'undefined' ) {
                 this.loadLikes();
             }
+
+
         }
     }
 </script>

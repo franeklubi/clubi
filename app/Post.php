@@ -8,6 +8,8 @@ class Post extends Model
 {
     protected $fillable = ['user_id', 'group_id', 'content', 'picture'];
 
+    protected $appends = ['like_count'];
+
     protected $casts = [
         'id' => 'integer',
         'user_id' => 'integer',
@@ -32,6 +34,11 @@ class Post extends Model
 
     public function likes() {
         return $this->morphMany('App\Like', 'likeable');
+    }
+
+    public function getLikeCountAttribute()
+    {
+        return $this->likes()->count();
     }
 
     // link for the Liked event
